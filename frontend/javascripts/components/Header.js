@@ -1,38 +1,16 @@
 import React, { Component, PropTypes } from 'react'
+import AppBar from 'material-ui/AppBar'
 
 
 class Header extends Component {
 
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
-
-  // lifecycle
-  //
-  // conponentDidMount() {
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  // }
-
-  // handlers
-  //
-
-  // renderers
-  //
   render() {
     return (
-      <header>Header</header>
+      <AppBar title={ process.env.APP_NAME } />
     )
   }
 
 }
-
-// Header.propTypes = {
-//   object: PropTypes.object.isRequired,
-// }
 
 
 export default Header

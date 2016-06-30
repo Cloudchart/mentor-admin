@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+injectTapEventPlugin()
 let node = document.querySelector('[data-react-class]')
 
 if (node) {
@@ -19,7 +22,9 @@ if (node) {
 
     ReactDOM.render(
       <Provider store={ store }>
-        <Component />
+        <MuiThemeProvider>
+          <Component/>
+        </MuiThemeProvider>
       </Provider>,
       node
     )

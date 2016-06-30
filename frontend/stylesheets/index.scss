@@ -1,2 +1,16 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+$standart-padding: 30px;
+
 body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+
+  main {
+    > div.container {
+      > .content {
+        padding: $standart-padding;
+      }
+    }
+  }
 }

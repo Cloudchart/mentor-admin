@@ -1,7 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import sortBy from 'lodash/sortBy'
 
-// import SurveysNew from './SurveysNew'
+import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+
+import SurveysNew from './SurveysNew'
 // import SurveysEdit from './SurveysEdit'
 
 
@@ -11,18 +14,22 @@ class SurveysList extends Component {
     super(props)
     this.state = {
       selectedSurveyId: null,
+      isDialogOpened: false,
     }
   }
 
   // handlers
   //
   handleNew(event) {
-    event.preventDefault()
-    this.refs.modal.show()
+    this.setState({ isDialogOpened: true })
   }
 
   handleCreate() {
-    this.refs.modal.hide()
+    console.log('handleCreate');
+  }
+
+  handleDialogClose(event) {
+    this.setState({ isDialogOpened: false })
   }
 
   handleEdit(id, event) {
@@ -68,7 +75,17 @@ class SurveysList extends Component {
           { sortBy(surveys, survey => survey.name.toLowerCase()).map(this.renderSurvey.bind(this)) }
         </ul>
 
-        <a href="" onClick={ this.handleNew.bind(this) }>New</a>
+        <RaisedButton
+          label="New"
+          primary={ true }
+          onTouchTap={ this.handleNew.bind(this) }
+        />
+
+        <Dialog
+          open={ this.state.isDialogOpened }
+          children={ <SurveysNew actions={ actions } onCreate={ this.handleCreate.bind(this) } /> }
+          onRequestClose={ this.handleDialogClose.bind(this) }
+        />
       </div>
     )
   }

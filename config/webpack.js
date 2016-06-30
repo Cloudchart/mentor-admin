@@ -1,9 +1,12 @@
+require('babel-core/register')
+require('babel-polyfill')
 require('dotenv').load()
 
 var path = require('path')
 var autoprefixer = require('autoprefixer')
 var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 var webpack = require('webpack')
+var appName = require('../lib').appName
 
 module.exports = {
   context: path.resolve(__dirname, '../frontend'),
@@ -52,6 +55,7 @@ module.exports = {
       "process.env": {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         ROOT_URL: JSON.stringify(process.env.ROOT_URL),
+        APP_NAME: JSON.stringify(appName)
       }
     }),
 

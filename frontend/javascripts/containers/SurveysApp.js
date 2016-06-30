@@ -6,7 +6,6 @@ import { surveysActions } from '../actions'
 
 import Header from '../components/Header'
 import SurveysList from '../components/SurveysList'
-import Footer from '../components/Footer'
 
 
 class SurveysApp extends Component {
@@ -21,8 +20,6 @@ class SurveysApp extends Component {
         <div className="content">
           <SurveysList surveys={ surveys } actions={ actions } />
         </div>
-
-        <Footer/>
       </div>
     )
   }
