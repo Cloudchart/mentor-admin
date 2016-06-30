@@ -1,0 +1,8 @@
+{
+  "development": {
+    "db": "mentor_admin_development"
+  },
+  "production": {
+    "db": "mentor_admin_production"
+  }
+}

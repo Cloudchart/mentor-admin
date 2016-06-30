@@ -43,7 +43,7 @@
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "request": "^2.72.0",
-    "rethinkdb": "^2.3.2",
+    "rethinkdbdash": "^2.3.13",
     "sass-loader": "^4.0.0",
     "serve-favicon": "^2.3.0",
     "style-loader": "^0.13.1",
