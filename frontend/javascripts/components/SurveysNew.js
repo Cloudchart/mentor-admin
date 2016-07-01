@@ -16,15 +16,6 @@ class SurveysNew extends Component {
     }
   }
 
-  // helpers
-  //
-  getAttributes() {
-    return {
-      name: this.state.name,
-      isActive: this.state.isActive,
-    }
-  }
-
   // handlers
   //
   handleInputChange(attr, event) {
@@ -34,10 +25,10 @@ class SurveysNew extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    const { id, actions, onCreate } = this.props
+    const { actions, onCreate } = this.props
     this.setState({ isFetching: true })
 
-    actions.createSurvey(this.getAttributes()).then(() => {
+    actions.createSurvey(event.target).then(() => {
       onCreate()
       this.setState({ isFetching: false })
     })
@@ -54,12 +45,13 @@ class SurveysNew extends Component {
           floatingLabelText="Name"
           hintText="Enter survey name"
           name="name"
-          fullWidth={ true }
           onChange={ this.handleInputChange.bind(this, 'name') }
         />
 
         <Toggle
           label="Is active"
+          labelPosition="right"
+          name="isActive"
           onToggle={ this.handleInputChange.bind(this, 'isActive') }
           toggled={ this.state.isActive }
         />
@@ -79,6 +71,7 @@ class SurveysNew extends Component {
 
 SurveysNew.propTypes = {
   actions: PropTypes.object.isRequired,
+  onCreate: PropTypes.func,
 }
 
 
