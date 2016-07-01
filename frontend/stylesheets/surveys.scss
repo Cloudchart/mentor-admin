@@ -1,0 +1,10 @@
+.container.surveys {
+  > .content {
+  }
+}
+
+form.surveys-new {
+  > div:not(:last-child) {
+    margin-bottom: $standart-margin;
+  }
+}

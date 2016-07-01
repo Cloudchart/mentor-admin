@@ -3,3 +3,6 @@
   margin: 0; }
   body main > div.container > .content {
     padding: 30px; }
+
+form.surveys-new > div:not(:last-child) {
+  margin-bottom: 30px; }

@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
 $standart-padding: 30px;
+$standart-margin: 30px;
 
 body {
   font-family: 'Roboto', sans-serif;
@@ -14,3 +15,5 @@ body {
     }
   }
 }
+
+@import 'surveys';

@@ -1,5 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 
+import Toggle from 'material-ui/Toggle'
+import TextField from 'material-ui/TextField'
+import FlatButton from 'material-ui/FlatButton'
+
 
 class SurveysNew extends Component {
 
@@ -43,28 +47,30 @@ class SurveysNew extends Component {
   //
   render() {
     return (
-      <form onSubmit={ this.handleSubmit.bind(this) }>
-        <label>
-          <span>Name</span>
-          <input
-            type="text"
-            autoFocus={ true }
-            value={ this.state.name }
-            placeholder={ 'Enter survey name' }
-            onChange={ this.handleInputChange.bind(this, 'name') }
-          />
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={ this.state.isActive }
-            onChange={ this.handleInputChange.bind(this, 'isActive') }
-          />
-          <span>Active</span>
-        </label>
-        <button type="submit" className="msi" disabled={ !this.state.name || this.state.isFetching }>
-          Create
-        </button>
+      <form className="surveys-new" onSubmit={ this.handleSubmit.bind(this) }>
+        <TextField
+          value={ this.state.name }
+          autoFocus={ true }
+          floatingLabelText="Name"
+          hintText="Enter survey name"
+          name="name"
+          fullWidth={ true }
+          onChange={ this.handleInputChange.bind(this, 'name') }
+        />
+
+        <Toggle
+          label="Is active"
+          onToggle={ this.handleInputChange.bind(this, 'isActive') }
+          toggled={ this.state.isActive }
+        />
+
+        <FlatButton
+          type="submit"
+          label="Create"
+          style={ { float: 'right' } }
+          primary={ true }
+          disabled={ !this.state.name || this.state.isFetching }
+        />
       </form>
     )
   }
@@ -73,7 +79,6 @@ class SurveysNew extends Component {
 
 SurveysNew.propTypes = {
   actions: PropTypes.object.isRequired,
-  onCreate: PropTypes.func,
 }
 
 
