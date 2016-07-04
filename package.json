@@ -43,10 +43,10 @@
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "request": "^2.72.0",
-    "rethinkdbdash": "^2.3.13",
     "sass-loader": "^4.0.0",
     "serve-favicon": "^2.3.0",
     "style-loader": "^0.13.1",
+    "thinky": "^2.3.3",
     "underscore.string": "^3.3.4",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1"

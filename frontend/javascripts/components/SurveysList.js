@@ -37,9 +37,9 @@ class SurveysList extends Component {
     this.setState({ selectedSurveyId: null })
   }
 
-  handleDestroy(id, event) {
+  handleDelete(id, event) {
     event.preventDefault()
-    if (window.confirm('Are you sure?')) this.props.actions.destroySurvey(id)
+    if (window.confirm('Are you sure?')) this.props.actions.deleteSurvey(id)
   }
 
   // renderers
@@ -51,11 +51,11 @@ class SurveysList extends Component {
         <span> | </span>
         <span>{ survey.slug }</span>
         <span> | </span>
-        { survey.isActive ? <i className="fa fa-check"/> : <i className="fa fa-times"/> }
+        <span>{ survey.isActive ? 'active' : 'inactive' }</span>
         <span> | </span>
         <a href="" onClick={ this.handleEdit.bind(this, survey.id) }>Edit</a>
         <span> | </span>
-        <a href="" onClick={ this.handleDestroy.bind(this, survey.id) }>Destroy</a>
+        <a href="" onClick={ this.handleDelete.bind(this, survey.id) }>Delete</a>
       </li>
     )
   }
