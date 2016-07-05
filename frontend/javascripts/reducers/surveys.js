@@ -1,7 +1,9 @@
+import uniqBy from 'lodash/uniqBy'
+
 export default function surveys(state = [], action) {
   switch (action.type) {
     case 'CREATE_SURVEY_RECEIVE':
-      return state.concat(action.survey)
+      return uniqBy(state.concat(action.survey), 'id')
     case 'UPDATE_SURVEY_REQUEST':
       return state.map(survey => survey.id === action.id ?
         Object.assign(survey, { isFetching: true }) :

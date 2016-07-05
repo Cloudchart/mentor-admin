@@ -1,5 +1,6 @@
 import multer from 'multer'
 import { Router } from 'express'
+import { slugify, titleize } from 'underscore.string'
 
 import { handleThinkyError } from './helpers'
 import { appName } from '../lib'
@@ -9,6 +10,18 @@ const router = Router()
 const upload = multer()
 
 
+// helpers
+//
+function getAttrs(body) {
+  let attrs = {}
+  attrs.name = titleize(body.name)
+  attrs.slug = slugify(body.name)
+  attrs.isActive = !!body.isActive
+  return attrs
+}
+
+// actions
+//
 router.get('/', async (req, res, next) => {
   Survey.run().then(surveys => {
     res.render('surveys', { title: `${appName} – Surveys`, surveys: surveys })
@@ -17,25 +30,24 @@ router.get('/', async (req, res, next) => {
   })
 })
 
-router.post('/', upload.array(), (req, res, next) => {
-  const survey = new Survey(Object.assign({}, req.body))
-  survey.save().then(result => {
-    res.json(result)
+router.post('/', (req, res, next) => {
+  Survey.filter({ name: '' }).then(result => {
+    if (result.length === 0) {
+      const survey = new Survey({})
+      survey.save().then(result => {
+        res.json(result)
+      }).error(handleThinkyError(res))
+    } else {
+      res.json(result[0])
+    }
   }).error(handleThinkyError(res))
 })
 
-// router.put('/:id', (req, res, next) => {
-//   Survey.findById(req.params.id).then(survey => {
-//     const attrs = getFilteredAttrs(req.body, permittedAttrs)
-//     survey.update(attrs).then(survey => {
-//       res.json(survey)
-//     }).catch(error => {
-//       res.status(500).json({ error })
-//     })
-//   }).catch(error => {
-//     res.status(404).json({ message: 'not found' })
-//   })
-// })
+router.put('/:id', upload.array(), (req, res, next) => {
+  Survey.get(req.params.id).update(getAttrs(req.body)).run().then(result => {
+    res.json(result)
+  }).error(handleThinkyError(res))
+})
 
 router.delete('/:id', (req, res, next) => {
   Survey.get(req.params.id).run().then(survey => {

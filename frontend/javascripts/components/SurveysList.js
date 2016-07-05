@@ -2,10 +2,10 @@ import React, { Component, PropTypes } from 'react'
 import sortBy from 'lodash/sortBy'
 
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import Dialog from 'material-ui/Dialog'
 
-import SurveysNew from './SurveysNew'
-// import SurveysEdit from './SurveysEdit'
+import SurveysEdit from './SurveysEdit'
 
 
 class SurveysList extends Component {
@@ -13,28 +13,26 @@ class SurveysList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedSurveyId: null,
-      isDialogOpened: false,
+      selectedSurvey: {},
     }
   }
 
   // handlers
   //
   handleNew(event) {
-    this.setState({ isDialogOpened: true })
+    this.props.actions.createSurvey().then(res => {
+      this.setState({ selectedSurvey: res.survey })
+    })
+
   }
 
   handleDialogClose(event) {
-    this.setState({ isDialogOpened: false })
+    this.setState({ selectedSurvey: {} })
   }
 
-  handleEdit(id, event) {
+  handleEdit(survey, event) {
     event.preventDefault()
-    this.setState({ selectedSurveyId: id })
-  }
-
-  handleReturn() {
-    this.setState({ selectedSurveyId: null })
+    this.setState({ selectedSurvey: survey })
   }
 
   handleDelete(id, event) {
@@ -53,7 +51,7 @@ class SurveysList extends Component {
         <span> | </span>
         <span>{ survey.isActive ? 'active' : 'inactive' }</span>
         <span> | </span>
-        <a href="" onClick={ this.handleEdit.bind(this, survey.id) }>Edit</a>
+        <a href="" onClick={ this.handleEdit.bind(this, survey) }>Edit</a>
         <span> | </span>
         <a href="" onClick={ this.handleDelete.bind(this, survey.id) }>Delete</a>
       </li>
@@ -62,13 +60,14 @@ class SurveysList extends Component {
 
   render() {
     const { surveys, actions } = this.props
+    const { selectedSurvey } = this.state
 
     return (
       <div>
         <h2>Surveys</h2>
 
         <ul className="list">
-          { sortBy(surveys, survey => survey.name.toLowerCase()).map(this.renderSurvey.bind(this)) }
+          { sortBy(surveys.filter(survey => survey.name), 'name').map(this.renderSurvey.bind(this)) }
         </ul>
 
         <RaisedButton
@@ -78,10 +77,20 @@ class SurveysList extends Component {
         />
 
         <Dialog
-          title="New survey"
-          open={ this.state.isDialogOpened }
+          title={ selectedSurvey.name ? `${selectedSurvey.name} survey` : 'New survey' }
+          open={ Object.keys(this.state.selectedSurvey).length > 0 }
           children={
-            <SurveysNew actions={ actions } onCreate={ this.handleDialogClose.bind(this) } />
+            <SurveysEdit
+              survey={ this.state.selectedSurvey }
+              actions={ actions }
+            />
+          }
+          actions={
+            <FlatButton
+              label="Done"
+              primary={ true }
+              onTouchTap={ this.handleDialogClose.bind(this) }
+            />
           }
           onRequestClose={ this.handleDialogClose.bind(this) }
         />

@@ -4,5 +4,5 @@
   body main > div.container > .content {
     padding: 30px; }
 
-form.surveys-new > div:not(:last-child) {
+form.surveys-edit > div:not(:last-child) {
   margin-bottom: 30px; }

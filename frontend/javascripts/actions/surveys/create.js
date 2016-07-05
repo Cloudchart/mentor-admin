@@ -23,13 +23,12 @@ function catchCreateSurveyError(error) {
   }
 }
 
-function createSurvey(form) {
+function createSurvey() {
   return function (dispatch) {
     dispatch(requestCreateSurvey())
 
     return fetch('/surveys', {
       method: 'POST',
-      body: new FormData(form),
       credentials: 'same-origin',
     }).then(response => response.json()).then(json => {
       if (json.error) {

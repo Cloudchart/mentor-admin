@@ -2,17 +2,15 @@ import React, { Component, PropTypes } from 'react'
 
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
-import FlatButton from 'material-ui/FlatButton'
 
 
-class SurveysNew extends Component {
+class SurveysEdit extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      name: '',
-      isActive: true,
-      isFetching: false,
+      name: props.survey.name,
+      isActive: props.survey.isActive,
     }
   }
 
@@ -25,20 +23,15 @@ class SurveysNew extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    const { actions, onCreate } = this.props
-    this.setState({ isFetching: true })
-
-    actions.createSurvey(event.target).then(() => {
-      onCreate()
-      this.setState({ isFetching: false })
-    })
+    const { survey, actions } = this.props
+    actions.updateSurvey(survey.id, this.refs.form)
   }
 
   // renderers
   //
   render() {
     return (
-      <form className="surveys-new" onSubmit={ this.handleSubmit.bind(this) }>
+      <form ref="form" className="surveys-edit" onSubmit={ this.handleSubmit.bind(this) }>
         <TextField
           value={ this.state.name }
           autoFocus={ true }
@@ -46,22 +39,16 @@ class SurveysNew extends Component {
           hintText="Enter survey name"
           name="name"
           onChange={ this.handleInputChange.bind(this, 'name') }
+          onBlur={ this.handleSubmit.bind(this) }
         />
 
         <Toggle
           label="Is active"
           labelPosition="right"
           name="isActive"
-          onToggle={ this.handleInputChange.bind(this, 'isActive') }
           toggled={ this.state.isActive }
-        />
-
-        <FlatButton
-          type="submit"
-          label="Create"
-          style={ { float: 'right' } }
-          primary={ true }
-          disabled={ !this.state.name || this.state.isFetching }
+          onToggle={ this.handleInputChange.bind(this, 'isActive') }
+          onBlur={ this.handleSubmit.bind(this) }
         />
       </form>
     )
@@ -69,10 +56,10 @@ class SurveysNew extends Component {
 
 }
 
-SurveysNew.propTypes = {
+SurveysEdit.propTypes = {
+  survey: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
-  onCreate: PropTypes.func,
 }
 
 
-export default SurveysNew
+export default SurveysEdit
