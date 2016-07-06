@@ -5,6 +5,15 @@ import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import Dialog from 'material-ui/Dialog'
 
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from 'material-ui/Table'
+
 import SurveysEdit from './SurveysEdit'
 
 
@@ -26,7 +35,7 @@ class SurveysList extends Component {
 
   }
 
-  handleDialogClose(event) {
+  handleEditClose(event) {
     this.setState({ selectedSurvey: {} })
   }
 
@@ -44,31 +53,42 @@ class SurveysList extends Component {
   //
   renderSurvey(survey) {
     return(
-      <li key={ survey.id }>
-        <span>{ survey.name }</span>
-        <span> | </span>
-        <span>{ survey.slug }</span>
-        <span> | </span>
-        <span>{ survey.isActive ? 'active' : 'inactive' }</span>
-        <span> | </span>
-        <a href="" onClick={ this.handleEdit.bind(this, survey) }>Edit</a>
-        <span> | </span>
-        <a href="" onClick={ this.handleDelete.bind(this, survey.id) }>Delete</a>
-      </li>
+      <TableRow key={ survey.id }>
+        <TableRowColumn>{ survey.name }</TableRowColumn>
+        <TableRowColumn>{ survey.slug }</TableRowColumn>
+        <TableRowColumn>{ survey.isActive ? 'Active' : 'Inactive' }</TableRowColumn>
+        <TableRowColumn>
+          {[
+            <a key={1} href="" onClick={ this.handleEdit.bind(this, survey) }>Edit</a>,
+            <span key={2}> | </span>,
+            <a key={3} href="" onClick={ this.handleDelete.bind(this, survey.id) }>Delete</a>
+          ]}
+        </TableRowColumn>
+      </TableRow>
     )
   }
 
   render() {
     const { surveys, actions } = this.props
-    const { selectedSurvey } = this.state
+    const { selectedSurvey, isAlertDialogOpen } = this.state
 
     return (
       <div>
-        <h2>Surveys</h2>
+        <h1>Surveys</h1>
 
-        <ul className="list">
-          { sortBy(surveys.filter(survey => survey.name), 'name').map(this.renderSurvey.bind(this)) }
-        </ul>
+        <Table selectable={ false }>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Slug</TableHeaderColumn>
+              <TableHeaderColumn>Active</TableHeaderColumn>
+              <TableHeaderColumn>Actions</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            { sortBy(surveys.filter(survey => survey.name), 'name').map(this.renderSurvey.bind(this)) }
+          </TableBody>
+        </Table>
 
         <RaisedButton
           label="New"
@@ -89,10 +109,10 @@ class SurveysList extends Component {
             <FlatButton
               label="Done"
               primary={ true }
-              onTouchTap={ this.handleDialogClose.bind(this) }
+              onTouchTap={ this.handleEditClose.bind(this) }
             />
           }
-          onRequestClose={ this.handleDialogClose.bind(this) }
+          onRequestClose={ this.handleEditClose.bind(this) }
         />
       </div>
     )

@@ -83,7 +83,7 @@
 	  if (reactType === 'plain') {
 	    _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	  } else {
-	    var reducers = __webpack_require__(472)("./" + reactClass).default;
+	    var reducers = __webpack_require__(485)("./" + reactClass).default;
 	    var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	    _reactDom2.default.render(_react2.default.createElement(
@@ -33810,7 +33810,9 @@
 
 	var _Dialog2 = _interopRequireDefault(_Dialog);
 
-	var _SurveysEdit = __webpack_require__(461);
+	var _Table = __webpack_require__(461);
+
+	var _SurveysEdit = __webpack_require__(476);
 
 	var _SurveysEdit2 = _interopRequireDefault(_SurveysEdit);
 
@@ -33850,8 +33852,8 @@
 	      });
 	    }
 	  }, {
-	    key: 'handleDialogClose',
-	    value: function handleDialogClose(event) {
+	    key: 'handleEditClose',
+	    value: function handleEditClose(event) {
 	      this.setState({ selectedSurvey: {} });
 	    }
 	  }, {
@@ -33874,52 +33876,39 @@
 	    key: 'renderSurvey',
 	    value: function renderSurvey(survey) {
 	      return _react2.default.createElement(
-	        'li',
+	        _Table.TableRow,
 	        { key: survey.id },
 	        _react2.default.createElement(
-	          'span',
+	          _Table.TableRowColumn,
 	          null,
 	          survey.name
 	        ),
 	        _react2.default.createElement(
-	          'span',
-	          null,
-	          ' | '
-	        ),
-	        _react2.default.createElement(
-	          'span',
+	          _Table.TableRowColumn,
 	          null,
 	          survey.slug
 	        ),
 	        _react2.default.createElement(
-	          'span',
+	          _Table.TableRowColumn,
 	          null,
-	          ' | '
+	          survey.isActive ? 'Active' : 'Inactive'
 	        ),
 	        _react2.default.createElement(
-	          'span',
+	          _Table.TableRowColumn,
 	          null,
-	          survey.isActive ? 'active' : 'inactive'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          ' | '
-	        ),
-	        _react2.default.createElement(
-	          'a',
-	          { href: '', onClick: this.handleEdit.bind(this, survey) },
-	          'Edit'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          ' | '
-	        ),
-	        _react2.default.createElement(
-	          'a',
-	          { href: '', onClick: this.handleDelete.bind(this, survey.id) },
-	          'Delete'
+	          [_react2.default.createElement(
+	            'a',
+	            { key: 1, href: '', onClick: this.handleEdit.bind(this, survey) },
+	            'Edit'
+	          ), _react2.default.createElement(
+	            'span',
+	            { key: 2 },
+	            ' | '
+	          ), _react2.default.createElement(
+	            'a',
+	            { key: 3, href: '', onClick: this.handleDelete.bind(this, survey.id) },
+	            'Delete'
+	          )]
 	        )
 	      );
 	    }
@@ -33929,23 +33918,57 @@
 	      var _props = this.props;
 	      var surveys = _props.surveys;
 	      var actions = _props.actions;
-	      var selectedSurvey = this.state.selectedSurvey;
+	      var _state = this.state;
+	      var selectedSurvey = _state.selectedSurvey;
+	      var isAlertDialogOpen = _state.isAlertDialogOpen;
 
 
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'h2',
+	          'h1',
 	          null,
 	          'Surveys'
 	        ),
 	        _react2.default.createElement(
-	          'ul',
-	          { className: 'list' },
-	          (0, _sortBy2.default)(surveys.filter(function (survey) {
-	            return survey.name;
-	          }), 'name').map(this.renderSurvey.bind(this))
+	          _Table.Table,
+	          { selectable: false },
+	          _react2.default.createElement(
+	            _Table.TableHeader,
+	            null,
+	            _react2.default.createElement(
+	              _Table.TableRow,
+	              null,
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Name'
+	              ),
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Slug'
+	              ),
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Active'
+	              ),
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Actions'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _Table.TableBody,
+	            null,
+	            (0, _sortBy2.default)(surveys.filter(function (survey) {
+	              return survey.name;
+	            }), 'name').map(this.renderSurvey.bind(this))
+	          )
 	        ),
 	        _react2.default.createElement(_RaisedButton2.default, {
 	          label: 'New',
@@ -33962,9 +33985,9 @@
 	          actions: _react2.default.createElement(_FlatButton2.default, {
 	            label: 'Done',
 	            primary: true,
-	            onTouchTap: this.handleDialogClose.bind(this)
+	            onTouchTap: this.handleEditClose.bind(this)
 	          }),
-	          onRequestClose: this.handleDialogClose.bind(this)
+	          onRequestClose: this.handleEditClose.bind(this)
 	        })
 	      );
 	    }
@@ -37913,106 +37936,46 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.default = exports.TableRowColumn = exports.TableRow = exports.TableHeaderColumn = exports.TableHeader = exports.TableFooter = exports.TableBody = exports.Table = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _Table2 = __webpack_require__(462);
 
-	var _react = __webpack_require__(1);
+	var _Table3 = _interopRequireDefault(_Table2);
 
-	var _react2 = _interopRequireDefault(_react);
+	var _TableBody2 = __webpack_require__(463);
 
-	var _Toggle = __webpack_require__(462);
+	var _TableBody3 = _interopRequireDefault(_TableBody2);
 
-	var _Toggle2 = _interopRequireDefault(_Toggle);
+	var _TableFooter2 = __webpack_require__(472);
 
-	var _TextField = __webpack_require__(465);
+	var _TableFooter3 = _interopRequireDefault(_TableFooter2);
 
-	var _TextField2 = _interopRequireDefault(_TextField);
+	var _TableHeader2 = __webpack_require__(473);
+
+	var _TableHeader3 = _interopRequireDefault(_TableHeader2);
+
+	var _TableHeaderColumn2 = __webpack_require__(474);
+
+	var _TableHeaderColumn3 = _interopRequireDefault(_TableHeaderColumn2);
+
+	var _TableRow2 = __webpack_require__(475);
+
+	var _TableRow3 = _interopRequireDefault(_TableRow2);
+
+	var _TableRowColumn2 = __webpack_require__(470);
+
+	var _TableRowColumn3 = _interopRequireDefault(_TableRowColumn2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var SurveysEdit = function (_Component) {
-	  _inherits(SurveysEdit, _Component);
-
-	  function SurveysEdit(props) {
-	    _classCallCheck(this, SurveysEdit);
-
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SurveysEdit).call(this, props));
-
-	    _this.state = {
-	      name: props.survey.name,
-	      isActive: props.survey.isActive
-	    };
-	    return _this;
-	  }
-
-	  // handlers
-	  //
-
-
-	  _createClass(SurveysEdit, [{
-	    key: 'handleInputChange',
-	    value: function handleInputChange(attr, event) {
-	      var value = attr === 'isActive' ? event.target.checked : event.target.value;
-	      this.setState(_defineProperty({}, attr, value));
-	    }
-	  }, {
-	    key: 'handleSubmit',
-	    value: function handleSubmit(event) {
-	      event.preventDefault();
-	      var _props = this.props;
-	      var survey = _props.survey;
-	      var actions = _props.actions;
-
-	      actions.updateSurvey(survey.id, this.refs.form);
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'form',
-	        { ref: 'form', className: 'surveys-edit', onSubmit: this.handleSubmit.bind(this) },
-	        _react2.default.createElement(_TextField2.default, {
-	          value: this.state.name,
-	          autoFocus: true,
-	          floatingLabelText: 'Name',
-	          hintText: 'Enter survey name',
-	          name: 'name',
-	          onChange: this.handleInputChange.bind(this, 'name'),
-	          onBlur: this.handleSubmit.bind(this)
-	        }),
-	        _react2.default.createElement(_Toggle2.default, {
-	          label: 'Is active',
-	          labelPosition: 'right',
-	          name: 'isActive',
-	          toggled: this.state.isActive,
-	          onToggle: this.handleInputChange.bind(this, 'isActive'),
-	          onBlur: this.handleSubmit.bind(this)
-	        })
-	      );
-	    }
-	  }]);
-
-	  return SurveysEdit;
-	}(_react.Component);
-
-	SurveysEdit.propTypes = {
-	  survey: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = SurveysEdit;
+	exports.Table = _Table3.default;
+	exports.TableBody = _TableBody3.default;
+	exports.TableFooter = _TableFooter3.default;
+	exports.TableHeader = _TableHeader3.default;
+	exports.TableHeaderColumn = _TableHeaderColumn3.default;
+	exports.TableRow = _TableRow3.default;
+	exports.TableRowColumn = _TableRowColumn3.default;
+	exports.default = _Table3.default;
 
 /***/ },
 /* 462 */
@@ -38023,18 +37986,849 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = undefined;
 
-	var _Toggle = __webpack_require__(463);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Toggle2 = _interopRequireDefault(_Toggle);
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _Toggle2.default;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context) {
+	  var _context$muiTheme = context.muiTheme;
+	  var baseTheme = _context$muiTheme.baseTheme;
+	  var table = _context$muiTheme.table;
+
+
+	  return {
+	    root: {
+	      backgroundColor: table.backgroundColor,
+	      padding: '0 ' + baseTheme.spacing.desktopGutter + 'px',
+	      width: '100%',
+	      borderCollapse: 'collapse',
+	      borderSpacing: 0,
+	      tableLayout: 'fixed',
+	      fontFamily: baseTheme.fontFamily
+	    },
+	    bodyTable: {
+	      height: props.fixedHeader || props.fixedFooter ? props.height : 'auto',
+	      overflowX: 'hidden',
+	      overflowY: 'auto'
+	    },
+	    tableWrapper: {
+	      height: props.fixedHeader || props.fixedFooter ? 'auto' : props.height,
+	      overflow: 'auto'
+	    }
+	  };
+	}
+
+	var Table = function (_Component) {
+	  _inherits(Table, _Component);
+
+	  function Table() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, Table);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Table)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	      allRowsSelected: _this.props.allRowsSelected
+	    }, _this.onCellClick = function (rowNumber, columnNumber, event) {
+	      if (_this.props.onCellClick) _this.props.onCellClick(rowNumber, columnNumber, event);
+	    }, _this.onCellHover = function (rowNumber, columnNumber, event) {
+	      if (_this.props.onCellHover) _this.props.onCellHover(rowNumber, columnNumber, event);
+	    }, _this.onCellHoverExit = function (rowNumber, columnNumber, event) {
+	      if (_this.props.onCellHoverExit) _this.props.onCellHoverExit(rowNumber, columnNumber, event);
+	    }, _this.onRowHover = function (rowNumber) {
+	      if (_this.props.onRowHover) _this.props.onRowHover(rowNumber);
+	    }, _this.onRowHoverExit = function (rowNumber) {
+	      if (_this.props.onRowHoverExit) _this.props.onRowHoverExit(rowNumber);
+	    }, _this.onRowSelection = function (selectedRows) {
+	      if (_this.state.allRowsSelected) _this.setState({ allRowsSelected: false });
+	      if (_this.props.onRowSelection) _this.props.onRowSelection(selectedRows);
+	    }, _this.onSelectAll = function () {
+	      if (_this.props.onRowSelection) {
+	        if (!_this.state.allRowsSelected) {
+	          _this.props.onRowSelection('all');
+	        } else {
+	          _this.props.onRowSelection('none');
+	        }
+	      }
+
+	      _this.setState({ allRowsSelected: !_this.state.allRowsSelected });
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(Table, [{
+	    key: 'isScrollbarVisible',
+	    value: function isScrollbarVisible() {
+	      var tableDivHeight = this.refs.tableDiv.clientHeight;
+	      var tableBodyHeight = this.refs.tableBody.clientHeight;
+
+	      return tableBodyHeight > tableDivHeight;
+	    }
+	  }, {
+	    key: 'createTableHeader',
+	    value: function createTableHeader(base) {
+	      return _react2.default.cloneElement(base, {
+	        enableSelectAll: base.props.enableSelectAll && this.props.selectable && this.props.multiSelectable,
+	        onSelectAll: this.onSelectAll,
+	        selectAllSelected: this.state.allRowsSelected
+	      });
+	    }
+	  }, {
+	    key: 'createTableBody',
+	    value: function createTableBody(base) {
+	      return _react2.default.cloneElement(base, {
+	        allRowsSelected: this.state.allRowsSelected,
+	        multiSelectable: this.props.multiSelectable,
+	        onCellClick: this.onCellClick,
+	        onCellHover: this.onCellHover,
+	        onCellHoverExit: this.onCellHoverExit,
+	        onRowHover: this.onRowHover,
+	        onRowHoverExit: this.onRowHoverExit,
+	        onRowSelection: this.onRowSelection,
+	        selectable: this.props.selectable,
+	        style: (0, _simpleAssign2.default)({ height: this.props.height }, base.props.style)
+	      });
+	    }
+	  }, {
+	    key: 'createTableFooter',
+	    value: function createTableFooter(base) {
+	      return base;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var _props = this.props;
+	      var children = _props.children;
+	      var className = _props.className;
+	      var fixedFooter = _props.fixedFooter;
+	      var fixedHeader = _props.fixedHeader;
+	      var style = _props.style;
+	      var wrapperStyle = _props.wrapperStyle;
+	      var headerStyle = _props.headerStyle;
+	      var bodyStyle = _props.bodyStyle;
+	      var footerStyle = _props.footerStyle;
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+
+	      var tHead = void 0;
+	      var tFoot = void 0;
+	      var tBody = void 0;
+
+	      _react2.default.Children.forEach(children, function (child) {
+	        if (!_react2.default.isValidElement(child)) return;
+
+	        var muiName = child.type.muiName;
+
+	        if (muiName === 'TableBody') {
+	          tBody = _this2.createTableBody(child);
+	        } else if (muiName === 'TableHeader') {
+	          tHead = _this2.createTableHeader(child);
+	        } else if (muiName === 'TableFooter') {
+	          tFoot = _this2.createTableFooter(child);
+	        }
+	      });
+
+	      // If we could not find a table-header and a table-body, do not attempt to display anything.
+	      if (!tBody && !tHead) return null;
+
+	      var mergedTableStyle = (0, _simpleAssign2.default)(styles.root, style);
+	      var headerTable = void 0;
+	      var footerTable = void 0;
+	      var inlineHeader = void 0;
+	      var inlineFooter = void 0;
+
+	      if (fixedHeader) {
+	        headerTable = _react2.default.createElement(
+	          'div',
+	          { style: prepareStyles((0, _simpleAssign2.default)({}, headerStyle)) },
+	          _react2.default.createElement(
+	            'table',
+	            { className: className, style: mergedTableStyle },
+	            tHead
+	          )
+	        );
+	      } else {
+	        inlineHeader = tHead;
+	      }
+
+	      if (tFoot !== undefined) {
+	        if (fixedFooter) {
+	          footerTable = _react2.default.createElement(
+	            'div',
+	            { style: prepareStyles((0, _simpleAssign2.default)({}, footerStyle)) },
+	            _react2.default.createElement(
+	              'table',
+	              { className: className, style: prepareStyles(mergedTableStyle) },
+	              tFoot
+	            )
+	          );
+	        } else {
+	          inlineFooter = tFoot;
+	        }
+	      }
+
+	      return _react2.default.createElement(
+	        'div',
+	        { style: prepareStyles((0, _simpleAssign2.default)(styles.tableWrapper, wrapperStyle)) },
+	        headerTable,
+	        _react2.default.createElement(
+	          'div',
+	          { style: prepareStyles((0, _simpleAssign2.default)(styles.bodyTable, bodyStyle)), ref: 'tableDiv' },
+	          _react2.default.createElement(
+	            'table',
+	            { className: className, style: mergedTableStyle, ref: 'tableBody' },
+	            inlineHeader,
+	            inlineFooter,
+	            tBody
+	          )
+	        ),
+	        footerTable
+	      );
+	    }
+	  }]);
+
+	  return Table;
+	}(_react.Component);
+
+	Table.propTypes = {
+	  /**
+	   * Set to true to indicate that all rows should be selected.
+	   */
+	  allRowsSelected: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the body's table element.
+	   */
+	  bodyStyle: _react.PropTypes.object,
+	  /**
+	   * Children passed to table.
+	   */
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * If true, the footer will appear fixed below the table.
+	   * The default value is true.
+	   */
+	  fixedFooter: _react.PropTypes.bool,
+	  /**
+	   * If true, the header will appear fixed above the table.
+	   * The default value is true.
+	   */
+	  fixedHeader: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the footer's table element.
+	   */
+	  footerStyle: _react.PropTypes.object,
+	  /**
+	   * Override the inline-styles of the header's table element.
+	   */
+	  headerStyle: _react.PropTypes.object,
+	  /**
+	   * The height of the table.
+	   */
+	  height: _react.PropTypes.string,
+	  /**
+	   * If true, multiple table rows can be selected.
+	   * CTRL/CMD+Click and SHIFT+Click are valid actions.
+	   * The default value is false.
+	   */
+	  multiSelectable: _react.PropTypes.bool,
+	  /**
+	   * Called when a row cell is clicked.
+	   * rowNumber is the row number and columnId is
+	   * the column number or the column key.
+	   */
+	  onCellClick: _react.PropTypes.func,
+	  /**
+	   * Called when a table cell is hovered.
+	   * rowNumber is the row number of the hovered row
+	   * and columnId is the column number or the column key of the cell.
+	   */
+	  onCellHover: _react.PropTypes.func,
+	  /**
+	   * Called when a table cell is no longer hovered.
+	   * rowNumber is the row number of the row and columnId
+	   * is the column number or the column key of the cell.
+	   */
+	  onCellHoverExit: _react.PropTypes.func,
+	  /**
+	   * Called when a table row is hovered.
+	   * rowNumber is the row number of the hovered row.
+	   */
+	  onRowHover: _react.PropTypes.func,
+	  /**
+	   * Called when a table row is no longer hovered.
+	   * rowNumber is the row number of the row that is no longer hovered.
+	   */
+	  onRowHoverExit: _react.PropTypes.func,
+	  /**
+	   * Called when a row is selected.
+	   * selectedRows is an array of all row selections.
+	   * IF all rows have been selected, the string "all"
+	   * will be returned instead to indicate that all rows have been selected.
+	   */
+	  onRowSelection: _react.PropTypes.func,
+	  /**
+	   * If true, table rows can be selected.
+	   * If multiple row selection is desired, enable multiSelectable.
+	   * The default value is true.
+	   */
+	  selectable: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  /**
+	   * Override the inline-styles of the table's wrapper element.
+	   */
+	  wrapperStyle: _react.PropTypes.object
+	};
+	Table.defaultProps = {
+	  allRowsSelected: false,
+	  fixedFooter: true,
+	  fixedHeader: true,
+	  height: 'inherit',
+	  multiSelectable: false,
+	  selectable: true
+	};
+	Table.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = Table;
 
 /***/ },
 /* 463 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Checkbox = __webpack_require__(464);
+
+	var _Checkbox2 = _interopRequireDefault(_Checkbox);
+
+	var _TableRowColumn = __webpack_require__(470);
+
+	var _TableRowColumn2 = _interopRequireDefault(_TableRowColumn);
+
+	var _ClickAwayListener = __webpack_require__(471);
+
+	var _ClickAwayListener2 = _interopRequireDefault(_ClickAwayListener);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TableBody = function (_Component) {
+	  _inherits(TableBody, _Component);
+
+	  function TableBody() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, TableBody);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(TableBody)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	      selectedRows: _this.calculatePreselectedRows(_this.props)
+	    }, _this.handleClickAway = function () {
+	      if (_this.props.deselectOnClickaway && _this.state.selectedRows.length) {
+	        _this.setState({
+	          selectedRows: []
+	        });
+	        if (_this.props.onRowSelection) {
+	          _this.props.onRowSelection([]);
+	        }
+	      }
+	    }, _this.onRowClick = function (event, rowNumber) {
+	      event.stopPropagation();
+
+	      if (_this.props.selectable) {
+	        // Prevent text selection while selecting rows.
+	        window.getSelection().removeAllRanges();
+	        _this.processRowSelection(event, rowNumber);
+	      }
+	    }, _this.onCellClick = function (event, rowNumber, columnNumber) {
+	      event.stopPropagation();
+	      if (_this.props.onCellClick) _this.props.onCellClick(rowNumber, _this.getColumnId(columnNumber), event);
+	    }, _this.onCellHover = function (event, rowNumber, columnNumber) {
+	      if (_this.props.onCellHover) _this.props.onCellHover(rowNumber, _this.getColumnId(columnNumber), event);
+	      _this.onRowHover(event, rowNumber);
+	    }, _this.onCellHoverExit = function (event, rowNumber, columnNumber) {
+	      if (_this.props.onCellHoverExit) _this.props.onCellHoverExit(rowNumber, _this.getColumnId(columnNumber), event);
+	      _this.onRowHoverExit(event, rowNumber);
+	    }, _this.onRowHover = function (event, rowNumber) {
+	      if (_this.props.onRowHover) _this.props.onRowHover(rowNumber);
+	    }, _this.onRowHoverExit = function (event, rowNumber) {
+	      if (_this.props.onRowHoverExit) _this.props.onRowHoverExit(rowNumber);
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(TableBody, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (this.props.allRowsSelected && !nextProps.allRowsSelected) {
+	        this.setState({
+	          selectedRows: this.state.selectedRows.length > 0 ? [this.state.selectedRows[this.state.selectedRows.length - 1]] : []
+	        });
+	        // TODO: should else be conditional, not run any time props other than allRowsSelected change?
+	      } else {
+	          this.setState({
+	            selectedRows: this.calculatePreselectedRows(nextProps)
+	          });
+	        }
+	    }
+	  }, {
+	    key: 'createRows',
+	    value: function createRows() {
+	      var _this2 = this;
+
+	      var numChildren = _react2.default.Children.count(this.props.children);
+	      var rowNumber = 0;
+	      var handlers = {
+	        onCellClick: this.onCellClick,
+	        onCellHover: this.onCellHover,
+	        onCellHoverExit: this.onCellHoverExit,
+	        onRowHover: this.onRowHover,
+	        onRowHoverExit: this.onRowHoverExit,
+	        onRowClick: this.onRowClick
+	      };
+
+	      return _react2.default.Children.map(this.props.children, function (child) {
+	        if (_react2.default.isValidElement(child)) {
+	          var _ret2 = function () {
+	            var props = {
+	              displayRowCheckbox: _this2.props.displayRowCheckbox,
+	              hoverable: _this2.props.showRowHover,
+	              selected: _this2.isRowSelected(rowNumber),
+	              striped: _this2.props.stripedRows && rowNumber % 2 === 0,
+	              rowNumber: rowNumber++
+	            };
+	            var checkboxColumn = _this2.createRowCheckboxColumn(props);
+
+	            if (rowNumber === numChildren) {
+	              props.displayBorder = false;
+	            }
+
+	            var children = [checkboxColumn];
+	            _react2.default.Children.forEach(child.props.children, function (child) {
+	              children.push(child);
+	            });
+
+	            return {
+	              v: _react2.default.cloneElement(child, _extends({}, props, handlers), children)
+	            };
+	          }();
+
+	          if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'createRowCheckboxColumn',
+	    value: function createRowCheckboxColumn(rowProps) {
+	      if (!this.props.displayRowCheckbox) return null;
+
+	      var key = rowProps.rowNumber + '-cb';
+	      var checkbox = _react2.default.createElement(_Checkbox2.default, {
+	        ref: 'rowSelectCB',
+	        name: key,
+	        value: 'selected',
+	        disabled: !this.props.selectable,
+	        checked: rowProps.selected
+	      });
+
+	      return _react2.default.createElement(
+	        _TableRowColumn2.default,
+	        {
+	          key: key,
+	          columnNumber: 0,
+	          style: { width: 24 }
+	        },
+	        checkbox
+	      );
+	    }
+	  }, {
+	    key: 'calculatePreselectedRows',
+	    value: function calculatePreselectedRows(props) {
+	      // Determine what rows are 'pre-selected'.
+	      var preSelectedRows = [];
+
+	      if (props.selectable && props.preScanRows) {
+	        (function () {
+	          var index = 0;
+	          _react2.default.Children.forEach(props.children, function (child) {
+	            if (_react2.default.isValidElement(child)) {
+	              if (child.props.selected && (preSelectedRows.length === 0 || props.multiSelectable)) {
+	                preSelectedRows.push(index);
+	              }
+
+	              index++;
+	            }
+	          });
+	        })();
+	      }
+
+	      return preSelectedRows;
+	    }
+	  }, {
+	    key: 'isRowSelected',
+	    value: function isRowSelected(rowNumber) {
+	      if (this.props.allRowsSelected) {
+	        return true;
+	      }
+
+	      for (var i = 0; i < this.state.selectedRows.length; i++) {
+	        var selection = this.state.selectedRows[i];
+
+	        if ((typeof selection === 'undefined' ? 'undefined' : _typeof(selection)) === 'object') {
+	          if (this.isValueInRange(rowNumber, selection)) return true;
+	        } else {
+	          if (selection === rowNumber) return true;
+	        }
+	      }
+
+	      return false;
+	    }
+	  }, {
+	    key: 'isValueInRange',
+	    value: function isValueInRange(value, range) {
+	      if (!range) return false;
+
+	      if (range.start <= value && value <= range.end || range.end <= value && value <= range.start) {
+	        return true;
+	      }
+
+	      return false;
+	    }
+	  }, {
+	    key: 'processRowSelection',
+	    value: function processRowSelection(event, rowNumber) {
+	      var selectedRows = this.state.selectedRows;
+
+	      if (event.shiftKey && this.props.multiSelectable && selectedRows.length) {
+	        var lastIndex = selectedRows.length - 1;
+	        var lastSelection = selectedRows[lastIndex];
+
+	        if ((typeof lastSelection === 'undefined' ? 'undefined' : _typeof(lastSelection)) === 'object') {
+	          lastSelection.end = rowNumber;
+	        } else {
+	          selectedRows.splice(lastIndex, 1, { start: lastSelection, end: rowNumber });
+	        }
+	      } else if ((event.ctrlKey && !event.metaKey || event.metaKey && !event.ctrlKey) && this.props.multiSelectable) {
+	        var idx = selectedRows.indexOf(rowNumber);
+	        if (idx < 0) {
+	          var foundRange = false;
+	          for (var i = 0; i < selectedRows.length; i++) {
+	            var range = selectedRows[i];
+	            if ((typeof range === 'undefined' ? 'undefined' : _typeof(range)) !== 'object') continue;
+
+	            if (this.isValueInRange(rowNumber, range)) {
+	              var _selectedRows;
+
+	              foundRange = true;
+	              var values = this.splitRange(range, rowNumber);
+	              (_selectedRows = selectedRows).splice.apply(_selectedRows, [i, 1].concat(_toConsumableArray(values)));
+	            }
+	          }
+
+	          if (!foundRange) selectedRows.push(rowNumber);
+	        } else {
+	          selectedRows.splice(idx, 1);
+	        }
+	      } else {
+	        if (selectedRows.length === 1 && selectedRows[0] === rowNumber) {
+	          selectedRows = [];
+	        } else {
+	          selectedRows = [rowNumber];
+	        }
+	      }
+
+	      this.setState({ selectedRows: selectedRows });
+	      if (this.props.onRowSelection) this.props.onRowSelection(this.flattenRanges(selectedRows));
+	    }
+	  }, {
+	    key: 'splitRange',
+	    value: function splitRange(range, splitPoint) {
+	      var splitValues = [];
+	      var startOffset = range.start - splitPoint;
+	      var endOffset = range.end - splitPoint;
+
+	      // Process start half
+	      splitValues.push.apply(splitValues, _toConsumableArray(this.genRangeOfValues(splitPoint, startOffset)));
+
+	      // Process end half
+	      splitValues.push.apply(splitValues, _toConsumableArray(this.genRangeOfValues(splitPoint, endOffset)));
+
+	      return splitValues;
+	    }
+	  }, {
+	    key: 'genRangeOfValues',
+	    value: function genRangeOfValues(start, offset) {
+	      var values = [];
+	      var dir = offset > 0 ? -1 : 1; // This forces offset to approach 0 from either direction.
+	      while (offset !== 0) {
+	        values.push(start + offset);
+	        offset += dir;
+	      }
+
+	      return values;
+	    }
+	  }, {
+	    key: 'flattenRanges',
+	    value: function flattenRanges(selectedRows) {
+	      var rows = [];
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = selectedRows[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var selection = _step.value;
+
+	          if ((typeof selection === 'undefined' ? 'undefined' : _typeof(selection)) === 'object') {
+	            var values = this.genRangeOfValues(selection.end, selection.start - selection.end);
+	            rows.push.apply(rows, [selection.end].concat(_toConsumableArray(values)));
+	          } else {
+	            rows.push(selection);
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+
+	      return rows.sort();
+	    }
+	  }, {
+	    key: 'getColumnId',
+	    value: function getColumnId(columnNumber) {
+	      var columnId = columnNumber;
+	      if (this.props.displayRowCheckbox) columnId--;
+
+	      return columnId;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var className = _props.className;
+	      var style = _props.style;
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var rows = this.createRows();
+
+	      return _react2.default.createElement(
+	        _ClickAwayListener2.default,
+	        { onClickAway: this.handleClickAway },
+	        _react2.default.createElement(
+	          'tbody',
+	          { className: className, style: prepareStyles((0, _simpleAssign2.default)({}, style)) },
+	          rows
+	        )
+	      );
+	    }
+	  }]);
+
+	  return TableBody;
+	}(_react.Component);
+
+	TableBody.muiName = 'TableBody';
+	TableBody.propTypes = {
+	  /**
+	   * @ignore
+	   * Set to true to indicate that all rows should be selected.
+	   */
+	  allRowsSelected: _react.PropTypes.bool,
+	  /**
+	   * Children passed to table body.
+	   */
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * Controls whether or not to deselect all selected
+	   * rows after clicking outside the table.
+	   */
+	  deselectOnClickaway: _react.PropTypes.bool,
+	  /**
+	   * Controls the display of the row checkbox. The default value is true.
+	   */
+	  displayRowCheckbox: _react.PropTypes.bool,
+	  /**
+	   * @ignore
+	   * If true, multiple table rows can be selected.
+	   * CTRL/CMD+Click and SHIFT+Click are valid actions.
+	   * The default value is false.
+	   */
+	  multiSelectable: _react.PropTypes.bool,
+	  /**
+	   * @ignore
+	   * Callback function for when a cell is clicked.
+	   */
+	  onCellClick: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table cell is hovered. rowNumber
+	   * is the row number of the hovered row and columnId
+	   * is the column number or the column key of the cell.
+	   */
+	  onCellHover: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table cell is no longer hovered.
+	   * rowNumber is the row number of the row and columnId
+	   * is the column number or the column key of the cell.
+	   */
+	  onCellHoverExit: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table row is hovered.
+	   * rowNumber is the row number of the hovered row.
+	   */
+	  onRowHover: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table row is no longer
+	   * hovered. rowNumber is the row number of the row
+	   * that is no longer hovered.
+	   */
+	  onRowHoverExit: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a row is selected. selectedRows is an
+	   * array of all row selections. IF all rows have been selected,
+	   * the string "all" will be returned instead to indicate that
+	   * all rows have been selected.
+	   */
+	  onRowSelection: _react.PropTypes.func,
+	  /**
+	   * Controls whether or not the rows are pre-scanned to determine
+	   * initial state. If your table has a large number of rows and
+	   * you are experiencing a delay in rendering, turn off this property.
+	   */
+	  preScanRows: _react.PropTypes.bool,
+	  /**
+	   * @ignore
+	   * If true, table rows can be selected. If multiple
+	   * row selection is desired, enable multiSelectable.
+	   * The default value is true.
+	   */
+	  selectable: _react.PropTypes.bool,
+	  /**
+	   * If true, table rows will be highlighted when
+	   * the cursor is hovering over the row. The default
+	   * value is false.
+	   */
+	  showRowHover: _react.PropTypes.bool,
+	  /**
+	   * If true, every other table row starting
+	   * with the first row will be striped. The default value is false.
+	   */
+	  stripedRows: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object
+	};
+	TableBody.defaultProps = {
+	  allRowsSelected: false,
+	  deselectOnClickaway: true,
+	  displayRowCheckbox: true,
+	  multiSelectable: false,
+	  preScanRows: true,
+	  selectable: true,
+	  style: {}
+	};
+	TableBody.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = TableBody;
+
+/***/ },
+/* 464 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _Checkbox = __webpack_require__(465);
+
+	var _Checkbox2 = _interopRequireDefault(_Checkbox);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _Checkbox2.default;
+
+/***/ },
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38055,17 +38849,25 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _EnhancedSwitch = __webpack_require__(466);
+
+	var _EnhancedSwitch2 = _interopRequireDefault(_EnhancedSwitch);
+
 	var _transitions = __webpack_require__(367);
 
 	var _transitions2 = _interopRequireDefault(_transitions);
 
-	var _Paper = __webpack_require__(400);
+	var _checkBoxOutlineBlank = __webpack_require__(467);
 
-	var _Paper2 = _interopRequireDefault(_Paper);
+	var _checkBoxOutlineBlank2 = _interopRequireDefault(_checkBoxOutlineBlank);
 
-	var _EnhancedSwitch = __webpack_require__(464);
+	var _checkBox = __webpack_require__(468);
 
-	var _EnhancedSwitch2 = _interopRequireDefault(_EnhancedSwitch);
+	var _checkBox2 = _interopRequireDefault(_checkBox);
+
+	var _deprecatedPropType = __webpack_require__(469);
+
+	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38077,197 +38879,186 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	function getStyles(props, context, state) {
-	  var disabled = props.disabled;
-	  var _context$muiTheme = context.muiTheme;
-	  var baseTheme = _context$muiTheme.baseTheme;
-	  var toggle = _context$muiTheme.toggle;
+	function getStyles(props, context) {
+	  var checkbox = context.muiTheme.checkbox;
 
+	  var checkboxSize = 24;
 
-	  var toggleSize = 20;
-	  var toggleTrackWidth = 36;
-	  var styles = {
+	  return {
 	    icon: {
-	      width: 36,
-	      padding: '4px 0px 6px 2px'
+	      height: checkboxSize,
+	      width: checkboxSize
 	    },
-	    ripple: {
-	      top: -10,
-	      left: -10,
-	      color: state.switched ? toggle.thumbOnColor : baseTheme.palette.textColor
-	    },
-	    toggleElement: {
-	      width: toggleTrackWidth
-	    },
-	    track: {
-	      transition: _transitions2.default.easeOut(),
-	      width: '100%',
-	      height: 14,
-	      borderRadius: 30,
-	      backgroundColor: toggle.trackOffColor
-	    },
-	    thumb: {
-	      transition: _transitions2.default.easeOut(),
+	    check: {
 	      position: 'absolute',
-	      top: 1,
-	      left: 0,
-	      width: toggleSize,
-	      height: toggleSize,
-	      lineHeight: '24px',
-	      borderRadius: '50%',
-	      backgroundColor: toggle.thumbOffColor
+	      opacity: 0,
+	      transform: 'scale(0)',
+	      transitionOrigin: '50% 50%',
+	      transition: _transitions2.default.easeOut('450ms', 'opacity', '0ms') + ', ' + _transitions2.default.easeOut('0ms', 'transform', '450ms'),
+	      fill: checkbox.checkedColor
 	    },
-	    trackWhenSwitched: {
-	      backgroundColor: toggle.trackOnColor
+	    box: {
+	      position: 'absolute',
+	      opacity: 1,
+	      fill: checkbox.boxColor,
+	      transition: _transitions2.default.easeOut('2s', null, '200ms')
 	    },
-	    thumbWhenSwitched: {
-	      backgroundColor: toggle.thumbOnColor,
-	      left: '100%'
+	    checkWhenSwitched: {
+	      opacity: 1,
+	      transform: 'scale(1)',
+	      transition: _transitions2.default.easeOut('0ms', 'opacity', '0ms') + ', ' + _transitions2.default.easeOut('800ms', 'transform', '0ms')
 	    },
-	    trackWhenDisabled: {
-	      backgroundColor: toggle.trackDisabledColor
+	    boxWhenSwitched: {
+	      transition: _transitions2.default.easeOut('100ms', null, '0ms'),
+	      fill: checkbox.checkedColor
 	    },
-	    thumbWhenDisabled: {
-	      backgroundColor: toggle.thumbDisabledColor
+	    checkWhenDisabled: {
+	      fill: checkbox.disabledColor
+	    },
+	    boxWhenDisabled: {
+	      fill: props.checked ? 'transparent' : checkbox.disabledColor
 	    },
 	    label: {
-	      color: disabled ? toggle.labelDisabledColor : toggle.labelColor,
-	      width: 'calc(100% - ' + (toggleTrackWidth + 10) + 'px)'
+	      color: props.disabled ? checkbox.labelDisabledColor : checkbox.labelColor
 	    }
 	  };
-
-	  return styles;
 	}
 
-	var Toggle = function (_Component) {
-	  _inherits(Toggle, _Component);
+	var Checkbox = function (_Component) {
+	  _inherits(Checkbox, _Component);
 
-	  function Toggle() {
+	  function Checkbox() {
 	    var _Object$getPrototypeO;
 
 	    var _temp, _this, _ret;
 
-	    _classCallCheck(this, Toggle);
+	    _classCallCheck(this, Checkbox);
 
 	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 	      args[_key] = arguments[_key];
 	    }
 
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Toggle)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = { switched: false }, _this.handleToggle = function (event, isInputChecked) {
-	      if (_this.props.onToggle) _this.props.onToggle(event, isInputChecked);
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Checkbox)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = { switched: false }, _this.handleCheck = function (event, isInputChecked) {
+	      if (_this.props.onCheck) _this.props.onCheck(event, isInputChecked);
 	    }, _this.handleStateChange = function (newSwitched) {
 	      _this.setState({ switched: newSwitched });
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
-	  _createClass(Toggle, [{
+	  _createClass(Checkbox, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      var _props = this.props;
-	      var toggled = _props.toggled;
-	      var defaultToggled = _props.defaultToggled;
+	      var checked = _props.checked;
+	      var defaultChecked = _props.defaultChecked;
 	      var valueLink = _props.valueLink;
 
 
-	      if (toggled || defaultToggled || valueLink && valueLink.value) {
+	      if (checked || defaultChecked || valueLink && valueLink.value) {
 	        this.setState({ switched: true });
 	      }
 	    }
 	  }, {
-	    key: 'isToggled',
-	    value: function isToggled() {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.setState({
+	        switched: this.props.checked !== nextProps.checked ? nextProps.checked : this.state.switched
+	      });
+	    }
+	  }, {
+	    key: 'isChecked',
+	    value: function isChecked() {
 	      return this.refs.enhancedSwitch.isSwitched();
 	    }
 	  }, {
-	    key: 'setToggled',
-	    value: function setToggled(newToggledValue) {
-	      this.refs.enhancedSwitch.setSwitched(newToggledValue);
+	    key: 'setChecked',
+	    value: function setChecked(newCheckedValue) {
+	      this.refs.enhancedSwitch.setSwitched(newCheckedValue);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _props2 = this.props;
-	      var defaultToggled = _props2.defaultToggled;
-	      var onToggle = _props2.onToggle;
+	      var iconStyle = _props2.iconStyle;
+	      var onCheck = _props2.onCheck;
 	      var // eslint-disable-line no-unused-vars
-	      toggled = _props2.toggled;
+	      checkedIcon = _props2.checkedIcon;
+	      var uncheckedIcon = _props2.uncheckedIcon;
+	      var unCheckedIcon = _props2.unCheckedIcon;
 
-	      var other = _objectWithoutProperties(_props2, ['defaultToggled', 'onToggle', 'toggled']);
+	      var other = _objectWithoutProperties(_props2, ['iconStyle', 'onCheck', 'checkedIcon', 'uncheckedIcon', 'unCheckedIcon']);
 
-	      var prepareStyles = this.context.muiTheme.prepareStyles;
+	      var styles = getStyles(this.props, this.context);
+	      var boxStyles = (0, _simpleAssign2.default)(styles.box, this.state.switched && styles.boxWhenSwitched, iconStyle, this.props.disabled && styles.boxWhenDisabled);
+	      var checkStyles = (0, _simpleAssign2.default)(styles.check, this.state.switched && styles.checkWhenSwitched, iconStyle, this.props.disabled && styles.checkWhenDisabled);
 
-	      var styles = getStyles(this.props, this.context, this.state);
+	      var checkedElement = checkedIcon ? _react2.default.cloneElement(checkedIcon, {
+	        style: (0, _simpleAssign2.default)(checkStyles, checkedIcon.props.style)
+	      }) : _react2.default.createElement(_checkBox2.default, {
+	        style: checkStyles
+	      });
 
-	      var trackStyles = (0, _simpleAssign2.default)({}, styles.track, this.props.trackStyle, this.state.switched && styles.trackWhenSwitched, this.props.disabled && styles.trackWhenDisabled);
+	      var unCheckedElement = unCheckedIcon || uncheckedIcon ? _react2.default.cloneElement(unCheckedIcon || uncheckedIcon, {
+	        style: (0, _simpleAssign2.default)(boxStyles, (unCheckedIcon || uncheckedIcon).props.style)
+	      }) : _react2.default.createElement(_checkBoxOutlineBlank2.default, {
+	        style: boxStyles
+	      });
 
-	      var thumbStyles = (0, _simpleAssign2.default)({}, styles.thumb, this.props.thumbStyle, this.state.switched && styles.thumbWhenSwitched, this.props.disabled && styles.thumbWhenDisabled);
-
-	      if (this.state.switched) {
-	        thumbStyles.marginLeft = 0 - thumbStyles.width;
-	      }
-
-	      var toggleElementStyles = (0, _simpleAssign2.default)({}, styles.toggleElement, this.props.elementStyle);
-
-	      var toggleElement = _react2.default.createElement(
+	      var checkboxElement = _react2.default.createElement(
 	        'div',
-	        { style: prepareStyles((0, _simpleAssign2.default)({}, toggleElementStyles)) },
-	        _react2.default.createElement('div', { style: prepareStyles((0, _simpleAssign2.default)({}, trackStyles)) }),
-	        _react2.default.createElement(_Paper2.default, { style: thumbStyles, circle: true, zDepth: 1 })
+	        null,
+	        unCheckedElement,
+	        checkedElement
 	      );
 
-	      var rippleStyle = (0, _simpleAssign2.default)({}, styles.ripple, this.props.rippleStyle);
+	      var rippleColor = this.state.switched ? checkStyles.fill : boxStyles.fill;
+	      var mergedIconStyle = (0, _simpleAssign2.default)(styles.icon, iconStyle);
 
-	      var iconStyle = (0, _simpleAssign2.default)({}, styles.icon, this.props.iconStyle);
-
-	      var labelStyle = (0, _simpleAssign2.default)({}, styles.label, this.props.labelStyle);
+	      var labelStyle = (0, _simpleAssign2.default)(styles.label, this.props.labelStyle);
 
 	      var enhancedSwitchProps = {
 	        ref: 'enhancedSwitch',
 	        inputType: 'checkbox',
-	        switchElement: toggleElement,
-	        rippleStyle: rippleStyle,
-	        rippleColor: rippleStyle.color,
-	        iconStyle: iconStyle,
-	        trackStyle: trackStyles,
-	        thumbStyle: thumbStyles,
-	        labelStyle: labelStyle,
 	        switched: this.state.switched,
-	        onSwitch: this.handleToggle,
+	        switchElement: checkboxElement,
+	        rippleColor: rippleColor,
+	        iconStyle: mergedIconStyle,
+	        onSwitch: this.handleCheck,
+	        labelStyle: labelStyle,
 	        onParentShouldUpdate: this.handleStateChange,
 	        labelPosition: this.props.labelPosition
 	      };
-
-	      if (this.props.hasOwnProperty('toggled')) {
-	        enhancedSwitchProps.checked = toggled;
-	      } else if (this.props.hasOwnProperty('defaultToggled')) {
-	        enhancedSwitchProps.defaultChecked = defaultToggled;
-	      }
 
 	      return _react2.default.createElement(_EnhancedSwitch2.default, _extends({}, other, enhancedSwitchProps));
 	    }
 	  }]);
 
-	  return Toggle;
+	  return Checkbox;
 	}(_react.Component);
 
-	Toggle.propTypes = {
+	Checkbox.propTypes = {
 	  /**
-	   * Determines whether the Toggle is initially turned on.
-	   * **Warning:** This cannot be used in conjunction with `toggled`.
+	   * Checkbox is checked if true.
+	   */
+	  checked: _react.PropTypes.bool,
+	  /**
+	   * The SvgIcon to use for the checked state.
+	   * This is useful to create icon toggles.
+	   */
+	  checkedIcon: _react.PropTypes.element,
+	  /**
+	   * The default state of our checkbox component.
+	   * **Warning:** This cannot be used in conjunction with `checked`.
 	   * Decide between using a controlled or uncontrolled input element and remove one of these props.
 	   * More info: https://fb.me/react-controlled-components
 	   */
-	  defaultToggled: _react.PropTypes.bool,
+	  defaultChecked: _react.PropTypes.bool,
 	  /**
-	   * Will disable the toggle if true.
+	   * Disabled if true.
 	   */
 	  disabled: _react.PropTypes.bool,
 	  /**
-	   * Overrides the inline-styles of the Toggle element.
-	   */
-	  elementStyle: _react.PropTypes.object,
-	  /**
-	   * Overrides the inline-styles of the Icon element.
+	   * Overrides the inline-styles of the icon element.
 	   */
 	  iconStyle: _react.PropTypes.object,
 	  /**
@@ -38275,58 +39066,50 @@
 	   */
 	  inputStyle: _react.PropTypes.object,
 	  /**
-	   * Label for toggle.
-	   */
-	  label: _react.PropTypes.string,
-	  /**
-	   * Where the label will be placed next to the toggle.
+	   * Where the label will be placed next to the checkbox.
 	   */
 	  labelPosition: _react.PropTypes.oneOf(['left', 'right']),
 	  /**
-	   * Overrides the inline-styles of the Toggle element label.
+	   * Overrides the inline-styles of the Checkbox element label.
 	   */
 	  labelStyle: _react.PropTypes.object,
 	  /**
-	   * Callback function that is fired when the toggle switch is toggled.
+	   * Callback function that is fired when the checkbox is checked.
+	   *
+	   * @param {object} event `change` event targeting the underlying checkbox `input`.
+	   * @param {boolean} isInputChecked The `checked` value of the underlying checkbox `input`.
 	   */
-	  onToggle: _react.PropTypes.func,
-	  /**
-	   * Override style of ripple.
-	   */
-	  rippleStyle: _react.PropTypes.object,
+	  onCheck: _react.PropTypes.func,
 	  /**
 	   * Override the inline-styles of the root element.
 	   */
 	  style: _react.PropTypes.object,
 	  /**
-	   * Override style for thumb.
+	   * The SvgIcon to use for the unchecked state.
+	   * This is useful to create icon toggles.
 	   */
-	  thumbStyle: _react.PropTypes.object,
+	  unCheckedIcon: (0, _deprecatedPropType2.default)(_react.PropTypes.element, 'Use uncheckedIcon instead.'),
 	  /**
-	   * Toggled if set to true.
+	   * The SvgIcon to use for the unchecked state.
+	   * This is useful to create icon toggles.
 	   */
-	  toggled: _react.PropTypes.bool,
+	  uncheckedIcon: _react.PropTypes.element,
 	  /**
-	   * Override style for track.
-	   */
-	  trackStyle: _react.PropTypes.object,
-	  /**
-	   * ValueLink prop for when using controlled toggle.
+	   * ValueLink for when using controlled checkbox.
 	   */
 	  valueLink: _react.PropTypes.object
 	};
-	Toggle.defaultProps = {
-	  defaultToggled: false,
-	  disabled: false,
-	  labelPosition: 'left'
+	Checkbox.defaultProps = {
+	  labelPosition: 'right',
+	  disabled: false
 	};
-	Toggle.contextTypes = {
+	Checkbox.contextTypes = {
 	  muiTheme: _react.PropTypes.object.isRequired
 	};
-	exports.default = Toggle;
+	exports.default = Checkbox;
 
 /***/ },
-/* 464 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38775,7 +39558,1320 @@
 	exports.default = EnhancedSwitch;
 
 /***/ },
-/* 465 */
+/* 467 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(390);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(398);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ToggleCheckBoxOutlineBlank = function ToggleCheckBoxOutlineBlank(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z' })
+	  );
+	};
+	ToggleCheckBoxOutlineBlank = (0, _pure2.default)(ToggleCheckBoxOutlineBlank);
+	ToggleCheckBoxOutlineBlank.displayName = 'ToggleCheckBoxOutlineBlank';
+	ToggleCheckBoxOutlineBlank.muiName = 'SvgIcon';
+
+	exports.default = ToggleCheckBoxOutlineBlank;
+
+/***/ },
+/* 468 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(390);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(398);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ToggleCheckBox = function ToggleCheckBox(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' })
+	  );
+	};
+	ToggleCheckBox = (0, _pure2.default)(ToggleCheckBox);
+	ToggleCheckBox.displayName = 'ToggleCheckBox';
+	ToggleCheckBox.muiName = 'SvgIcon';
+
+	exports.default = ToggleCheckBox;
+
+/***/ },
+/* 469 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = deprecated;
+
+	var _warning = __webpack_require__(348);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function deprecated(propType, explanation) {
+	  return function validate(props, propName, componentName) {
+	    if (props[propName] != null) {
+	       true ? (0, _warning2.default)(false, '"' + propName + '" property of "' + componentName + '" has been deprecated.\n' + explanation) : void 0;
+	    }
+
+	    return propType(props, propName, componentName);
+	  };
+	}
+
+/***/ },
+/* 470 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context) {
+	  var tableRowColumn = context.muiTheme.tableRowColumn;
+
+
+	  var styles = {
+	    root: {
+	      paddingLeft: tableRowColumn.spacing,
+	      paddingRight: tableRowColumn.spacing,
+	      height: tableRowColumn.height,
+	      textAlign: 'left',
+	      fontSize: 13,
+	      overflow: 'hidden',
+	      whiteSpace: 'nowrap',
+	      textOverflow: 'ellipsis'
+	    }
+	  };
+
+	  if (_react2.default.Children.count(props.children) === 1 && !isNaN(props.children)) {
+	    styles.textAlign = 'right';
+	  }
+
+	  return styles;
+	}
+
+	var TableRowColumn = function (_Component) {
+	  _inherits(TableRowColumn, _Component);
+
+	  function TableRowColumn() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, TableRowColumn);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(TableRowColumn)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	      hovered: false
+	    }, _this.onClick = function (event) {
+	      if (_this.props.onClick) _this.props.onClick(event, _this.props.columnNumber);
+	    }, _this.onMouseEnter = function (event) {
+	      if (_this.props.hoverable) {
+	        _this.setState({ hovered: true });
+	        if (_this.props.onHover) _this.props.onHover(event, _this.props.columnNumber);
+	      }
+	    }, _this.onMouseLeave = function (event) {
+	      if (_this.props.hoverable) {
+	        _this.setState({ hovered: false });
+	        if (_this.props.onHoverExit) _this.props.onHoverExit(event, _this.props.columnNumber);
+	      }
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(TableRowColumn, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var children = _props.children;
+	      var className = _props.className;
+	      var columnNumber = _props.columnNumber;
+	      var // eslint-disable-line no-unused-vars
+	      hoverable = _props.hoverable;
+	      var // eslint-disable-line no-unused-vars
+	      onClick = _props.onClick;
+	      var // eslint-disable-line no-unused-vars
+	      onHover = _props.onHover;
+	      var // eslint-disable-line no-unused-vars
+	      onHoverExit = _props.onHoverExit;
+	      var // eslint-disable-line no-unused-vars
+	      style = _props.style;
+
+	      var other = _objectWithoutProperties(_props, ['children', 'className', 'columnNumber', 'hoverable', 'onClick', 'onHover', 'onHoverExit', 'style']);
+
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+
+	      var handlers = {
+	        onClick: this.onClick,
+	        onMouseEnter: this.onMouseEnter,
+	        onMouseLeave: this.onMouseLeave
+	      };
+
+	      return _react2.default.createElement(
+	        'td',
+	        _extends({
+	          className: className,
+	          style: prepareStyles((0, _simpleAssign2.default)(styles.root, style))
+	        }, handlers, other),
+	        children
+	      );
+	    }
+	  }]);
+
+	  return TableRowColumn;
+	}(_react.Component);
+
+	TableRowColumn.propTypes = {
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * @ignore
+	   * Number to identify the header row. This property
+	   * is automatically populated when used with TableHeader.
+	   */
+	  columnNumber: _react.PropTypes.number,
+	  /**
+	   * @ignore
+	   * If true, this column responds to hover events.
+	   */
+	  hoverable: _react.PropTypes.bool,
+	  /**
+	   * @ignore
+	   * Callback function for click event.
+	   */
+	  onClick: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Callback function for hover event.
+	   */
+	  onHover: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Callback function for hover exit event.
+	   */
+	  onHoverExit: _react.PropTypes.func,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object
+	};
+	TableRowColumn.defaultProps = {
+	  hoverable: false
+	};
+	TableRowColumn.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = TableRowColumn;
+
+/***/ },
+/* 471 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _reactDom = __webpack_require__(37);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _events = __webpack_require__(373);
+
+	var _events2 = _interopRequireDefault(_events);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var isDescendant = function isDescendant(el, target) {
+	  if (target !== null) {
+	    return el === target || isDescendant(el, target.parentNode);
+	  }
+	  return false;
+	};
+
+	var clickAwayEvents = ['mouseup', 'touchend'];
+	var bind = function bind(callback) {
+	  return clickAwayEvents.forEach(function (event) {
+	    return _events2.default.on(document, event, callback);
+	  });
+	};
+	var unbind = function unbind(callback) {
+	  return clickAwayEvents.forEach(function (event) {
+	    return _events2.default.off(document, event, callback);
+	  });
+	};
+
+	var ClickAwayListener = function (_Component) {
+	  _inherits(ClickAwayListener, _Component);
+
+	  function ClickAwayListener() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, ClickAwayListener);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ClickAwayListener)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.handleClickAway = function (event) {
+	      if (event.defaultPrevented) {
+	        return;
+	      }
+
+	      var el = _reactDom2.default.findDOMNode(_this);
+
+	      if (document.documentElement.contains(event.target) && !isDescendant(el, event.target)) {
+	        _this.props.onClickAway(event);
+	      }
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(ClickAwayListener, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.onClickAway) {
+	        bind(this.handleClickAway);
+	      }
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps) {
+	      if (prevProps.onClickAway !== this.props.onClickAway) {
+	        unbind(this.handleClickAway);
+	        if (this.props.onClickAway) {
+	          bind(this.handleClickAway);
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      unbind(this.handleClickAway);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return this.props.children;
+	    }
+	  }]);
+
+	  return ClickAwayListener;
+	}(_react.Component);
+
+	ClickAwayListener.propTypes = {
+	  children: _react.PropTypes.node,
+	  onClickAway: _react.PropTypes.any
+	};
+	exports.default = ClickAwayListener;
+
+/***/ },
+/* 472 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TableRowColumn = __webpack_require__(470);
+
+	var _TableRowColumn2 = _interopRequireDefault(_TableRowColumn);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context) {
+	  var tableFooter = context.muiTheme.tableFooter;
+
+
+	  return {
+	    cell: {
+	      borderTop: '1px solid ' + tableFooter.borderColor,
+	      verticalAlign: 'bottom',
+	      padding: 20,
+	      textAlign: 'left',
+	      whiteSpace: 'nowrap'
+	    }
+	  };
+	}
+
+	var TableFooter = function (_Component) {
+	  _inherits(TableFooter, _Component);
+
+	  function TableFooter() {
+	    _classCallCheck(this, TableFooter);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TableFooter).apply(this, arguments));
+	  }
+
+	  _createClass(TableFooter, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var adjustForCheckbox = _props.adjustForCheckbox;
+	      var children = _props.children;
+	      var className = _props.className;
+	      var style = _props.style;
+
+	      var other = _objectWithoutProperties(_props, ['adjustForCheckbox', 'children', 'className', 'style']);
+
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+
+	      var footerRows = _react2.default.Children.map(children, function (child, rowNumber) {
+	        var newChildProps = {
+	          displayBorder: false,
+	          key: 'f-' + rowNumber,
+	          rowNumber: rowNumber,
+	          style: (0, _simpleAssign2.default)({}, styles.cell, child.props.style)
+	        };
+
+	        var newDescendants = void 0;
+	        if (adjustForCheckbox) {
+	          newDescendants = [_react2.default.createElement(_TableRowColumn2.default, { key: 'fpcb' + rowNumber, style: { width: 24 } })].concat(_toConsumableArray(_react2.default.Children.toArray(child.props.children)));
+	        }
+
+	        return _react2.default.cloneElement(child, newChildProps, newDescendants);
+	      });
+
+	      return _react2.default.createElement(
+	        'tfoot',
+	        _extends({ className: className, style: prepareStyles((0, _simpleAssign2.default)({}, style)) }, other),
+	        footerRows
+	      );
+	    }
+	  }]);
+
+	  return TableFooter;
+	}(_react.Component);
+
+	TableFooter.muiName = 'TableFooter';
+	TableFooter.propTypes = {
+	  /**
+	   * @ignore
+	   * Controls whether or not header rows should be adjusted
+	   * for a checkbox column. If the select all checkbox is true,
+	   * this property will not influence the number of columns.
+	   * This is mainly useful for "super header" rows so that
+	   * the checkbox column does not create an offset that needs
+	   * to be accounted for manually.
+	   */
+	  adjustForCheckbox: _react.PropTypes.bool,
+	  /**
+	   * Children passed to table footer.
+	   */
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object
+	};
+	TableFooter.defaultProps = {
+	  adjustForCheckbox: true,
+	  style: {}
+	};
+	TableFooter.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = TableFooter;
+
+/***/ },
+/* 473 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Checkbox = __webpack_require__(464);
+
+	var _Checkbox2 = _interopRequireDefault(_Checkbox);
+
+	var _TableHeaderColumn = __webpack_require__(474);
+
+	var _TableHeaderColumn2 = _interopRequireDefault(_TableHeaderColumn);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context) {
+	  var tableHeader = context.muiTheme.tableHeader;
+
+
+	  return {
+	    root: {
+	      borderBottom: '1px solid ' + tableHeader.borderColor
+	    }
+	  };
+	}
+
+	var TableHeader = function (_Component) {
+	  _inherits(TableHeader, _Component);
+
+	  function TableHeader() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, TableHeader);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(TableHeader)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.handleCheckAll = function (event, checked) {
+	      if (_this.props.onSelectAll) _this.props.onSelectAll(checked);
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(TableHeader, [{
+	    key: 'createSuperHeaderRows',
+	    value: function createSuperHeaderRows() {
+	      var numChildren = _react2.default.Children.count(this.props.children);
+	      if (numChildren === 1) return undefined;
+
+	      var superHeaders = [];
+	      for (var index = 0; index < numChildren - 1; index++) {
+	        var child = this.props.children[index];
+
+	        if (!_react2.default.isValidElement(child)) continue;
+
+	        var props = {
+	          key: 'sh' + index,
+	          rowNumber: index
+	        };
+	        superHeaders.push(this.createSuperHeaderRow(child, props));
+	      }
+
+	      if (superHeaders.length) return superHeaders;
+	    }
+	  }, {
+	    key: 'createSuperHeaderRow',
+	    value: function createSuperHeaderRow(child, props) {
+	      var children = [];
+	      if (this.props.adjustForCheckbox) {
+	        children.push(this.getCheckboxPlaceholder(props));
+	      }
+	      _react2.default.Children.forEach(child.props.children, function (child) {
+	        children.push(child);
+	      });
+
+	      return _react2.default.cloneElement(child, props, children);
+	    }
+	  }, {
+	    key: 'createBaseHeaderRow',
+	    value: function createBaseHeaderRow() {
+	      var numChildren = _react2.default.Children.count(this.props.children);
+	      var child = numChildren === 1 ? this.props.children : this.props.children[numChildren - 1];
+	      var props = {
+	        key: 'h' + numChildren,
+	        rowNumber: numChildren
+	      };
+
+	      var children = [this.getSelectAllCheckboxColumn(props)];
+	      _react2.default.Children.forEach(child.props.children, function (child) {
+	        children.push(child);
+	      });
+
+	      return _react2.default.cloneElement(child, props, children);
+	    }
+	  }, {
+	    key: 'getCheckboxPlaceholder',
+	    value: function getCheckboxPlaceholder(props) {
+	      if (!this.props.adjustForCheckbox) return null;
+
+	      var key = 'hpcb' + props.rowNumber;
+	      return _react2.default.createElement(_TableHeaderColumn2.default, { key: key, style: { width: 24 } });
+	    }
+	  }, {
+	    key: 'getSelectAllCheckboxColumn',
+	    value: function getSelectAllCheckboxColumn(props) {
+	      if (!this.props.displaySelectAll) return this.getCheckboxPlaceholder(props);
+
+	      var checkbox = _react2.default.createElement(_Checkbox2.default, {
+	        key: 'selectallcb',
+	        name: 'selectallcb',
+	        value: 'selected',
+	        disabled: !this.props.enableSelectAll,
+	        checked: this.props.selectAllSelected,
+	        onCheck: this.handleCheckAll
+	      });
+
+	      var key = 'hpcb' + props.rowNumber;
+	      return _react2.default.createElement(
+	        _TableHeaderColumn2.default,
+	        { key: key, style: { width: 24 } },
+	        checkbox
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var className = _props.className;
+	      var style = _props.style;
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+	      var superHeaderRows = this.createSuperHeaderRows();
+	      var baseHeaderRow = this.createBaseHeaderRow();
+
+	      return _react2.default.createElement(
+	        'thead',
+	        { className: className, style: prepareStyles((0, _simpleAssign2.default)(styles.root, style)) },
+	        superHeaderRows,
+	        baseHeaderRow
+	      );
+	    }
+	  }]);
+
+	  return TableHeader;
+	}(_react.Component);
+
+	TableHeader.muiName = 'TableHeader';
+	TableHeader.propTypes = {
+	  /**
+	   * Controls whether or not header rows should be
+	   * adjusted for a checkbox column. If the select all
+	   * checkbox is true, this property will not influence
+	   * the number of columns. This is mainly useful for
+	   * "super header" rows so that the checkbox column
+	   * does not create an offset that needs to be accounted
+	   * for manually.
+	   */
+	  adjustForCheckbox: _react.PropTypes.bool,
+	  /**
+	   * Children passed to table header.
+	   */
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * Controls whether or not the select all checkbox is displayed.
+	   */
+	  displaySelectAll: _react.PropTypes.bool,
+	  /**
+	   * If set to true, the select all button will be interactable.
+	   * If set to false, the button will not be interactable.
+	   * To hide the checkbox, set displaySelectAll to false.
+	   */
+	  enableSelectAll: _react.PropTypes.bool,
+	  /**
+	   * @ignore
+	   * Callback when select all has been checked.
+	   */
+	  onSelectAll: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * True when select all has been checked.
+	   */
+	  selectAllSelected: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object
+	};
+	TableHeader.defaultProps = {
+	  adjustForCheckbox: true,
+	  displaySelectAll: true,
+	  enableSelectAll: true,
+	  selectAllSelected: false
+	};
+	TableHeader.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = TableHeader;
+
+/***/ },
+/* 474 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Tooltip = __webpack_require__(388);
+
+	var _Tooltip2 = _interopRequireDefault(_Tooltip);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context) {
+	  var tableHeaderColumn = context.muiTheme.tableHeaderColumn;
+
+
+	  return {
+	    root: {
+	      fontWeight: 'normal',
+	      fontSize: 12,
+	      paddingLeft: tableHeaderColumn.spacing,
+	      paddingRight: tableHeaderColumn.spacing,
+	      height: tableHeaderColumn.height,
+	      textAlign: 'left',
+	      whiteSpace: 'nowrap',
+	      textOverflow: 'ellipsis',
+	      color: tableHeaderColumn.textColor,
+	      position: 'relative'
+	    },
+	    tooltip: {
+	      boxSizing: 'border-box',
+	      marginTop: tableHeaderColumn.height / 2
+	    }
+	  };
+	}
+
+	var TableHeaderColumn = function (_Component) {
+	  _inherits(TableHeaderColumn, _Component);
+
+	  function TableHeaderColumn() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, TableHeaderColumn);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(TableHeaderColumn)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	      hovered: false
+	    }, _this.onMouseEnter = function () {
+	      if (_this.props.tooltip !== undefined) _this.setState({ hovered: true });
+	    }, _this.onMouseLeave = function () {
+	      if (_this.props.tooltip !== undefined) _this.setState({ hovered: false });
+	    }, _this.onClick = function (event) {
+	      if (_this.props.onClick) _this.props.onClick(event, _this.props.columnNumber);
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(TableHeaderColumn, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var children = _props.children;
+	      var className = _props.className;
+	      var columnNumber = _props.columnNumber;
+	      var // eslint-disable-line no-unused-vars
+	      onClick = _props.onClick;
+	      var // eslint-disable-line no-unused-vars
+	      style = _props.style;
+	      var tooltip = _props.tooltip;
+	      var tooltipStyle = _props.tooltipStyle;
+
+	      var other = _objectWithoutProperties(_props, ['children', 'className', 'columnNumber', 'onClick', 'style', 'tooltip', 'tooltipStyle']);
+
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+
+	      var handlers = {
+	        onMouseEnter: this.onMouseEnter,
+	        onMouseLeave: this.onMouseLeave,
+	        onClick: this.onClick
+	      };
+
+	      var tooltipNode = void 0;
+
+	      if (tooltip !== undefined) {
+	        tooltipNode = _react2.default.createElement(_Tooltip2.default, {
+	          label: tooltip,
+	          show: this.state.hovered,
+	          style: (0, _simpleAssign2.default)(styles.tooltip, tooltipStyle)
+	        });
+	      }
+
+	      return _react2.default.createElement(
+	        'th',
+	        _extends({
+	          className: className,
+	          style: prepareStyles((0, _simpleAssign2.default)(styles.root, style))
+	        }, handlers, other),
+	        tooltipNode,
+	        children
+	      );
+	    }
+	  }]);
+
+	  return TableHeaderColumn;
+	}(_react.Component);
+
+	TableHeaderColumn.propTypes = {
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * Number to identify the header row. This property
+	   * is automatically populated when used with TableHeader.
+	   */
+	  columnNumber: _react.PropTypes.number,
+	  /**
+	   * @ignore
+	   * Callback function for click event.
+	   */
+	  onClick: _react.PropTypes.func,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  /**
+	   * The string to supply to the tooltip. If not
+	   * string is supplied no tooltip will be shown.
+	   */
+	  tooltip: _react.PropTypes.string,
+	  /**
+	   * Additional styling that can be applied to the tooltip.
+	   */
+	  tooltipStyle: _react.PropTypes.object
+	};
+	TableHeaderColumn.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = TableHeaderColumn;
+
+/***/ },
+/* 475 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context, state) {
+	  var tableRow = context.muiTheme.tableRow;
+
+
+	  var cellBgColor = 'inherit';
+	  if (props.hovered || state.hovered) {
+	    cellBgColor = tableRow.hoverColor;
+	  } else if (props.selected) {
+	    cellBgColor = tableRow.selectedColor;
+	  } else if (props.striped) {
+	    cellBgColor = tableRow.stripeColor;
+	  }
+
+	  return {
+	    root: {
+	      borderBottom: props.displayBorder && '1px solid ' + tableRow.borderColor,
+	      color: tableRow.textColor,
+	      height: tableRow.height
+	    },
+	    cell: {
+	      backgroundColor: cellBgColor
+	    }
+	  };
+	}
+
+	var TableRow = function (_Component) {
+	  _inherits(TableRow, _Component);
+
+	  function TableRow() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, TableRow);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(TableRow)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	      hovered: false
+	    }, _this.onCellClick = function (event, columnIndex) {
+	      if (_this.props.selectable && _this.props.onCellClick) {
+	        _this.props.onCellClick(event, _this.props.rowNumber, columnIndex);
+	      }
+	      event.ctrlKey = true;
+	      _this.onRowClick(event);
+	    }, _this.onCellHover = function (event, columnIndex) {
+	      if (_this.props.hoverable) {
+	        _this.setState({ hovered: true });
+	        if (_this.props.onCellHover) _this.props.onCellHover(event, _this.props.rowNumber, columnIndex);
+	        _this.onRowHover(event);
+	      }
+	    }, _this.onCellHoverExit = function (event, columnIndex) {
+	      if (_this.props.hoverable) {
+	        _this.setState({ hovered: false });
+	        if (_this.props.onCellHoverExit) _this.props.onCellHoverExit(event, _this.props.rowNumber, columnIndex);
+	        _this.onRowHoverExit(event);
+	      }
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(TableRow, [{
+	    key: 'onRowClick',
+	    value: function onRowClick(event) {
+	      if (this.props.selectable && this.props.onRowClick) this.props.onRowClick(event, this.props.rowNumber);
+	    }
+	  }, {
+	    key: 'onRowHover',
+	    value: function onRowHover(event) {
+	      if (this.props.onRowHover) this.props.onRowHover(event, this.props.rowNumber);
+	    }
+	  }, {
+	    key: 'onRowHoverExit',
+	    value: function onRowHoverExit(event) {
+	      if (this.props.onRowHoverExit) this.props.onRowHoverExit(event, this.props.rowNumber);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      var _props = this.props;
+	      var className = _props.className;
+	      var displayBorder = _props.displayBorder;
+	      var // eslint-disable-line no-unused-vars
+	      hoverable = _props.hoverable;
+	      var // eslint-disable-line no-unused-vars
+	      onCellClick = _props.onCellClick;
+	      var // eslint-disable-line no-unused-vars
+	      onCellHover = _props.onCellHover;
+	      var // eslint-disable-line no-unused-vars
+	      onCellHoverExit = _props.onCellHoverExit;
+	      var // eslint-disable-line no-unused-vars
+	      onRowClick = _props.onRowClick;
+	      var // eslint-disable-line no-unused-vars
+	      onRowHover = _props.onRowHover;
+	      var // eslint-disable-line no-unused-vars
+	      onRowHoverExit = _props.onRowHoverExit;
+	      var // eslint-disable-line no-unused-vars
+	      rowNumber = _props.rowNumber;
+	      var // eslint-disable-line no-unused-vars
+	      selectable = _props.selectable;
+	      var // eslint-disable-line no-unused-vars
+	      selected = _props.selected;
+	      var // eslint-disable-line no-unused-vars
+	      striped = _props.striped;
+	      var // eslint-disable-line no-unused-vars
+	      style = _props.style;
+
+	      var other = _objectWithoutProperties(_props, ['className', 'displayBorder', 'hoverable', 'onCellClick', 'onCellHover', 'onCellHoverExit', 'onRowClick', 'onRowHover', 'onRowHoverExit', 'rowNumber', 'selectable', 'selected', 'striped', 'style']);
+
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context, this.state);
+
+	      var rowColumns = _react2.default.Children.map(this.props.children, function (child, columnNumber) {
+	        if (_react2.default.isValidElement(child)) {
+	          return _react2.default.cloneElement(child, {
+	            columnNumber: columnNumber,
+	            hoverable: _this2.props.hoverable,
+	            key: _this2.props.rowNumber + '-' + columnNumber,
+	            onClick: _this2.onCellClick,
+	            onHover: _this2.onCellHover,
+	            onHoverExit: _this2.onCellHoverExit,
+	            style: (0, _simpleAssign2.default)({}, styles.cell, child.props.style)
+	          });
+	        }
+	      });
+
+	      return _react2.default.createElement(
+	        'tr',
+	        _extends({
+	          className: className,
+	          style: prepareStyles((0, _simpleAssign2.default)(styles.root, style))
+	        }, other),
+	        rowColumns
+	      );
+	    }
+	  }]);
+
+	  return TableRow;
+	}(_react.Component);
+
+	TableRow.propTypes = {
+	  /**
+	   * Children passed to table row.
+	   */
+	  children: _react.PropTypes.node,
+	  /**
+	   * The css class name of the root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * If true, row border will be displayed for the row.
+	   * If false, no border will be drawn.
+	   */
+	  displayBorder: _react.PropTypes.bool,
+	  /**
+	   * Controls whether or not the row reponseds to hover events.
+	   */
+	  hoverable: _react.PropTypes.bool,
+	  /**
+	   * Controls whether or not the row should be rendered as being
+	   * hovered. This property is evaluated in addition to this.state.hovered
+	   * and can be used to synchronize the hovered state with some other
+	   * external events.
+	   */
+	  hovered: _react.PropTypes.bool,
+	  /**
+	   * @ignore
+	   * Called when a row cell is clicked.
+	   * rowNumber is the row number and columnId is
+	   * the column number or the column key.
+	   */
+	  onCellClick: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table cell is hovered.
+	   * rowNumber is the row number of the hovered row
+	   * and columnId is the column number or the column key of the cell.
+	   */
+	  onCellHover: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table cell is no longer hovered.
+	   * rowNumber is the row number of the row and columnId
+	   * is the column number or the column key of the cell.
+	   */
+	  onCellHoverExit: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when row is clicked.
+	   */
+	  onRowClick: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table row is hovered.
+	   * rowNumber is the row number of the hovered row.
+	   */
+	  onRowHover: _react.PropTypes.func,
+	  /**
+	   * @ignore
+	   * Called when a table row is no longer hovered.
+	   * rowNumber is the row number of the row that is no longer hovered.
+	   */
+	  onRowHoverExit: _react.PropTypes.func,
+	  /**
+	   * Number to identify the row. This property is
+	   * automatically populated when used with the TableBody component.
+	   */
+	  rowNumber: _react.PropTypes.number,
+	  /**
+	   * If true, table rows can be selected. If multiple row
+	   * selection is desired, enable multiSelectable.
+	   * The default value is true.
+	   */
+	  selectable: _react.PropTypes.bool,
+	  /**
+	   * Indicates that a particular row is selected.
+	   * This property can be used to programmatically select rows.
+	   */
+	  selected: _react.PropTypes.bool,
+	  /**
+	   * Indicates whether or not the row is striped.
+	   */
+	  striped: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object
+	};
+	TableRow.defaultProps = {
+	  displayBorder: true,
+	  hoverable: false,
+	  hovered: false,
+	  selectable: true,
+	  selected: false,
+	  striped: false
+	};
+	TableRow.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = TableRow;
+
+/***/ },
+/* 476 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Toggle = __webpack_require__(477);
+
+	var _Toggle2 = _interopRequireDefault(_Toggle);
+
+	var _TextField = __webpack_require__(479);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SurveysEdit = function (_Component) {
+	  _inherits(SurveysEdit, _Component);
+
+	  function SurveysEdit(props) {
+	    _classCallCheck(this, SurveysEdit);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SurveysEdit).call(this, props));
+
+	    _this.state = {
+	      name: props.survey.name,
+	      isActive: props.survey.isActive
+	    };
+	    return _this;
+	  }
+
+	  // handlers
+	  //
+
+
+	  _createClass(SurveysEdit, [{
+	    key: 'handleInputChange',
+	    value: function handleInputChange(attr, event) {
+	      var value = attr === 'isActive' ? event.target.checked : event.target.value;
+	      this.setState(_defineProperty({}, attr, value));
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(event) {
+	      event.preventDefault();
+	      var _props = this.props;
+	      var survey = _props.survey;
+	      var actions = _props.actions;
+
+	      actions.updateSurvey(survey.id, this.refs.form);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'form',
+	        { ref: 'form', className: 'surveys-edit', onSubmit: this.handleSubmit.bind(this) },
+	        _react2.default.createElement(_TextField2.default, {
+	          value: this.state.name,
+	          autoFocus: !this.state.name,
+	          floatingLabelText: 'Name',
+	          hintText: 'Enter survey name',
+	          name: 'name',
+	          onChange: this.handleInputChange.bind(this, 'name'),
+	          onBlur: this.handleSubmit.bind(this)
+	        }),
+	        _react2.default.createElement(_Toggle2.default, {
+	          label: 'Is active',
+	          labelPosition: 'right',
+	          name: 'isActive',
+	          toggled: this.state.isActive,
+	          onToggle: this.handleInputChange.bind(this, 'isActive'),
+	          onBlur: this.handleSubmit.bind(this)
+	        })
+	      );
+	    }
+	  }]);
+
+	  return SurveysEdit;
+	}(_react.Component);
+
+	SurveysEdit.propTypes = {
+	  survey: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = SurveysEdit;
+
+/***/ },
+/* 477 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38785,7 +40881,318 @@
 	});
 	exports.default = undefined;
 
-	var _TextField = __webpack_require__(466);
+	var _Toggle = __webpack_require__(478);
+
+	var _Toggle2 = _interopRequireDefault(_Toggle);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _Toggle2.default;
+
+/***/ },
+/* 478 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(364);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _transitions = __webpack_require__(367);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	var _Paper = __webpack_require__(400);
+
+	var _Paper2 = _interopRequireDefault(_Paper);
+
+	var _EnhancedSwitch = __webpack_require__(466);
+
+	var _EnhancedSwitch2 = _interopRequireDefault(_EnhancedSwitch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context, state) {
+	  var disabled = props.disabled;
+	  var _context$muiTheme = context.muiTheme;
+	  var baseTheme = _context$muiTheme.baseTheme;
+	  var toggle = _context$muiTheme.toggle;
+
+
+	  var toggleSize = 20;
+	  var toggleTrackWidth = 36;
+	  var styles = {
+	    icon: {
+	      width: 36,
+	      padding: '4px 0px 6px 2px'
+	    },
+	    ripple: {
+	      top: -10,
+	      left: -10,
+	      color: state.switched ? toggle.thumbOnColor : baseTheme.palette.textColor
+	    },
+	    toggleElement: {
+	      width: toggleTrackWidth
+	    },
+	    track: {
+	      transition: _transitions2.default.easeOut(),
+	      width: '100%',
+	      height: 14,
+	      borderRadius: 30,
+	      backgroundColor: toggle.trackOffColor
+	    },
+	    thumb: {
+	      transition: _transitions2.default.easeOut(),
+	      position: 'absolute',
+	      top: 1,
+	      left: 0,
+	      width: toggleSize,
+	      height: toggleSize,
+	      lineHeight: '24px',
+	      borderRadius: '50%',
+	      backgroundColor: toggle.thumbOffColor
+	    },
+	    trackWhenSwitched: {
+	      backgroundColor: toggle.trackOnColor
+	    },
+	    thumbWhenSwitched: {
+	      backgroundColor: toggle.thumbOnColor,
+	      left: '100%'
+	    },
+	    trackWhenDisabled: {
+	      backgroundColor: toggle.trackDisabledColor
+	    },
+	    thumbWhenDisabled: {
+	      backgroundColor: toggle.thumbDisabledColor
+	    },
+	    label: {
+	      color: disabled ? toggle.labelDisabledColor : toggle.labelColor,
+	      width: 'calc(100% - ' + (toggleTrackWidth + 10) + 'px)'
+	    }
+	  };
+
+	  return styles;
+	}
+
+	var Toggle = function (_Component) {
+	  _inherits(Toggle, _Component);
+
+	  function Toggle() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, Toggle);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Toggle)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = { switched: false }, _this.handleToggle = function (event, isInputChecked) {
+	      if (_this.props.onToggle) _this.props.onToggle(event, isInputChecked);
+	    }, _this.handleStateChange = function (newSwitched) {
+	      _this.setState({ switched: newSwitched });
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(Toggle, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _props = this.props;
+	      var toggled = _props.toggled;
+	      var defaultToggled = _props.defaultToggled;
+	      var valueLink = _props.valueLink;
+
+
+	      if (toggled || defaultToggled || valueLink && valueLink.value) {
+	        this.setState({ switched: true });
+	      }
+	    }
+	  }, {
+	    key: 'isToggled',
+	    value: function isToggled() {
+	      return this.refs.enhancedSwitch.isSwitched();
+	    }
+	  }, {
+	    key: 'setToggled',
+	    value: function setToggled(newToggledValue) {
+	      this.refs.enhancedSwitch.setSwitched(newToggledValue);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props2 = this.props;
+	      var defaultToggled = _props2.defaultToggled;
+	      var onToggle = _props2.onToggle;
+	      var // eslint-disable-line no-unused-vars
+	      toggled = _props2.toggled;
+
+	      var other = _objectWithoutProperties(_props2, ['defaultToggled', 'onToggle', 'toggled']);
+
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context, this.state);
+
+	      var trackStyles = (0, _simpleAssign2.default)({}, styles.track, this.props.trackStyle, this.state.switched && styles.trackWhenSwitched, this.props.disabled && styles.trackWhenDisabled);
+
+	      var thumbStyles = (0, _simpleAssign2.default)({}, styles.thumb, this.props.thumbStyle, this.state.switched && styles.thumbWhenSwitched, this.props.disabled && styles.thumbWhenDisabled);
+
+	      if (this.state.switched) {
+	        thumbStyles.marginLeft = 0 - thumbStyles.width;
+	      }
+
+	      var toggleElementStyles = (0, _simpleAssign2.default)({}, styles.toggleElement, this.props.elementStyle);
+
+	      var toggleElement = _react2.default.createElement(
+	        'div',
+	        { style: prepareStyles((0, _simpleAssign2.default)({}, toggleElementStyles)) },
+	        _react2.default.createElement('div', { style: prepareStyles((0, _simpleAssign2.default)({}, trackStyles)) }),
+	        _react2.default.createElement(_Paper2.default, { style: thumbStyles, circle: true, zDepth: 1 })
+	      );
+
+	      var rippleStyle = (0, _simpleAssign2.default)({}, styles.ripple, this.props.rippleStyle);
+
+	      var iconStyle = (0, _simpleAssign2.default)({}, styles.icon, this.props.iconStyle);
+
+	      var labelStyle = (0, _simpleAssign2.default)({}, styles.label, this.props.labelStyle);
+
+	      var enhancedSwitchProps = {
+	        ref: 'enhancedSwitch',
+	        inputType: 'checkbox',
+	        switchElement: toggleElement,
+	        rippleStyle: rippleStyle,
+	        rippleColor: rippleStyle.color,
+	        iconStyle: iconStyle,
+	        trackStyle: trackStyles,
+	        thumbStyle: thumbStyles,
+	        labelStyle: labelStyle,
+	        switched: this.state.switched,
+	        onSwitch: this.handleToggle,
+	        onParentShouldUpdate: this.handleStateChange,
+	        labelPosition: this.props.labelPosition
+	      };
+
+	      if (this.props.hasOwnProperty('toggled')) {
+	        enhancedSwitchProps.checked = toggled;
+	      } else if (this.props.hasOwnProperty('defaultToggled')) {
+	        enhancedSwitchProps.defaultChecked = defaultToggled;
+	      }
+
+	      return _react2.default.createElement(_EnhancedSwitch2.default, _extends({}, other, enhancedSwitchProps));
+	    }
+	  }]);
+
+	  return Toggle;
+	}(_react.Component);
+
+	Toggle.propTypes = {
+	  /**
+	   * Determines whether the Toggle is initially turned on.
+	   * **Warning:** This cannot be used in conjunction with `toggled`.
+	   * Decide between using a controlled or uncontrolled input element and remove one of these props.
+	   * More info: https://fb.me/react-controlled-components
+	   */
+	  defaultToggled: _react.PropTypes.bool,
+	  /**
+	   * Will disable the toggle if true.
+	   */
+	  disabled: _react.PropTypes.bool,
+	  /**
+	   * Overrides the inline-styles of the Toggle element.
+	   */
+	  elementStyle: _react.PropTypes.object,
+	  /**
+	   * Overrides the inline-styles of the Icon element.
+	   */
+	  iconStyle: _react.PropTypes.object,
+	  /**
+	   * Overrides the inline-styles of the input element.
+	   */
+	  inputStyle: _react.PropTypes.object,
+	  /**
+	   * Label for toggle.
+	   */
+	  label: _react.PropTypes.string,
+	  /**
+	   * Where the label will be placed next to the toggle.
+	   */
+	  labelPosition: _react.PropTypes.oneOf(['left', 'right']),
+	  /**
+	   * Overrides the inline-styles of the Toggle element label.
+	   */
+	  labelStyle: _react.PropTypes.object,
+	  /**
+	   * Callback function that is fired when the toggle switch is toggled.
+	   */
+	  onToggle: _react.PropTypes.func,
+	  /**
+	   * Override style of ripple.
+	   */
+	  rippleStyle: _react.PropTypes.object,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  /**
+	   * Override style for thumb.
+	   */
+	  thumbStyle: _react.PropTypes.object,
+	  /**
+	   * Toggled if set to true.
+	   */
+	  toggled: _react.PropTypes.bool,
+	  /**
+	   * Override style for track.
+	   */
+	  trackStyle: _react.PropTypes.object,
+	  /**
+	   * ValueLink prop for when using controlled toggle.
+	   */
+	  valueLink: _react.PropTypes.object
+	};
+	Toggle.defaultProps = {
+	  defaultToggled: false,
+	  disabled: false,
+	  labelPosition: 'left'
+	};
+	Toggle.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = Toggle;
+
+/***/ },
+/* 479 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _TextField = __webpack_require__(480);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -38794,7 +41201,7 @@
 	exports.default = _TextField2.default;
 
 /***/ },
-/* 466 */
+/* 480 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38833,23 +41240,23 @@
 
 	var _transitions2 = _interopRequireDefault(_transitions);
 
-	var _deprecatedPropType = __webpack_require__(467);
+	var _deprecatedPropType = __webpack_require__(469);
 
 	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
 
-	var _EnhancedTextarea = __webpack_require__(468);
+	var _EnhancedTextarea = __webpack_require__(481);
 
 	var _EnhancedTextarea2 = _interopRequireDefault(_EnhancedTextarea);
 
-	var _TextFieldHint = __webpack_require__(469);
+	var _TextFieldHint = __webpack_require__(482);
 
 	var _TextFieldHint2 = _interopRequireDefault(_TextFieldHint);
 
-	var _TextFieldLabel = __webpack_require__(470);
+	var _TextFieldLabel = __webpack_require__(483);
 
 	var _TextFieldLabel2 = _interopRequireDefault(_TextFieldLabel);
 
-	var _TextFieldUnderline = __webpack_require__(471);
+	var _TextFieldUnderline = __webpack_require__(484);
 
 	var _TextFieldUnderline2 = _interopRequireDefault(_TextFieldUnderline);
 
@@ -39363,34 +41770,7 @@
 	exports.default = TextField;
 
 /***/ },
-/* 467 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = deprecated;
-
-	var _warning = __webpack_require__(348);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function deprecated(propType, explanation) {
-	  return function validate(props, propName, componentName) {
-	    if (props[propName] != null) {
-	       true ? (0, _warning2.default)(false, '"' + propName + '" property of "' + componentName + '" has been deprecated.\n' + explanation) : void 0;
-	    }
-
-	    return propType(props, propName, componentName);
-	  };
-	}
-
-/***/ },
-/* 468 */
+/* 481 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39614,7 +41994,7 @@
 	exports.default = EnhancedTextarea;
 
 /***/ },
-/* 469 */
+/* 482 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39695,7 +42075,7 @@
 	exports.default = TextFieldHint;
 
 /***/ },
-/* 470 */
+/* 483 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39812,7 +42192,7 @@
 	exports.default = TextFieldLabel;
 
 /***/ },
-/* 471 */
+/* 484 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39947,14 +42327,14 @@
 	exports.default = TextFieldUnderline;
 
 /***/ },
-/* 472 */
+/* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./SurveysApp": 473,
-		"./SurveysApp.js": 473,
-		"./surveys": 474,
-		"./surveys.js": 474
+		"./SurveysApp": 486,
+		"./SurveysApp.js": 486,
+		"./surveys": 487,
+		"./surveys.js": 487
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -39967,11 +42347,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 472;
+	webpackContext.id = 485;
 
 
 /***/ },
-/* 473 */
+/* 486 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39982,7 +42362,7 @@
 
 	var _redux = __webpack_require__(167);
 
-	var _surveys = __webpack_require__(474);
+	var _surveys = __webpack_require__(487);
 
 	var _surveys2 = _interopRequireDefault(_surveys);
 
@@ -39993,7 +42373,7 @@
 	});
 
 /***/ },
-/* 474 */
+/* 487 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40003,7 +42383,7 @@
 	});
 	exports.default = surveys;
 
-	var _uniqBy = __webpack_require__(475);
+	var _uniqBy = __webpack_require__(488);
 
 	var _uniqBy2 = _interopRequireDefault(_uniqBy);
 
@@ -40038,11 +42418,11 @@
 	}
 
 /***/ },
-/* 475 */
+/* 488 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseIteratee = __webpack_require__(408),
-	    baseUniq = __webpack_require__(476);
+	    baseUniq = __webpack_require__(489);
 
 	/**
 	 * This method is like `_.uniq` except that it accepts `iteratee` which is
@@ -40076,14 +42456,14 @@
 
 
 /***/ },
-/* 476 */
+/* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var SetCache = __webpack_require__(414),
-	    arrayIncludes = __webpack_require__(477),
-	    arrayIncludesWith = __webpack_require__(480),
-	    cacheHas = __webpack_require__(481),
-	    createSet = __webpack_require__(482),
+	    arrayIncludes = __webpack_require__(490),
+	    arrayIncludesWith = __webpack_require__(493),
+	    cacheHas = __webpack_require__(494),
+	    createSet = __webpack_require__(495),
 	    setToArray = __webpack_require__(287);
 
 	/** Used as the size to enable large array optimizations. */
@@ -40154,10 +42534,10 @@
 
 
 /***/ },
-/* 477 */
+/* 490 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(478);
+	var baseIndexOf = __webpack_require__(491);
 
 	/**
 	 * A specialized version of `_.includes` for arrays without support for
@@ -40177,10 +42557,10 @@
 
 
 /***/ },
-/* 478 */
+/* 491 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexOfNaN = __webpack_require__(479);
+	var indexOfNaN = __webpack_require__(492);
 
 	/**
 	 * The base implementation of `_.indexOf` without `fromIndex` bounds checks.
@@ -40210,7 +42590,7 @@
 
 
 /***/ },
-/* 479 */
+/* 492 */
 /***/ function(module, exports) {
 
 	/**
@@ -40239,7 +42619,7 @@
 
 
 /***/ },
-/* 480 */
+/* 493 */
 /***/ function(module, exports) {
 
 	/**
@@ -40267,7 +42647,7 @@
 
 
 /***/ },
-/* 481 */
+/* 494 */
 /***/ function(module, exports) {
 
 	/**
@@ -40286,11 +42666,11 @@
 
 
 /***/ },
-/* 482 */
+/* 495 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Set = __webpack_require__(273),
-	    noop = __webpack_require__(483),
+	    noop = __webpack_require__(496),
 	    setToArray = __webpack_require__(287);
 
 	/** Used as references for various `Number` constants. */
@@ -40311,7 +42691,7 @@
 
 
 /***/ },
-/* 483 */
+/* 496 */
 /***/ function(module, exports) {
 
 	/**

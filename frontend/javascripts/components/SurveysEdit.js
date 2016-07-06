@@ -34,7 +34,7 @@ class SurveysEdit extends Component {
       <form ref="form" className="surveys-edit" onSubmit={ this.handleSubmit.bind(this) }>
         <TextField
           value={ this.state.name }
-          autoFocus={ true }
+          autoFocus={ !this.state.name }
           floatingLabelText="Name"
           hintText="Enter survey name"
           name="name"
