@@ -29151,6 +29151,7 @@
 	    value: function render() {
 	      var _props = this.props;
 	      var surveys = _props.surveys;
+	      var questions = _props.questions;
 	      var actions = _props.actions;
 
 
@@ -29161,7 +29162,11 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'content' },
-	          _react2.default.createElement(_SurveysList2.default, { surveys: surveys, actions: actions })
+	          _react2.default.createElement(_SurveysList2.default, {
+	            surveys: surveys,
+	            questions: questions,
+	            actions: actions
+	          })
 	        )
 	      );
 	    }
@@ -29172,12 +29177,14 @@
 
 	SurveysApp.propTypes = {
 	  surveys: _react.PropTypes.array.isRequired,
+	  questions: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
 	function mapStateToProps(state) {
 	  return {
-	    surveys: state.surveys
+	    surveys: state.surveys,
+	    questions: state.questions
 	  };
 	}
 
@@ -29212,12 +29219,32 @@
 
 	var _delete2 = _interopRequireDefault(_delete);
 
+	var _get = __webpack_require__(512);
+
+	var _get2 = _interopRequireDefault(_get);
+
+	var _create3 = __webpack_require__(510);
+
+	var _create4 = _interopRequireDefault(_create3);
+
+	var _update3 = __webpack_require__(515);
+
+	var _update4 = _interopRequireDefault(_update3);
+
+	var _delete3 = __webpack_require__(516);
+
+	var _delete4 = _interopRequireDefault(_delete3);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var surveysActions = exports.surveysActions = {
 	  createSurvey: _create2.default,
 	  updateSurvey: _update2.default,
-	  deleteSurvey: _delete2.default
+	  deleteSurvey: _delete2.default,
+	  getQuestions: _get2.default,
+	  createQuestion: _create4.default,
+	  updateQuestion: _update4.default,
+	  deleteQuestion: _delete4.default
 	};
 
 /***/ },
@@ -33917,6 +33944,7 @@
 	    value: function render() {
 	      var _props = this.props;
 	      var surveys = _props.surveys;
+	      var questions = _props.questions;
 	      var actions = _props.actions;
 	      var _state = this.state;
 	      var selectedSurvey = _state.selectedSurvey;
@@ -33973,13 +34001,16 @@
 	        _react2.default.createElement(_RaisedButton2.default, {
 	          label: 'New',
 	          primary: true,
+	          style: { marginTop: '20px' },
 	          onTouchTap: this.handleNew.bind(this)
 	        }),
 	        _react2.default.createElement(_Dialog2.default, {
 	          title: selectedSurvey.name ? selectedSurvey.name + ' survey' : 'New survey',
 	          open: Object.keys(this.state.selectedSurvey).length > 0,
+	          autoScrollBodyContent: true,
 	          children: _react2.default.createElement(_SurveysEdit2.default, {
 	            survey: this.state.selectedSurvey,
+	            questions: questions,
 	            actions: actions
 	          }),
 	          actions: _react2.default.createElement(_FlatButton2.default, {
@@ -33998,6 +34029,7 @@
 
 	SurveysList.propTypes = {
 	  surveys: _react.PropTypes.array.isRequired,
+	  questions: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -40784,6 +40816,10 @@
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
+	var _QuestionsList = __webpack_require__(509);
+
+	var _QuestionsList2 = _interopRequireDefault(_QuestionsList);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -40836,25 +40872,45 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _props2 = this.props;
+	      var survey = _props2.survey;
+	      var questions = _props2.questions;
+	      var actions = _props2.actions;
+
+
 	      return _react2.default.createElement(
-	        'form',
-	        { ref: 'form', className: 'surveys-edit', onSubmit: this.handleSubmit.bind(this) },
-	        _react2.default.createElement(_TextField2.default, {
-	          value: this.state.name,
-	          autoFocus: !this.state.name,
-	          floatingLabelText: 'Name',
-	          hintText: 'Enter survey name',
-	          name: 'name',
-	          onChange: this.handleInputChange.bind(this, 'name'),
-	          onBlur: this.handleSubmit.bind(this)
-	        }),
-	        _react2.default.createElement(_Toggle2.default, {
-	          label: 'Is active',
-	          labelPosition: 'right',
-	          name: 'isActive',
-	          toggled: this.state.isActive,
-	          onToggle: this.handleInputChange.bind(this, 'isActive'),
-	          onBlur: this.handleSubmit.bind(this)
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'form',
+	          { ref: 'form', className: 'surveys-edit' },
+	          _react2.default.createElement(_TextField2.default, {
+	            value: this.state.name,
+	            autoFocus: !this.state.name,
+	            floatingLabelText: 'Name',
+	            hintText: 'Enter survey name',
+	            name: 'name',
+	            onChange: this.handleInputChange.bind(this, 'name'),
+	            onBlur: this.handleSubmit.bind(this)
+	          }),
+	          _react2.default.createElement(_Toggle2.default, {
+	            label: 'Is active',
+	            labelPosition: 'right',
+	            name: 'isActive',
+	            toggled: this.state.isActive,
+	            onToggle: this.handleInputChange.bind(this, 'isActive'),
+	            onBlur: this.handleSubmit.bind(this)
+	          })
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Questions'
+	        ),
+	        _react2.default.createElement(_QuestionsList2.default, {
+	          survey: survey,
+	          questions: questions,
+	          actions: actions
 	        })
 	      );
 	    }
@@ -40865,6 +40921,7 @@
 
 	SurveysEdit.propTypes = {
 	  survey: _react.PropTypes.object.isRequired,
+	  questions: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -42333,6 +42390,8 @@
 	var map = {
 		"./SurveysApp": 486,
 		"./SurveysApp.js": 486,
+		"./questions": 511,
+		"./questions.js": 511,
 		"./surveys": 487,
 		"./surveys.js": 487
 	};
@@ -42366,10 +42425,15 @@
 
 	var _surveys2 = _interopRequireDefault(_surveys);
 
+	var _questions = __webpack_require__(511);
+
+	var _questions2 = _interopRequireDefault(_questions);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
-	  surveys: _surveys2.default
+	  surveys: _surveys2.default,
+	  questions: _questions2.default
 	});
 
 /***/ },
@@ -42712,6 +42776,637 @@
 
 	module.exports = noop;
 
+
+/***/ },
+/* 497 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(390);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(398);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ContentAdd = function ContentAdd(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z' })
+	  );
+	};
+	ContentAdd = (0, _pure2.default)(ContentAdd);
+	ContentAdd.displayName = 'ContentAdd';
+	ContentAdd.muiName = 'SvgIcon';
+
+	exports.default = ContentAdd;
+
+/***/ },
+/* 498 */,
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FlatButton = __webpack_require__(452);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _add = __webpack_require__(497);
+
+	var _add2 = _interopRequireDefault(_add);
+
+	var _Question = __webpack_require__(513);
+
+	var _Question2 = _interopRequireDefault(_Question);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var QuestionsList = function (_Component) {
+	  _inherits(QuestionsList, _Component);
+
+	  function QuestionsList() {
+	    _classCallCheck(this, QuestionsList);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(QuestionsList).apply(this, arguments));
+	  }
+
+	  _createClass(QuestionsList, [{
+	    key: 'componentDidMount',
+
+
+	    // lifecycle
+	    //
+	    value: function componentDidMount() {
+	      this.props.actions.getQuestions(this.props.survey.id);
+	    }
+
+	    // helpers
+	    //
+
+	  }, {
+	    key: 'getQuestions',
+	    value: function getQuestions() {
+	      var _this2 = this;
+
+	      return this.props.questions.filter(function (question) {
+	        return question.surveyId === _this2.props.survey.id;
+	      });
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: 'handleCreateQuestion',
+	    value: function handleCreateQuestion(event) {
+	      this.props.actions.createQuestion(this.props.survey.id);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var survey = _props.survey;
+	      var actions = _props.actions;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'questions' },
+	          this.getQuestions().map(function (question) {
+	            return _react2.default.createElement(_Question2.default, { key: question.id, question: question, actions: actions });
+	          })
+	        ),
+	        _react2.default.createElement(_FlatButton2.default, {
+	          label: 'Add question',
+	          labelPosition: 'before',
+	          primary: true,
+	          icon: _react2.default.createElement(_add2.default, null),
+	          onTouchTap: this.handleCreateQuestion.bind(this)
+	        })
+	      );
+	    }
+	  }]);
+
+	  return QuestionsList;
+	}(_react.Component);
+
+	QuestionsList.propTypes = {
+	  survey: _react.PropTypes.object.isRequired,
+	  questions: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = QuestionsList;
+
+/***/ },
+/* 510 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(357);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestCreateQuestion(surveyId) {
+	  return {
+	    type: 'CREATE_QUESTION_REQUEST',
+	    surveyId: surveyId
+	  };
+	}
+
+	function receiveCreateQuestion(surveyId, json) {
+	  return {
+	    type: 'CREATE_QUESTION_RECEIVE',
+	    surveyId: surveyId,
+	    question: json,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchCreateQuestionError(surveyId, error) {
+	  return {
+	    type: 'CREATE_QUESTION_ERROR',
+	    surveyId: surveyId,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function createQuestion(surveyId) {
+	  return function (dispatch) {
+	    dispatch(requestCreateQuestion());
+
+	    return (0, _isomorphicFetch2.default)('/surveys/' + surveyId + '/questions', {
+	      method: 'POST',
+	      credentials: 'same-origin'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchCreateQuestionError(surveyId, json.error));
+	      } else {
+	        return dispatch(receiveCreateQuestion(surveyId, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchCreateQuestionError(surveyId, error));
+	    });
+	  };
+	}
+
+	exports.default = createQuestion;
+
+/***/ },
+/* 511 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = questions;
+	function questions() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'GET_QUESTIONS_RECEIVE':
+	      return action.questions;
+	    case 'CREATE_QUESTION_RECEIVE':
+	      return state.concat(action.question);
+	    case 'DELETE_QUESTION_RECEIVE':
+	      return state.filter(function (question) {
+	        return question.id !== action.id;
+	      });
+	    case 'UPDATE_QUESTION_RECEIVE':
+	      return state.map(function (question) {
+	        return question.id === action.id ? Object.assign(action.question, { isFetching: false }) : question;
+	      });
+	    case 'UPDATE_QUESTION_ERROR':
+	      return state.map(function (question) {
+	        return question.id === action.id ? Object.assign(question, { isFetching: false, error: action.error }) : question;
+	      });
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 512 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(357);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestGetQuestions(surveyId) {
+	  return {
+	    type: 'GET_QUESTIONS_REQUEST',
+	    surveyId: surveyId
+	  };
+	}
+
+	function receiveGetQuestions(surveyId, json) {
+	  return {
+	    type: 'GET_QUESTIONS_RECEIVE',
+	    surveyId: surveyId,
+	    questions: json,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchGetQuestionErrors(surveyId, error) {
+	  return {
+	    type: 'GET_QUESTIONS_ERROR',
+	    surveyId: surveyId,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function getQuestions(surveyId) {
+	  return function (dispatch) {
+	    dispatch(requestGetQuestions());
+
+	    return (0, _isomorphicFetch2.default)('/surveys/' + surveyId + '/questions', {
+	      method: 'GET',
+	      credentials: 'same-origin'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchGetQuestionErrors(surveyId, json.error));
+	      } else {
+	        return dispatch(receiveGetQuestions(surveyId, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchGetQuestionErrors(surveyId, error));
+	    });
+	  };
+	}
+
+	exports.default = getQuestions;
+
+/***/ },
+/* 513 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TextField = __webpack_require__(479);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	var _IconButton = __webpack_require__(365);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
+	var _delete = __webpack_require__(514);
+
+	var _delete2 = _interopRequireDefault(_delete);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// import AnswersList from './AnswersList'
+
+	var Question = function (_Component) {
+	  _inherits(Question, _Component);
+
+	  function Question(props) {
+	    _classCallCheck(this, Question);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Question).call(this, props));
+
+	    _this.state = {
+	      name: props.question.name,
+	      explanation: props.question.explanation
+	    };
+	    return _this;
+	  }
+
+	  // handlers
+	  //
+
+
+	  _createClass(Question, [{
+	    key: 'handleInputChange',
+	    value: function handleInputChange(attr, event) {
+	      this.setState(_defineProperty({}, attr, event.target.value));
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(event) {
+	      this.props.actions.updateQuestion(this.props.question.id, this.refs.form);
+	    }
+	  }, {
+	    key: 'handleDelete',
+	    value: function handleDelete(event) {
+	      if (window.confirm('Are you sure?')) this.props.actions.deleteQuestion(this.props.question.id);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var question = _props.question;
+	      var actions = _props.actions;
+
+
+	      return _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'form',
+	          { ref: 'form' },
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'name',
+	            value: this.state.name,
+	            multiLine: true,
+	            floatingLabelText: 'Name',
+	            hintText: 'Enter question name',
+	            onChange: this.handleInputChange.bind(this, 'name'),
+	            onBlur: this.handleSubmit.bind(this)
+	          }),
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'explanation',
+	            value: this.state.explanation,
+	            multiLine: true,
+	            floatingLabelText: 'Explanation',
+	            hintText: 'Enter question explanation',
+	            onChange: this.handleInputChange.bind(this, 'explanation'),
+	            onBlur: this.handleSubmit.bind(this)
+	          }),
+	          _react2.default.createElement(
+	            _IconButton2.default,
+	            {
+	              iconStyle: { width: '20px', height: '20px' },
+	              onTouchTap: this.handleDelete.bind(this)
+	            },
+	            _react2.default.createElement(_delete2.default, null)
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Question;
+	}(_react.Component);
+
+	Question.propTypes = {
+	  question: _react.PropTypes.object.isRequired,
+	  // answers: PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = Question;
+
+/***/ },
+/* 514 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(390);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(398);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ActionDelete = function ActionDelete(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z' })
+	  );
+	};
+	ActionDelete = (0, _pure2.default)(ActionDelete);
+	ActionDelete.displayName = 'ActionDelete';
+	ActionDelete.muiName = 'SvgIcon';
+
+	exports.default = ActionDelete;
+
+/***/ },
+/* 515 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(357);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestUpdateQuestion(id) {
+	  return {
+	    type: 'UPDATE_QUESTION_REQUEST',
+	    id: id
+	  };
+	}
+
+	function receiveUpdateQuestion(id, json) {
+	  return {
+	    type: 'UPDATE_QUESTION_RECEIVE',
+	    id: id,
+	    question: json,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchUpdateQuestionError(id, error) {
+	  return {
+	    type: 'UPDATE_QUESTION_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function updateQuestion(id, form) {
+	  return function (dispatch) {
+	    dispatch(requestUpdateQuestion(id));
+
+	    return (0, _isomorphicFetch2.default)('/questions/' + id, {
+	      method: 'PUT',
+	      body: new FormData(form),
+	      credentials: 'same-origin'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchUpdateQuestionError(id, json.error));
+	      } else {
+	        return dispatch(receiveUpdateQuestion(id, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchUpdateQuestionError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = updateQuestion;
+
+/***/ },
+/* 516 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(357);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestDeleteQuestion(id) {
+	  return {
+	    type: 'DELETE_QUESTION_REQUEST',
+	    id: id
+	  };
+	}
+
+	function receiveDeleteQuestion(id, json) {
+	  return {
+	    type: 'DELETE_QUESTION_RECEIVE',
+	    id: id,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchDeleteQuestionError(id, error) {
+	  return {
+	    type: 'DELETE_QUESTION_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function deleteQuestion(id) {
+	  return function (dispatch) {
+	    dispatch(requestDeleteQuestion(id));
+
+	    return (0, _isomorphicFetch2.default)('/questions/' + id, {
+	      method: 'DELETE',
+	      credentials: 'same-origin'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchDeleteQuestionError(id, json.error));
+	      } else {
+	        return dispatch(receiveDeleteQuestion(id, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchDeleteQuestionError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = deleteQuestion;
 
 /***/ }
 /******/ ]);

@@ -11,14 +11,18 @@ import SurveysList from '../components/SurveysList'
 class SurveysApp extends Component {
 
   render() {
-    const { surveys, actions } = this.props
+    const { surveys, questions, actions } = this.props
 
     return (
       <div className="container surveys">
         <Header/>
 
         <div className="content">
-          <SurveysList surveys={ surveys } actions={ actions } />
+          <SurveysList
+            surveys={ surveys }
+            questions={ questions }
+            actions={ actions }
+          />
         </div>
       </div>
     )
@@ -27,12 +31,14 @@ class SurveysApp extends Component {
 
 SurveysApp.propTypes = {
   surveys: PropTypes.array.isRequired,
+  questions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
 function mapStateToProps(state) {
   return {
     surveys: state.surveys,
+    questions: state.questions,
   }
 }
 

@@ -11,6 +11,7 @@ var RedisStore = require('connect-redis')(session);
 
 var routes = require('./routes/index').default;
 var surveys = require('./routes/surveys').default;
+var questions = require('./routes/questions').default;
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use(session({
 // routes
 app.use('/', routes);
 app.use('/surveys', surveys);
+app.use('/', questions);
 
 
 // catch 404 and forward to error handler

@@ -13,7 +13,7 @@ const upload = multer()
 // helpers
 //
 function getAttrs(body) {
-  let attrs = {}
+  let attrs = Object.assign({}, body)
   attrs.name = titleize(body.name)
   attrs.slug = slugify(body.name)
   attrs.isActive = !!body.isActive

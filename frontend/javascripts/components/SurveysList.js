@@ -69,7 +69,7 @@ class SurveysList extends Component {
   }
 
   render() {
-    const { surveys, actions } = this.props
+    const { surveys, questions, actions } = this.props
     const { selectedSurvey, isAlertDialogOpen } = this.state
 
     return (
@@ -93,15 +93,18 @@ class SurveysList extends Component {
         <RaisedButton
           label="New"
           primary={ true }
+          style={{ marginTop: '20px' }}
           onTouchTap={ this.handleNew.bind(this) }
         />
 
         <Dialog
           title={ selectedSurvey.name ? `${selectedSurvey.name} survey` : 'New survey' }
           open={ Object.keys(this.state.selectedSurvey).length > 0 }
+          autoScrollBodyContent={ true }
           children={
             <SurveysEdit
               survey={ this.state.selectedSurvey }
+              questions={ questions }
               actions={ actions }
             />
           }
@@ -122,6 +125,7 @@ class SurveysList extends Component {
 
 SurveysList.propTypes = {
   surveys: PropTypes.array.isRequired,
+  questions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

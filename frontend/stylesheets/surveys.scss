@@ -4,6 +4,8 @@
 }
 
 form.surveys-edit {
+  margin-bottom: $standart-margin * 2;
+
   > div:not(:last-child) {
     margin-bottom: $standart-margin;
   }

@@ -3,6 +3,8 @@ import React, { Component, PropTypes } from 'react'
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
 
+import QuestionsList from './QuestionsList'
+
 
 class SurveysEdit extends Component {
 
@@ -30,27 +32,38 @@ class SurveysEdit extends Component {
   // renderers
   //
   render() {
-    return (
-      <form ref="form" className="surveys-edit" onSubmit={ this.handleSubmit.bind(this) }>
-        <TextField
-          value={ this.state.name }
-          autoFocus={ !this.state.name }
-          floatingLabelText="Name"
-          hintText="Enter survey name"
-          name="name"
-          onChange={ this.handleInputChange.bind(this, 'name') }
-          onBlur={ this.handleSubmit.bind(this) }
-        />
+    const { survey, questions, actions } = this.props
 
-        <Toggle
-          label="Is active"
-          labelPosition="right"
-          name="isActive"
-          toggled={ this.state.isActive }
-          onToggle={ this.handleInputChange.bind(this, 'isActive') }
-          onBlur={ this.handleSubmit.bind(this) }
+    return (
+      <div>
+        <form ref="form" className="surveys-edit">
+          <TextField
+            value={ this.state.name }
+            autoFocus={ !this.state.name }
+            floatingLabelText="Name"
+            hintText="Enter survey name"
+            name="name"
+            onChange={ this.handleInputChange.bind(this, 'name') }
+            onBlur={ this.handleSubmit.bind(this) }
+          />
+
+          <Toggle
+            label="Is active"
+            labelPosition="right"
+            name="isActive"
+            toggled={ this.state.isActive }
+            onToggle={ this.handleInputChange.bind(this, 'isActive') }
+            onBlur={ this.handleSubmit.bind(this) }
+          />
+        </form>
+
+        <h3>Questions</h3>
+        <QuestionsList
+          survey={ survey }
+          questions={ questions }
+          actions={ actions }
         />
-      </form>
+      </div>
     )
   }
 
@@ -58,6 +71,7 @@ class SurveysEdit extends Component {
 
 SurveysEdit.propTypes = {
   survey: PropTypes.object.isRequired,
+  questions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
