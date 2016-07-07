@@ -29158,7 +29158,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'container surveys' },
-	        _react2.default.createElement(_Header2.default, null),
+	        _react2.default.createElement(_Header2.default, { title: 'Surveys' }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'content' },
@@ -29928,12 +29928,18 @@
 	  _createClass(Header, [{
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement(_AppBar2.default, { title: ("MentorAdmin") });
+	      var title = this.props.title ? ("MentorAdmin") + ' – ' + this.props.title : ("MentorAdmin");
+
+	      return _react2.default.createElement(_AppBar2.default, { title: title });
 	    }
 	  }]);
 
 	  return Header;
 	}(_react.Component);
+
+	Header.propTypes = {
+	  title: _react.PropTypes.string
+	};
 
 	exports.default = Header;
 
@@ -33954,11 +33960,6 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Surveys'
-	        ),
 	        _react2.default.createElement(
 	          _Table.Table,
 	          { selectable: false },

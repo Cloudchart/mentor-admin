@@ -74,8 +74,6 @@ class SurveysList extends Component {
 
     return (
       <div>
-        <h1>Surveys</h1>
-
         <Table selectable={ false }>
           <TableHeader>
             <TableRow>

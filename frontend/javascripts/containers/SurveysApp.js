@@ -15,7 +15,7 @@ class SurveysApp extends Component {
 
     return (
       <div className="container surveys">
-        <Header/>
+        <Header title="Surveys"/>
 
         <div className="content">
           <SurveysList
