@@ -28,7 +28,7 @@ function catchCreateQuestionError(surveyId, error) {
 
 function createQuestion(surveyId) {
   return function (dispatch) {
-    dispatch(requestCreateQuestion())
+    dispatch(requestCreateQuestion(surveyId))
 
     return fetch(`/surveys/${surveyId}/questions`, {
       method: 'POST',

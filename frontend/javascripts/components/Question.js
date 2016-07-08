@@ -19,11 +19,15 @@ class Question extends Component {
 
   // handlers
   //
+  handleSubmit(event) {
+    event.preventDefault()
+  }
+
   handleInputChange(attr, event) {
     this.setState({ [attr]: event.target.value })
   }
 
-  handleSubmit(event) {
+  handleUpdate(event) {
     this.props.actions.updateQuestion(this.props.question.id, this.refs.form)
   }
 
@@ -38,7 +42,7 @@ class Question extends Component {
 
     return (
       <li>
-        <form ref="form">
+        <form ref="form" onSubmit={ this.handleSubmit }>
           <TextField
             name="name"
             value={ this.state.name }
@@ -46,7 +50,7 @@ class Question extends Component {
             floatingLabelText="Name"
             hintText="Enter question name"
             onChange={ this.handleInputChange.bind(this, 'name') }
-            onBlur={ this.handleSubmit.bind(this) }
+            onBlur={ this.handleUpdate.bind(this) }
           />
 
           <TextField
@@ -56,7 +60,7 @@ class Question extends Component {
             floatingLabelText="Explanation"
             hintText="Enter question explanation"
             onChange={ this.handleInputChange.bind(this, 'explanation') }
-            onBlur={ this.handleSubmit.bind(this) }
+            onBlur={ this.handleUpdate.bind(this) }
           />
 
           <IconButton

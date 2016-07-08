@@ -30,7 +30,7 @@ function updateQuestion(id, form) {
   return function (dispatch) {
     dispatch(requestUpdateQuestion(id))
 
-    return fetch(`/questions/${id}`, {
+    return fetch(`/survey_questions/${id}`, {
       method: 'PUT',
       body: new FormData(form),
       credentials: 'same-origin',

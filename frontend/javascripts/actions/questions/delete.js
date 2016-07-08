@@ -29,7 +29,7 @@ function deleteQuestion(id) {
   return function (dispatch) {
     dispatch(requestDeleteQuestion(id))
 
-    return fetch(`/questions/${id}`, {
+    return fetch(`/survey_questions/${id}`, {
       method: 'DELETE',
       credentials: 'same-origin',
     }).then(response => response.json()).then(json => {

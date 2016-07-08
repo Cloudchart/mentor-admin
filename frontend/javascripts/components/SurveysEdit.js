@@ -18,13 +18,16 @@ class SurveysEdit extends Component {
 
   // handlers
   //
+  handleSubmit(event) {
+    event.preventDefault()
+  }
+
   handleInputChange(attr, event) {
     const value = attr === 'isActive' ? event.target.checked : event.target.value
     this.setState({ [attr]: value })
   }
 
-  handleSubmit(event) {
-    event.preventDefault()
+  handleUpdate(event) {
     const { survey, actions } = this.props
     actions.updateSurvey(survey.id, this.refs.form)
   }
@@ -36,7 +39,7 @@ class SurveysEdit extends Component {
 
     return (
       <div>
-        <form ref="form" className="surveys-edit">
+        <form ref="form" className="surveys-edit" onSubmit={ this.handleSubmit }>
           <TextField
             value={ this.state.name }
             autoFocus={ !this.state.name }
@@ -44,7 +47,7 @@ class SurveysEdit extends Component {
             hintText="Enter survey name"
             name="name"
             onChange={ this.handleInputChange.bind(this, 'name') }
-            onBlur={ this.handleSubmit.bind(this) }
+            onBlur={ this.handleUpdate.bind(this) }
           />
 
           <Toggle
@@ -53,7 +56,7 @@ class SurveysEdit extends Component {
             name="isActive"
             toggled={ this.state.isActive }
             onToggle={ this.handleInputChange.bind(this, 'isActive') }
-            onBlur={ this.handleSubmit.bind(this) }
+            onBlur={ this.handleUpdate.bind(this) }
           />
         </form>
 

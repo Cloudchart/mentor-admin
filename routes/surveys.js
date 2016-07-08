@@ -1,20 +1,20 @@
 import multer from 'multer'
 import { Router } from 'express'
-import { slugify, titleize } from 'underscore.string'
+import { slugify } from 'underscore.string'
 
-import { handleThinkyError } from './helpers'
+import { getFilteredAttrs, handleThinkyError } from './helpers'
 import { appName } from '../lib'
 import { Survey } from '../models'
 
 const router = Router()
 const upload = multer()
+const permittedAttrs = ['name', 'isActive']
 
 
 // helpers
 //
 function getAttrs(body) {
-  let attrs = Object.assign({}, body)
-  attrs.name = titleize(body.name)
+  let attrs = getFilteredAttrs(body, permittedAttrs)
   attrs.slug = slugify(body.name)
   attrs.isActive = !!body.isActive
   return attrs
