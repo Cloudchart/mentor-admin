@@ -14,54 +14,53 @@ import {
   TableRowColumn
 } from 'material-ui/Table'
 
-import SurveyEdit from './SurveyEdit'
+import BotEdit from './BotEdit'
 
 
-class SurveysList extends Component {
+class BotsList extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      selectedSurvey: {},
+      selectedBot: {},
     }
   }
 
   // handlers
   //
   handleNew(event) {
-    this.props.actions.createSurvey().then(res => {
-      this.setState({ selectedSurvey: res.item })
+    this.props.actions.createBot().then(res => {
+      this.setState({ selectedBot: res.item })
     })
 
   }
 
   handleEditClose(event) {
-    this.setState({ selectedSurvey: {} })
+    this.setState({ selectedBot: {} })
   }
 
-  handleEdit(survey, event) {
+  handleEdit(bot, event) {
     event.preventDefault()
-    this.setState({ selectedSurvey: survey })
+    this.setState({ selectedBot: bot })
   }
 
   handleDelete(id, event) {
     event.preventDefault()
-    if (window.confirm('Are you sure?')) this.props.actions.deleteSurvey(id)
+    if (window.confirm('Are you sure?')) this.props.actions.deleteBot(id)
   }
 
   // renderers
   //
-  renderSurvey(survey) {
+  renderBot(bot) {
     return(
-      <TableRow key={ survey.id }>
-        <TableRowColumn>{ survey.name }</TableRowColumn>
-        <TableRowColumn>{ survey.slug }</TableRowColumn>
-        <TableRowColumn>{ survey.isActive ? 'Active' : 'Inactive' }</TableRowColumn>
+      <TableRow key={ bot.id }>
+        <TableRowColumn>{ bot.name }</TableRowColumn>
+        <TableRowColumn>{ bot.isActive ? 'Active' : 'Inactive' }</TableRowColumn>
         <TableRowColumn>
           {[
-            <a key={1} href="" onClick={ this.handleEdit.bind(this, survey) }>Edit</a>,
+            <a key={1} href="" onClick={ this.handleEdit.bind(this, bot) }>Edit</a>,
             <span key={2}> | </span>,
-            <a key={3} href="" onClick={ this.handleDelete.bind(this, survey.id) }>Delete</a>
+            <a key={3} href="" onClick={ this.handleDelete.bind(this, bot.id) }>Delete</a>
           ]}
         </TableRowColumn>
       </TableRow>
@@ -69,8 +68,8 @@ class SurveysList extends Component {
   }
 
   render() {
-    const { surveys, questions, actions } = this.props
-    const { selectedSurvey, isAlertDialogOpen } = this.state
+    const { bots, questions, actions } = this.props
+    const { selectedBot, isAlertDialogOpen } = this.state
 
     return (
       <div>
@@ -78,13 +77,12 @@ class SurveysList extends Component {
           <TableHeader>
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Slug</TableHeaderColumn>
               <TableHeaderColumn>Active</TableHeaderColumn>
               <TableHeaderColumn>Actions</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody>
-            { sortBy(surveys.filter(survey => survey.name), 'name').map(this.renderSurvey.bind(this)) }
+            { sortBy(bots.filter(bot => bot.name), 'name').map(this.renderBot.bind(this)) }
           </TableBody>
         </Table>
 
@@ -96,12 +94,12 @@ class SurveysList extends Component {
         />
 
         <Dialog
-          title={ selectedSurvey.name ? `${selectedSurvey.name} survey` : 'New survey' }
-          open={ Object.keys(this.state.selectedSurvey).length > 0 }
+          title={ selectedBot.name ? `${selectedBot.name} bot` : 'New bot' }
+          open={ Object.keys(this.state.selectedBot).length > 0 }
           autoScrollBodyContent={ true }
           children={
-            <SurveyEdit
-              survey={ this.state.selectedSurvey }
+            <BotEdit
+              bot={ this.state.selectedBot }
               questions={ questions }
               actions={ actions }
             />
@@ -121,11 +119,10 @@ class SurveysList extends Component {
 
 }
 
-SurveysList.propTypes = {
-  surveys: PropTypes.array.isRequired,
-  questions: PropTypes.array.isRequired,
+BotsList.propTypes = {
+  bots: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
 
-export default SurveysList
+export default BotsList

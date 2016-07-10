@@ -26,9 +26,17 @@ body {
     > div.container {
       > .content {
         padding: $standart-padding;
+
       }
     }
   }
+
+  form {
+    > div:not(:last-child) {
+      margin-bottom: $standart-margin;
+    }
+  }
+
 }
 
 @import 'surveys';

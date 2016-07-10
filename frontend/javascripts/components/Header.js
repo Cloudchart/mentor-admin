@@ -26,12 +26,15 @@ class Header extends Component {
       <AppBar
         title={ title }
         iconElementLeft={
-          <IconMenu
-            iconButtonElement={
-              <IconButton><MenuIcon color="#FFFFFF" /></IconButton>
-            }
-          >
-            <MenuItem primaryText="Surveys" onTouchTap={ this.handleMenuItemClick.bind(this, '/surveys') } />
+          <IconMenu iconButtonElement={ <IconButton><MenuIcon color="#FFFFFF" /></IconButton> }>
+            <MenuItem
+              primaryText="Bots"
+              onTouchTap={ this.handleMenuItemClick.bind(this, '/bots') }
+            />
+            <MenuItem
+              primaryText="Surveys"
+              onTouchTap={ this.handleMenuItemClick.bind(this, '/surveys') }
+            />
           </IconMenu>
         }
       />

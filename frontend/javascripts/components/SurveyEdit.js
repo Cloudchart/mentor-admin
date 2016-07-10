@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField'
 import QuestionsList from './QuestionsList'
 
 
-class SurveysEdit extends Component {
+class SurveyEdit extends Component {
 
   constructor(props) {
     super(props)
@@ -72,11 +72,11 @@ class SurveysEdit extends Component {
 
 }
 
-SurveysEdit.propTypes = {
+SurveyEdit.propTypes = {
   survey: PropTypes.object.isRequired,
   questions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
 
-export default SurveysEdit
+export default SurveyEdit

@@ -12,8 +12,8 @@
     padding: 0; }
   body main > div.container > .content {
     padding: 30px; }
+  body form > div:not(:last-child) {
+    margin-bottom: 20px; }
 
 form.surveys-edit {
   margin-bottom: 40px; }
-  form.surveys-edit > div:not(:last-child) {
-    margin-bottom: 20px; }

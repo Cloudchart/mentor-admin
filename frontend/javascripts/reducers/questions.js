@@ -1,4 +1,4 @@
-export default function questions(state = [], action) {
+export default function (state = [], action) {
   switch (action.type) {
     case 'GET_QUESTIONS_RECEIVE':
       return action.questions

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  main(
+    data-react-class="BotsApp"
+  )
+
+block pagescript
+  script(type="text/javascript").
+    window.__INITIAL_STATE__ = {
+      bots: !{JSON.stringify(bots)}
+    }
