@@ -50,5 +50,11 @@
     "underscore.string": "^3.3.4",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1"
+  },
+  "devDependencies": {
+    "shipit-cli": "^1.4.1",
+    "shipit-deploy": "^2.2.0",
+    "shipit-npm": "^0.2.0",
+    "shipit-shared": "^4.4.1"
   }
 }
