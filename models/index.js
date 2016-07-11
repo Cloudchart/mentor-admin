@@ -13,6 +13,7 @@ export const Scenario = Thinky.createModel('Scenario',
   type.object().schema({
     id: type.string(),
     name: type.string(),
+    actionsJSON: type.string(), // temp field
   }).removeExtra()
 )
 

@@ -7,7 +7,7 @@ import { Scenario, ScenarioAction } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['name']
+const permittedAttrs = ['name', 'actionsJSON']
 
 
 router.get('/', async (req, res, next) => {

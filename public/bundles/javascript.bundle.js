@@ -46655,7 +46655,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScenarioEdit).call(this, props));
 
 	    _this.state = {
-	      name: props.scenario.name
+	      name: props.scenario.name,
+	      actionsJSON: props.scenario.actionsJSON
 	    };
 	    return _this;
 	  }
@@ -46702,6 +46703,15 @@
 	            floatingLabelText: 'Name',
 	            hintText: 'Enter scenario name',
 	            name: 'name',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: this.state.actionsJSON,
+	            fullWidth: true,
+	            multiLine: true,
+	            floatingLabelText: 'Actions',
+	            hintText: 'Enter scenario actions',
+	            name: 'actionsJSON',
 	            onBlur: this.handleUpdate.bind(this)
 	          })
 	        )

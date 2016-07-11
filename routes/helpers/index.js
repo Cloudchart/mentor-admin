@@ -14,7 +14,7 @@ export function handleThinkyError(res) {
       case 'ValidationError':
         return res.status(400).json({ error })
       default:
-        return res.status(500).json({ error })
+        return res.status(500).json({ error: error.message })
     }
   }
 }

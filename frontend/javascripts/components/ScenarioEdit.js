@@ -10,6 +10,7 @@ class ScenarioEdit extends Component {
     super(props)
     this.state = {
       name: props.scenario.name,
+      actionsJSON: props.scenario.actionsJSON,
     }
   }
 
@@ -38,6 +39,16 @@ class ScenarioEdit extends Component {
             floatingLabelText="Name"
             hintText="Enter scenario name"
             name="name"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+
+          <TextField
+            defaultValue={ this.state.actionsJSON }
+            fullWidth={ true }
+            multiLine={ true }
+            floatingLabelText="Actions"
+            hintText="Enter scenario actions"
+            name="actionsJSON"
             onBlur={ this.handleUpdate.bind(this) }
           />
         </form>
