@@ -10,9 +10,10 @@ var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 
 var routes = require('./routes/index').default;
+var bots = require('./routes/bots').default;
 var surveys = require('./routes/surveys').default;
 var questions = require('./routes/questions').default;
-var bots = require('./routes/bots').default;
+var scenarios = require('./routes/scenarios').default;
 
 var app = express();
 
@@ -38,9 +39,10 @@ app.use(session({
 
 // routes
 app.use('/', routes);
-app.use('/surveys', surveys);
-app.use('/bots', bots);
 app.use('/', questions);
+app.use('/bots', bots);
+app.use('/surveys', surveys);
+app.use('/scenarios', scenarios);
 
 
 // catch 404 and forward to error handler

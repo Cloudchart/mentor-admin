@@ -11,7 +11,7 @@ import BotsList from '../components/BotsList'
 class BotsApp extends Component {
 
   render() {
-    const { bots, questions, actions } = this.props
+    const { bots, actions } = this.props
 
     return (
       <div className="container bots">

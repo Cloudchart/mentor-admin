@@ -38,7 +38,7 @@ class BotEdit extends Component {
   // renderers
   //
   render() {
-    const { bot, questions, actions } = this.props
+    const { bot, actions } = this.props
 
     return (
       <div>

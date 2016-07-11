@@ -22,3 +22,9 @@ export const botsActions = {
   updateBot: update('bot'),
   deleteBot: destroy('bot'),
 }
+
+export const scenariosActions = {
+  createScenario: create('scenario'),
+  updateScenario: update('scenario'),
+  deleteScenario: destroy('scenario'),
+}

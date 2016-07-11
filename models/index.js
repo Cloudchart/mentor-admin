@@ -39,7 +39,7 @@ export const Bot = Thinky.createModel('Bot',
     keys: type.object().schema({
       facebookKey: type.string(),
       telegramKey: type.string(),
-    }),
+    }).removeExtra(),
   }).removeExtra()
 )
 
