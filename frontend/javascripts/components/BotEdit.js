@@ -8,9 +8,14 @@ class BotEdit extends Component {
 
   constructor(props) {
     super(props)
+
+    props.bot.keys = props.bot.keys || {}
+
     this.state = {
       name: props.bot.name,
       isActive: props.bot.isActive,
+      facebookKey: props.bot.keys.facebookKey,
+      telegramKey: props.bot.keys.telegramKey,
     }
   }
 
@@ -54,6 +59,24 @@ class BotEdit extends Component {
             name="isActive"
             toggled={ this.state.isActive }
             onToggle={ this.handleInputChange.bind(this, 'isActive') }
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+
+          <TextField
+            value={ this.state.facebookKey }
+            floatingLabelText="Facebook key"
+            hintText="Enter facebook key"
+            name="keys[facebookKey]"
+            onChange={ this.handleInputChange.bind(this, 'facebookKey') }
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+
+          <TextField
+            value={ this.state.telegramKey }
+            floatingLabelText="Telegram key"
+            hintText="Enter telegram key"
+            name="keys[telegramKey]"
+            onChange={ this.handleInputChange.bind(this, 'telegramKey') }
             onBlur={ this.handleUpdate.bind(this) }
           />
         </form>

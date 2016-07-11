@@ -29214,7 +29214,7 @@
 
 	var _update2 = _interopRequireDefault(_update);
 
-	var _delete = __webpack_require__(531);
+	var _delete = __webpack_require__(360);
 
 	var _delete2 = _interopRequireDefault(_delete);
 
@@ -29840,7 +29840,73 @@
 	}
 
 /***/ },
-/* 360 */,
+/* 360 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function (modelName) {
+	  return function (id) {
+	    return deleteItem(modelName, id);
+	  };
+	};
+
+	var _isomorphicFetch = __webpack_require__(357);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestDeleteItem(modelName, id) {
+	  return {
+	    type: 'DELETE_' + modelName.toUpperCase() + '_REQUEST',
+	    id: id
+	  };
+	}
+
+	function receiveDeleteItem(modelName, id, json) {
+	  return {
+	    type: 'DELETE_' + modelName.toUpperCase() + '_RECEIVE',
+	    id: id,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchDeleteItemError(modelName, id, error) {
+	  return {
+	    type: 'DELETE_' + modelName.toUpperCase() + '_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function deleteItem(modelName, id) {
+	  return function (dispatch) {
+	    dispatch(requestDeleteItem(modelName, id));
+
+	    return (0, _isomorphicFetch2.default)('/' + modelName + 's/' + id, {
+	      method: 'DELETE',
+	      credentials: 'same-origin'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchDeleteItemError(modelName, id, json.error));
+	      } else {
+	        return dispatch(receiveDeleteItem(modelName, id, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchDeleteItemError(modelName, id, error));
+	    });
+	  };
+	}
+
+/***/ },
 /* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -44667,9 +44733,13 @@
 
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BotEdit).call(this, props));
 
+	    props.bot.keys = props.bot.keys || {};
+
 	    _this.state = {
 	      name: props.bot.name,
-	      isActive: props.bot.isActive
+	      isActive: props.bot.isActive,
+	      facebookKey: props.bot.keys.facebookKey,
+	      telegramKey: props.bot.keys.telegramKey
 	    };
 	    return _this;
 	  }
@@ -44732,6 +44802,22 @@
 	            name: 'isActive',
 	            toggled: this.state.isActive,
 	            onToggle: this.handleInputChange.bind(this, 'isActive'),
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement(_TextField2.default, {
+	            value: this.state.facebookKey,
+	            floatingLabelText: 'Facebook key',
+	            hintText: 'Enter facebook key',
+	            name: 'keys[facebookKey]',
+	            onChange: this.handleInputChange.bind(this, 'facebookKey'),
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement(_TextField2.default, {
+	            value: this.state.telegramKey,
+	            floatingLabelText: 'Telegram key',
+	            hintText: 'Enter telegram key',
+	            name: 'keys[telegramKey]',
+	            onChange: this.handleInputChange.bind(this, 'telegramKey'),
 	            onBlur: this.handleUpdate.bind(this)
 	          })
 	        )
@@ -47497,74 +47583,6 @@
 	      return state;
 	  }
 	};
-
-/***/ },
-/* 530 */,
-/* 531 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	exports.default = function (modelName) {
-	  return function (id) {
-	    return deleteItem(modelName, id);
-	  };
-	};
-
-	var _isomorphicFetch = __webpack_require__(357);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function requestDeleteItem(modelName, id) {
-	  return {
-	    type: 'DELETE_' + modelName.toUpperCase() + '_REQUEST',
-	    id: id
-	  };
-	}
-
-	function receiveDeleteItem(modelName, id, json) {
-	  return {
-	    type: 'DELETE_' + modelName.toUpperCase() + '_RECEIVE',
-	    id: id,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchDeleteItemError(modelName, id, error) {
-	  return {
-	    type: 'DELETE_' + modelName.toUpperCase() + '_ERROR',
-	    id: id,
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function deleteItem(modelName, id) {
-	  return function (dispatch) {
-	    dispatch(requestDeleteItem(modelName, id));
-
-	    return (0, _isomorphicFetch2.default)('/' + modelName + 's/' + id, {
-	      method: 'DELETE',
-	      credentials: 'same-origin'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      if (json.error) {
-	        return dispatch(catchDeleteItemError(modelName, id, json.error));
-	      } else {
-	        return dispatch(receiveDeleteItem(modelName, id, json));
-	      }
-	    }).catch(function (error) {
-	      return dispatch(catchDeleteItemError(modelName, id, error));
-	    });
-	  };
-	}
 
 /***/ }
 /******/ ]);
