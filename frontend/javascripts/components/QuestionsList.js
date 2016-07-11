@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react'
 import FlatButton from 'material-ui/FlatButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 
-import Question from './Question'
+import QuestionEdit from './QuestionEdit'
 
 
 class QuestionsList extends Component {
@@ -37,7 +37,7 @@ class QuestionsList extends Component {
         <ul className="questions">
           {
             this.getQuestions().map(question => {
-              return <Question key={ question.id } question={ question } actions={ actions } />
+              return <QuestionEdit key={ question.id } question={ question } actions={ actions } />
             })
           }
         </ul>

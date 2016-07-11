@@ -3,11 +3,11 @@ import { Router } from 'express'
 
 import { getFilteredAttrs, handleThinkyError } from './helpers'
 import { appName } from '../lib'
-import { Bot } from '../models'
+import { Bot, Scenario } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['name', 'isActive', 'keys']
+const permittedAttrs = ['name', 'isActive', 'keys', 'scenarioId']
 
 
 // helpers
@@ -21,8 +21,15 @@ function getAttrs(body) {
 // actions
 //
 router.get('/', async (req, res, next) => {
-  Bot.run().then(bots => {
-    res.render('bots', { title: `${appName} – Bots`, bots: bots })
+  Scenario.filter(scenario => scenario.hasFields('name')).then(scenarios => {
+    Bot.run().then(bots => {
+      res.render('bots', { title: `${appName} – Bots`,
+        bots: bots,
+        scenarios: scenarios,
+      })
+    }).error(error => {
+      res.status(500).render('error', { message: error, error: {} })
+    })
   }).error(error => {
     res.status(500).render('error', { message: error, error: {} })
   })

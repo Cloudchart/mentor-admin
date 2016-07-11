@@ -22,11 +22,6 @@ class SurveyEdit extends Component {
     event.preventDefault()
   }
 
-  handleInputChange(attr, event) {
-    const value = attr === 'isActive' ? event.target.checked : event.target.value
-    this.setState({ [attr]: value })
-  }
-
   handleUpdate(event) {
     const { survey, actions } = this.props
     actions.updateSurvey(survey.id, this.refs.form)
@@ -41,12 +36,11 @@ class SurveyEdit extends Component {
       <div>
         <form ref="form" className="surveys-edit" onSubmit={ this.handleSubmit }>
           <TextField
-            value={ this.state.name }
+            defaultValue={ this.state.name }
             autoFocus={ !this.state.name }
             floatingLabelText="Name"
             hintText="Enter survey name"
             name="name"
-            onChange={ this.handleInputChange.bind(this, 'name') }
             onBlur={ this.handleUpdate.bind(this) }
           />
 
@@ -54,8 +48,7 @@ class SurveyEdit extends Component {
             label="Is active"
             labelPosition="right"
             name="isActive"
-            toggled={ this.state.isActive }
-            onToggle={ this.handleInputChange.bind(this, 'isActive') }
+            defaultToggled={ this.state.isActive }
             onBlur={ this.handleUpdate.bind(this) }
           />
         </form>

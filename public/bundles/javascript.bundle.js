@@ -83,7 +83,7 @@
 	  if (reactType === 'plain') {
 	    _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	  } else {
-	    var reducers = __webpack_require__(516)("./" + reactClass).default;
+	    var reducers = __webpack_require__(518)("./" + reactClass).default;
 	    var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	    _reactDom2.default.render(_react2.default.createElement(
@@ -29086,8 +29086,8 @@
 		"./BotsApp.js": 354,
 		"./ScenariosApp": 508,
 		"./ScenariosApp.js": 508,
-		"./SurveysApp": 509,
-		"./SurveysApp.js": 509
+		"./SurveysApp": 511,
+		"./SurveysApp.js": 511
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -29155,6 +29155,7 @@
 	    value: function render() {
 	      var _props = this.props;
 	      var bots = _props.bots;
+	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
 
 
@@ -29167,6 +29168,7 @@
 	          { className: 'content' },
 	          _react2.default.createElement(_BotsList2.default, {
 	            bots: bots,
+	            scenarios: scenarios,
 	            actions: actions
 	          })
 	        )
@@ -29179,12 +29181,14 @@
 
 	BotsApp.propTypes = {
 	  bots: _react.PropTypes.array.isRequired,
+	  scenarios: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
 	function mapStateToProps(state) {
 	  return {
-	    bots: state.bots
+	    bots: state.bots,
+	    scenarios: state.scenarios
 	  };
 	}
 
@@ -38346,6 +38350,7 @@
 	    value: function render() {
 	      var _props = this.props;
 	      var bots = _props.bots;
+	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
 	      var _state = this.state;
 	      var selectedBot = _state.selectedBot;
@@ -38401,6 +38406,7 @@
 	          autoScrollBodyContent: true,
 	          children: _react2.default.createElement(_BotEdit2.default, {
 	            bot: this.state.selectedBot,
+	            scenarios: scenarios,
 	            actions: actions
 	          }),
 	          actions: _react2.default.createElement(_FlatButton2.default, {
@@ -38419,6 +38425,7 @@
 
 	BotsList.propTypes = {
 	  bots: _react.PropTypes.array.isRequired,
+	  scenarios: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -44716,6 +44723,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _sortBy = __webpack_require__(430);
+
+	var _sortBy2 = _interopRequireDefault(_sortBy);
+
 	var _Toggle = __webpack_require__(500);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
@@ -44726,13 +44737,14 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// https://github.com/callemall/material-ui/issues/3151
+	// import SelectField from 'material-ui/SelectField'
 
 	var BotEdit = function (_Component) {
 	  _inherits(BotEdit, _Component);
@@ -44743,10 +44755,10 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BotEdit).call(this, props));
 
 	    props.bot.keys = props.bot.keys || {};
-
 	    _this.state = {
 	      name: props.bot.name,
 	      isActive: props.bot.isActive,
+	      scenarioId: props.bot.scenarioId,
 	      facebookKey: props.bot.keys.facebookKey,
 	      telegramKey: props.bot.keys.telegramKey
 	    };
@@ -44763,12 +44775,6 @@
 	      event.preventDefault();
 	    }
 	  }, {
-	    key: 'handleInputChange',
-	    value: function handleInputChange(attr, event) {
-	      var value = attr === 'isActive' ? event.target.checked : event.target.value;
-	      this.setState(_defineProperty({}, attr, value));
-	    }
-	  }, {
 	    key: 'handleUpdate',
 	    value: function handleUpdate(event) {
 	      var _props = this.props;
@@ -44782,10 +44788,20 @@
 	    //
 
 	  }, {
+	    key: 'renderScenariosOptions',
+	    value: function renderScenariosOptions(scenario) {
+	      return _react2.default.createElement(
+	        'option',
+	        { key: scenario.id, value: scenario.id },
+	        scenario.name
+	      );
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _props2 = this.props;
 	      var bot = _props2.bot;
+	      var scenarios = _props2.scenarios;
 	      var actions = _props2.actions;
 
 
@@ -44796,38 +44812,44 @@
 	          'form',
 	          { ref: 'form', className: 'bots-edit', onSubmit: this.handleSubmit },
 	          _react2.default.createElement(_TextField2.default, {
-	            value: this.state.name,
+	            defaultValue: this.state.name,
 	            autoFocus: !this.state.name,
 	            floatingLabelText: 'Name',
 	            hintText: 'Enter bot name',
 	            name: 'name',
-	            onChange: this.handleInputChange.bind(this, 'name'),
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(_Toggle2.default, {
 	            label: 'Is active',
 	            labelPosition: 'right',
 	            name: 'isActive',
-	            toggled: this.state.isActive,
-	            onToggle: this.handleInputChange.bind(this, 'isActive'),
+	            defaultToggled: this.state.isActive,
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(_TextField2.default, {
-	            value: this.state.facebookKey,
+	            defaultValue: this.state.facebookKey,
 	            floatingLabelText: 'Facebook key',
 	            hintText: 'Enter facebook key',
 	            name: 'keys[facebookKey]',
-	            onChange: this.handleInputChange.bind(this, 'facebookKey'),
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(_TextField2.default, {
-	            value: this.state.telegramKey,
+	            defaultValue: this.state.telegramKey,
 	            floatingLabelText: 'Telegram key',
 	            hintText: 'Enter telegram key',
 	            name: 'keys[telegramKey]',
-	            onChange: this.handleInputChange.bind(this, 'telegramKey'),
 	            onBlur: this.handleUpdate.bind(this)
-	          })
+	          }),
+	          _react2.default.createElement(
+	            'select',
+	            {
+	              name: 'scenarioId',
+	              defaultValue: this.state.scenarioId,
+	              onBlur: this.handleUpdate.bind(this)
+	            },
+	            _react2.default.createElement('option', null),
+	            (0, _sortBy2.default)(scenarios, 'name').map(this.renderScenariosOptions.bind(this))
+	          )
 	        )
 	      );
 	    }
@@ -44838,6 +44860,7 @@
 
 	BotEdit.propTypes = {
 	  bot: _react.PropTypes.object.isRequired,
+	  scenarios: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -46325,7 +46348,7 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _ScenariosList = __webpack_require__(534);
+	var _ScenariosList = __webpack_require__(509);
 
 	var _ScenariosList2 = _interopRequireDefault(_ScenariosList);
 
@@ -46405,6 +46428,313 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _sortBy = __webpack_require__(430);
+
+	var _sortBy2 = _interopRequireDefault(_sortBy);
+
+	var _RaisedButton = __webpack_require__(477);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+	var _FlatButton = __webpack_require__(479);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _Dialog = __webpack_require__(482);
+
+	var _Dialog2 = _interopRequireDefault(_Dialog);
+
+	var _Table = __webpack_require__(486);
+
+	var _ScenarioEdit = __webpack_require__(510);
+
+	var _ScenarioEdit2 = _interopRequireDefault(_ScenarioEdit);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ScenariosList = function (_Component) {
+	  _inherits(ScenariosList, _Component);
+
+	  function ScenariosList(props) {
+	    _classCallCheck(this, ScenariosList);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScenariosList).call(this, props));
+
+	    _this.state = {
+	      selectedItem: {}
+	    };
+	    return _this;
+	  }
+
+	  // handlers
+	  //
+
+
+	  _createClass(ScenariosList, [{
+	    key: 'handleNew',
+	    value: function handleNew(event) {
+	      var _this2 = this;
+
+	      this.props.actions.createScenario().then(function (res) {
+	        _this2.setState({ selectedItem: res.item });
+	      });
+	    }
+	  }, {
+	    key: 'handleEditClose',
+	    value: function handleEditClose(event) {
+	      this.setState({ selectedItem: {} });
+	    }
+	  }, {
+	    key: 'handleEdit',
+	    value: function handleEdit(item, event) {
+	      event.preventDefault();
+	      this.setState({ selectedItem: item });
+	    }
+	  }, {
+	    key: 'handleDelete',
+	    value: function handleDelete(id, event) {
+	      event.preventDefault();
+	      if (window.confirm('Are you sure?')) this.props.actions.deleteScenario(id);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderItem',
+	    value: function renderItem(item) {
+	      return _react2.default.createElement(
+	        _Table.TableRow,
+	        { key: item.id },
+	        _react2.default.createElement(
+	          _Table.TableRowColumn,
+	          null,
+	          item.name
+	        ),
+	        _react2.default.createElement(
+	          _Table.TableRowColumn,
+	          null,
+	          [_react2.default.createElement(
+	            'a',
+	            { key: 1, href: '', onClick: this.handleEdit.bind(this, item) },
+	            'Edit'
+	          ), _react2.default.createElement(
+	            'span',
+	            { key: 2 },
+	            ' | '
+	          ), _react2.default.createElement(
+	            'a',
+	            { key: 3, href: '', onClick: this.handleDelete.bind(this, item.id) },
+	            'Delete'
+	          )]
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var scenarios = _props.scenarios;
+	      var actions = _props.actions;
+	      var _state = this.state;
+	      var selectedItem = _state.selectedItem;
+	      var isAlertDialogOpen = _state.isAlertDialogOpen;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _Table.Table,
+	          { selectable: false },
+	          _react2.default.createElement(
+	            _Table.TableHeader,
+	            null,
+	            _react2.default.createElement(
+	              _Table.TableRow,
+	              null,
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Name'
+	              ),
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Actions'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _Table.TableBody,
+	            null,
+	            (0, _sortBy2.default)(scenarios.filter(function (scenario) {
+	              return scenario.name;
+	            }), 'name').map(this.renderItem.bind(this))
+	          )
+	        ),
+	        _react2.default.createElement(_RaisedButton2.default, {
+	          label: 'New',
+	          primary: true,
+	          style: { marginTop: '20px' },
+	          onTouchTap: this.handleNew.bind(this)
+	        }),
+	        _react2.default.createElement(_Dialog2.default, {
+	          title: selectedItem.name ? selectedItem.name + ' scenario' : 'New scenario',
+	          open: Object.keys(this.state.selectedItem).length > 0,
+	          autoScrollBodyContent: true,
+	          children: _react2.default.createElement(_ScenarioEdit2.default, {
+	            scenario: this.state.selectedItem,
+	            actions: actions
+	          }),
+	          actions: _react2.default.createElement(_FlatButton2.default, {
+	            label: 'Done',
+	            primary: true,
+	            onTouchTap: this.handleEditClose.bind(this)
+	          }),
+	          onRequestClose: this.handleEditClose.bind(this)
+	        })
+	      );
+	    }
+	  }]);
+
+	  return ScenariosList;
+	}(_react.Component);
+
+	ScenariosList.propTypes = {
+	  scenarios: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = ScenariosList;
+
+/***/ },
+/* 510 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Toggle = __webpack_require__(500);
+
+	var _Toggle2 = _interopRequireDefault(_Toggle);
+
+	var _TextField = __webpack_require__(502);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ScenarioEdit = function (_Component) {
+	  _inherits(ScenarioEdit, _Component);
+
+	  function ScenarioEdit(props) {
+	    _classCallCheck(this, ScenarioEdit);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScenarioEdit).call(this, props));
+
+	    _this.state = {
+	      name: props.scenario.name
+	    };
+	    return _this;
+	  }
+
+	  // handlers
+	  //
+
+
+	  _createClass(ScenarioEdit, [{
+	    key: 'handleSubmit',
+	    value: function handleSubmit(event) {
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: 'handleUpdate',
+	    value: function handleUpdate(event) {
+	      var _props = this.props;
+	      var scenario = _props.scenario;
+	      var actions = _props.actions;
+
+	      actions.updateScenario(scenario.id, this.refs.form);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props2 = this.props;
+	      var scenario = _props2.scenario;
+	      var actions = _props2.actions;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'form',
+	          { ref: 'form', className: 'scenarios-edit', onSubmit: this.handleSubmit },
+	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: this.state.name,
+	            autoFocus: !this.state.name,
+	            floatingLabelText: 'Name',
+	            hintText: 'Enter scenario name',
+	            name: 'name',
+	            onBlur: this.handleUpdate.bind(this)
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return ScenarioEdit;
+	}(_react.Component);
+
+	ScenarioEdit.propTypes = {
+	  scenario: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = ScenarioEdit;
+
+/***/ },
+/* 511 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _redux = __webpack_require__(167);
 
 	var _reactRedux = __webpack_require__(180);
@@ -46415,7 +46745,7 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _SurveysList = __webpack_require__(510);
+	var _SurveysList = __webpack_require__(512);
 
 	var _SurveysList2 = _interopRequireDefault(_SurveysList);
 
@@ -46487,7 +46817,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SurveysApp);
 
 /***/ },
-/* 510 */
+/* 512 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46520,7 +46850,7 @@
 
 	var _Table = __webpack_require__(486);
 
-	var _SurveyEdit = __webpack_require__(511);
+	var _SurveyEdit = __webpack_require__(513);
 
 	var _SurveyEdit2 = _interopRequireDefault(_SurveyEdit);
 
@@ -46712,7 +47042,7 @@
 	exports.default = SurveysList;
 
 /***/ },
-/* 511 */
+/* 513 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46735,13 +47065,11 @@
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
-	var _QuestionsList = __webpack_require__(512);
+	var _QuestionsList = __webpack_require__(514);
 
 	var _QuestionsList2 = _interopRequireDefault(_QuestionsList);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -46774,12 +47102,6 @@
 	      event.preventDefault();
 	    }
 	  }, {
-	    key: 'handleInputChange',
-	    value: function handleInputChange(attr, event) {
-	      var value = attr === 'isActive' ? event.target.checked : event.target.value;
-	      this.setState(_defineProperty({}, attr, value));
-	    }
-	  }, {
 	    key: 'handleUpdate',
 	    value: function handleUpdate(event) {
 	      var _props = this.props;
@@ -46808,20 +47130,18 @@
 	          'form',
 	          { ref: 'form', className: 'surveys-edit', onSubmit: this.handleSubmit },
 	          _react2.default.createElement(_TextField2.default, {
-	            value: this.state.name,
+	            defaultValue: this.state.name,
 	            autoFocus: !this.state.name,
 	            floatingLabelText: 'Name',
 	            hintText: 'Enter survey name',
 	            name: 'name',
-	            onChange: this.handleInputChange.bind(this, 'name'),
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(_Toggle2.default, {
 	            label: 'Is active',
 	            labelPosition: 'right',
 	            name: 'isActive',
-	            toggled: this.state.isActive,
-	            onToggle: this.handleInputChange.bind(this, 'isActive'),
+	            defaultToggled: this.state.isActive,
 	            onBlur: this.handleUpdate.bind(this)
 	          })
 	        ),
@@ -46851,7 +47171,7 @@
 	exports.default = SurveyEdit;
 
 /***/ },
-/* 512 */
+/* 514 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46870,13 +47190,13 @@
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-	var _add = __webpack_require__(513);
+	var _add = __webpack_require__(515);
 
 	var _add2 = _interopRequireDefault(_add);
 
-	var _Question = __webpack_require__(514);
+	var _QuestionEdit = __webpack_require__(516);
 
-	var _Question2 = _interopRequireDefault(_Question);
+	var _QuestionEdit2 = _interopRequireDefault(_QuestionEdit);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46945,7 +47265,7 @@
 	          'ul',
 	          { className: 'questions' },
 	          this.getQuestions().map(function (question) {
-	            return _react2.default.createElement(_Question2.default, { key: question.id, question: question, actions: actions });
+	            return _react2.default.createElement(_QuestionEdit2.default, { key: question.id, question: question, actions: actions });
 	          })
 	        ),
 	        _react2.default.createElement(_FlatButton2.default, {
@@ -46971,7 +47291,7 @@
 	exports.default = QuestionsList;
 
 /***/ },
-/* 513 */
+/* 515 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47008,7 +47328,7 @@
 	exports.default = ContentAdd;
 
 /***/ },
-/* 514 */
+/* 516 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47031,13 +47351,11 @@
 
 	var _IconButton2 = _interopRequireDefault(_IconButton);
 
-	var _delete = __webpack_require__(515);
+	var _delete = __webpack_require__(517);
 
 	var _delete2 = _interopRequireDefault(_delete);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -47047,13 +47365,13 @@
 
 	// import AnswersList from './AnswersList'
 
-	var Question = function (_Component) {
-	  _inherits(Question, _Component);
+	var QuestionEdit = function (_Component) {
+	  _inherits(QuestionEdit, _Component);
 
-	  function Question(props) {
-	    _classCallCheck(this, Question);
+	  function QuestionEdit(props) {
+	    _classCallCheck(this, QuestionEdit);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Question).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(QuestionEdit).call(this, props));
 
 	    _this.state = {
 	      name: props.question.name,
@@ -47066,15 +47384,10 @@
 	  //
 
 
-	  _createClass(Question, [{
+	  _createClass(QuestionEdit, [{
 	    key: 'handleSubmit',
 	    value: function handleSubmit(event) {
 	      event.preventDefault();
-	    }
-	  }, {
-	    key: 'handleInputChange',
-	    value: function handleInputChange(attr, event) {
-	      this.setState(_defineProperty({}, attr, event.target.value));
 	    }
 	  }, {
 	    key: 'handleUpdate',
@@ -47106,20 +47419,18 @@
 	          { ref: 'form', onSubmit: this.handleSubmit },
 	          _react2.default.createElement(_TextField2.default, {
 	            name: 'name',
-	            value: this.state.name,
+	            defaultValue: this.state.name,
 	            multiLine: true,
 	            floatingLabelText: 'Name',
 	            hintText: 'Enter question name',
-	            onChange: this.handleInputChange.bind(this, 'name'),
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(_TextField2.default, {
 	            name: 'explanation',
-	            value: this.state.explanation,
+	            defaultValue: this.state.explanation,
 	            multiLine: true,
 	            floatingLabelText: 'Explanation',
 	            hintText: 'Enter question explanation',
-	            onChange: this.handleInputChange.bind(this, 'explanation'),
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(
@@ -47135,19 +47446,19 @@
 	    }
 	  }]);
 
-	  return Question;
+	  return QuestionEdit;
 	}(_react.Component);
 
-	Question.propTypes = {
+	QuestionEdit.propTypes = {
 	  question: _react.PropTypes.object.isRequired,
 	  // answers: PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
-	exports.default = Question;
+	exports.default = QuestionEdit;
 
 /***/ },
-/* 515 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47184,24 +47495,24 @@
 	exports.default = ActionDelete;
 
 /***/ },
-/* 516 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./BotsApp": 517,
-		"./BotsApp.js": 517,
-		"./ScenariosApp": 533,
-		"./ScenariosApp.js": 533,
-		"./SurveysApp": 530,
-		"./SurveysApp.js": 530,
-		"./bots": 518,
-		"./bots.js": 518,
-		"./questions": 532,
-		"./questions.js": 532,
-		"./scenarios": 529,
-		"./scenarios.js": 529,
-		"./surveys": 531,
-		"./surveys.js": 531
+		"./BotsApp": 519,
+		"./BotsApp.js": 519,
+		"./ScenariosApp": 531,
+		"./ScenariosApp.js": 531,
+		"./SurveysApp": 532,
+		"./SurveysApp.js": 532,
+		"./bots": 520,
+		"./bots.js": 520,
+		"./questions": 534,
+		"./questions.js": 534,
+		"./scenarios": 530,
+		"./scenarios.js": 530,
+		"./surveys": 533,
+		"./surveys.js": 533
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -47214,11 +47525,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 516;
+	webpackContext.id = 518;
 
 
 /***/ },
-/* 517 */
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47229,18 +47540,23 @@
 
 	var _redux = __webpack_require__(167);
 
-	var _bots = __webpack_require__(518);
+	var _bots = __webpack_require__(520);
 
 	var _bots2 = _interopRequireDefault(_bots);
+
+	var _scenarios = __webpack_require__(530);
+
+	var _scenarios2 = _interopRequireDefault(_scenarios);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
-	  bots: _bots2.default
+	  bots: _bots2.default,
+	  scenarios: _scenarios2.default
 	});
 
 /***/ },
-/* 518 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47277,18 +47593,18 @@
 	  }
 	};
 
-	var _uniqBy = __webpack_require__(519);
+	var _uniqBy = __webpack_require__(521);
 
 	var _uniqBy2 = _interopRequireDefault(_uniqBy);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 519 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseIteratee = __webpack_require__(435),
-	    baseUniq = __webpack_require__(520);
+	    baseUniq = __webpack_require__(522);
 
 	/**
 	 * This method is like `_.uniq` except that it accepts `iteratee` which is
@@ -47322,14 +47638,14 @@
 
 
 /***/ },
-/* 520 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var SetCache = __webpack_require__(441),
-	    arrayIncludes = __webpack_require__(521),
-	    arrayIncludesWith = __webpack_require__(524),
-	    cacheHas = __webpack_require__(525),
-	    createSet = __webpack_require__(526),
+	    arrayIncludes = __webpack_require__(523),
+	    arrayIncludesWith = __webpack_require__(526),
+	    cacheHas = __webpack_require__(527),
+	    createSet = __webpack_require__(528),
 	    setToArray = __webpack_require__(287);
 
 	/** Used as the size to enable large array optimizations. */
@@ -47400,10 +47716,10 @@
 
 
 /***/ },
-/* 521 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(522);
+	var baseIndexOf = __webpack_require__(524);
 
 	/**
 	 * A specialized version of `_.includes` for arrays without support for
@@ -47423,10 +47739,10 @@
 
 
 /***/ },
-/* 522 */
+/* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexOfNaN = __webpack_require__(523);
+	var indexOfNaN = __webpack_require__(525);
 
 	/**
 	 * The base implementation of `_.indexOf` without `fromIndex` bounds checks.
@@ -47456,7 +47772,7 @@
 
 
 /***/ },
-/* 523 */
+/* 525 */
 /***/ function(module, exports) {
 
 	/**
@@ -47485,7 +47801,7 @@
 
 
 /***/ },
-/* 524 */
+/* 526 */
 /***/ function(module, exports) {
 
 	/**
@@ -47513,7 +47829,7 @@
 
 
 /***/ },
-/* 525 */
+/* 527 */
 /***/ function(module, exports) {
 
 	/**
@@ -47532,11 +47848,11 @@
 
 
 /***/ },
-/* 526 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Set = __webpack_require__(273),
-	    noop = __webpack_require__(527),
+	    noop = __webpack_require__(529),
 	    setToArray = __webpack_require__(287);
 
 	/** Used as references for various `Number` constants. */
@@ -47557,7 +47873,7 @@
 
 
 /***/ },
-/* 527 */
+/* 529 */
 /***/ function(module, exports) {
 
 	/**
@@ -47580,8 +47896,7 @@
 
 
 /***/ },
-/* 528 */,
-/* 529 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47618,14 +47933,14 @@
 	  }
 	};
 
-	var _uniqBy = __webpack_require__(519);
+	var _uniqBy = __webpack_require__(521);
 
 	var _uniqBy2 = _interopRequireDefault(_uniqBy);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 530 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47636,11 +47951,33 @@
 
 	var _redux = __webpack_require__(167);
 
-	var _surveys = __webpack_require__(531);
+	var _scenarios = __webpack_require__(530);
+
+	var _scenarios2 = _interopRequireDefault(_scenarios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _redux.combineReducers)({
+	  scenarios: _scenarios2.default
+	});
+
+/***/ },
+/* 532 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _redux = __webpack_require__(167);
+
+	var _surveys = __webpack_require__(533);
 
 	var _surveys2 = _interopRequireDefault(_surveys);
 
-	var _questions = __webpack_require__(532);
+	var _questions = __webpack_require__(534);
 
 	var _questions2 = _interopRequireDefault(_questions);
 
@@ -47652,7 +47989,7 @@
 	});
 
 /***/ },
-/* 531 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47689,14 +48026,14 @@
 	  }
 	};
 
-	var _uniqBy = __webpack_require__(519);
+	var _uniqBy = __webpack_require__(521);
 
 	var _uniqBy2 = _interopRequireDefault(_uniqBy);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 532 */
+/* 534 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -47730,343 +48067,6 @@
 	      return state;
 	  }
 	};
-
-/***/ },
-/* 533 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _redux = __webpack_require__(167);
-
-	var _scenarios = __webpack_require__(529);
-
-	var _scenarios2 = _interopRequireDefault(_scenarios);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = (0, _redux.combineReducers)({
-	  scenarios: _scenarios2.default
-	});
-
-/***/ },
-/* 534 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _sortBy = __webpack_require__(430);
-
-	var _sortBy2 = _interopRequireDefault(_sortBy);
-
-	var _RaisedButton = __webpack_require__(477);
-
-	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
-
-	var _FlatButton = __webpack_require__(479);
-
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-	var _Dialog = __webpack_require__(482);
-
-	var _Dialog2 = _interopRequireDefault(_Dialog);
-
-	var _Table = __webpack_require__(486);
-
-	var _ScenarioEdit = __webpack_require__(535);
-
-	var _ScenarioEdit2 = _interopRequireDefault(_ScenarioEdit);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ScenariosList = function (_Component) {
-	  _inherits(ScenariosList, _Component);
-
-	  function ScenariosList(props) {
-	    _classCallCheck(this, ScenariosList);
-
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScenariosList).call(this, props));
-
-	    _this.state = {
-	      selectedItem: {}
-	    };
-	    return _this;
-	  }
-
-	  // handlers
-	  //
-
-
-	  _createClass(ScenariosList, [{
-	    key: 'handleNew',
-	    value: function handleNew(event) {
-	      var _this2 = this;
-
-	      this.props.actions.createScenario().then(function (res) {
-	        _this2.setState({ selectedItem: res.item });
-	      });
-	    }
-	  }, {
-	    key: 'handleEditClose',
-	    value: function handleEditClose(event) {
-	      this.setState({ selectedItem: {} });
-	    }
-	  }, {
-	    key: 'handleEdit',
-	    value: function handleEdit(item, event) {
-	      event.preventDefault();
-	      this.setState({ selectedItem: item });
-	    }
-	  }, {
-	    key: 'handleDelete',
-	    value: function handleDelete(id, event) {
-	      event.preventDefault();
-	      if (window.confirm('Are you sure?')) this.props.actions.deleteScenario(id);
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'renderItem',
-	    value: function renderItem(item) {
-	      return _react2.default.createElement(
-	        _Table.TableRow,
-	        { key: item.id },
-	        _react2.default.createElement(
-	          _Table.TableRowColumn,
-	          null,
-	          item.name
-	        ),
-	        _react2.default.createElement(
-	          _Table.TableRowColumn,
-	          null,
-	          [_react2.default.createElement(
-	            'a',
-	            { key: 1, href: '', onClick: this.handleEdit.bind(this, item) },
-	            'Edit'
-	          ), _react2.default.createElement(
-	            'span',
-	            { key: 2 },
-	            ' | '
-	          ), _react2.default.createElement(
-	            'a',
-	            { key: 3, href: '', onClick: this.handleDelete.bind(this, item.id) },
-	            'Delete'
-	          )]
-	        )
-	      );
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _props = this.props;
-	      var scenarios = _props.scenarios;
-	      var actions = _props.actions;
-	      var _state = this.state;
-	      var selectedItem = _state.selectedItem;
-	      var isAlertDialogOpen = _state.isAlertDialogOpen;
-
-
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          _Table.Table,
-	          { selectable: false },
-	          _react2.default.createElement(
-	            _Table.TableHeader,
-	            null,
-	            _react2.default.createElement(
-	              _Table.TableRow,
-	              null,
-	              _react2.default.createElement(
-	                _Table.TableHeaderColumn,
-	                null,
-	                'Name'
-	              ),
-	              _react2.default.createElement(
-	                _Table.TableHeaderColumn,
-	                null,
-	                'Actions'
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            _Table.TableBody,
-	            null,
-	            (0, _sortBy2.default)(scenarios.filter(function (scenario) {
-	              return scenario.name;
-	            }), 'name').map(this.renderItem.bind(this))
-	          )
-	        ),
-	        _react2.default.createElement(_RaisedButton2.default, {
-	          label: 'New',
-	          primary: true,
-	          style: { marginTop: '20px' },
-	          onTouchTap: this.handleNew.bind(this)
-	        }),
-	        _react2.default.createElement(_Dialog2.default, {
-	          title: selectedItem.name ? selectedItem.name + ' scenario' : 'New scenario',
-	          open: Object.keys(this.state.selectedItem).length > 0,
-	          autoScrollBodyContent: true,
-	          children: _react2.default.createElement(_ScenarioEdit2.default, {
-	            scenario: this.state.selectedItem,
-	            actions: actions
-	          }),
-	          actions: _react2.default.createElement(_FlatButton2.default, {
-	            label: 'Done',
-	            primary: true,
-	            onTouchTap: this.handleEditClose.bind(this)
-	          }),
-	          onRequestClose: this.handleEditClose.bind(this)
-	        })
-	      );
-	    }
-	  }]);
-
-	  return ScenariosList;
-	}(_react.Component);
-
-	ScenariosList.propTypes = {
-	  scenarios: _react.PropTypes.array.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = ScenariosList;
-
-/***/ },
-/* 535 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Toggle = __webpack_require__(500);
-
-	var _Toggle2 = _interopRequireDefault(_Toggle);
-
-	var _TextField = __webpack_require__(502);
-
-	var _TextField2 = _interopRequireDefault(_TextField);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ScenarioEdit = function (_Component) {
-	  _inherits(ScenarioEdit, _Component);
-
-	  function ScenarioEdit(props) {
-	    _classCallCheck(this, ScenarioEdit);
-
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScenarioEdit).call(this, props));
-
-	    _this.state = {
-	      name: props.scenario.name
-	    };
-	    return _this;
-	  }
-
-	  // handlers
-	  //
-
-
-	  _createClass(ScenarioEdit, [{
-	    key: 'handleSubmit',
-	    value: function handleSubmit(event) {
-	      event.preventDefault();
-	    }
-	  }, {
-	    key: 'handleInputChange',
-	    value: function handleInputChange(attr, event) {
-	      this.setState(_defineProperty({}, attr, event.target.value));
-	    }
-	  }, {
-	    key: 'handleUpdate',
-	    value: function handleUpdate(event) {
-	      var _props = this.props;
-	      var scenario = _props.scenario;
-	      var actions = _props.actions;
-
-	      actions.updateScenario(scenario.id, this.refs.form);
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _props2 = this.props;
-	      var scenario = _props2.scenario;
-	      var actions = _props2.actions;
-
-
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'form',
-	          { ref: 'form', className: 'scenarios-edit', onSubmit: this.handleSubmit },
-	          _react2.default.createElement(_TextField2.default, {
-	            value: this.state.name,
-	            autoFocus: !this.state.name,
-	            floatingLabelText: 'Name',
-	            hintText: 'Enter scenario name',
-	            name: 'name',
-	            onChange: this.handleInputChange.bind(this, 'name'),
-	            onBlur: this.handleUpdate.bind(this)
-	          })
-	        )
-	      );
-	    }
-	  }]);
-
-	  return ScenarioEdit;
-	}(_react.Component);
-
-	ScenarioEdit.propTypes = {
-	  scenario: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = ScenarioEdit;
 
 /***/ }
 /******/ ]);

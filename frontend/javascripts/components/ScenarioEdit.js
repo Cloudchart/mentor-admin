@@ -19,10 +19,6 @@ class ScenarioEdit extends Component {
     event.preventDefault()
   }
 
-  handleInputChange(attr, event) {
-    this.setState({ [attr]: event.target.value })
-  }
-
   handleUpdate(event) {
     const { scenario, actions } = this.props
     actions.updateScenario(scenario.id, this.refs.form)
@@ -37,12 +33,11 @@ class ScenarioEdit extends Component {
       <div>
         <form ref="form" className="scenarios-edit" onSubmit={ this.handleSubmit }>
           <TextField
-            value={ this.state.name }
+            defaultValue={ this.state.name }
             autoFocus={ !this.state.name }
             floatingLabelText="Name"
             hintText="Enter scenario name"
             name="name"
-            onChange={ this.handleInputChange.bind(this, 'name') }
             onBlur={ this.handleUpdate.bind(this) }
           />
         </form>

@@ -7,7 +7,7 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 // import AnswersList from './AnswersList'
 
 
-class Question extends Component {
+class QuestionEdit extends Component {
 
   constructor(props) {
     super(props)
@@ -21,10 +21,6 @@ class Question extends Component {
   //
   handleSubmit(event) {
     event.preventDefault()
-  }
-
-  handleInputChange(attr, event) {
-    this.setState({ [attr]: event.target.value })
   }
 
   handleUpdate(event) {
@@ -45,21 +41,19 @@ class Question extends Component {
         <form ref="form" onSubmit={ this.handleSubmit }>
           <TextField
             name="name"
-            value={ this.state.name }
+            defaultValue={ this.state.name }
             multiLine={ true }
             floatingLabelText="Name"
             hintText="Enter question name"
-            onChange={ this.handleInputChange.bind(this, 'name') }
             onBlur={ this.handleUpdate.bind(this) }
           />
 
           <TextField
             name="explanation"
-            value={ this.state.explanation }
+            defaultValue={ this.state.explanation }
             multiLine={ true }
             floatingLabelText="Explanation"
             hintText="Enter question explanation"
-            onChange={ this.handleInputChange.bind(this, 'explanation') }
             onBlur={ this.handleUpdate.bind(this) }
           />
 
@@ -76,11 +70,11 @@ class Question extends Component {
 
 }
 
-Question.propTypes = {
+QuestionEdit.propTypes = {
   question: PropTypes.object.isRequired,
   // answers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
 
-export default Question
+export default QuestionEdit

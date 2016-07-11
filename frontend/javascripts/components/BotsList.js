@@ -68,7 +68,7 @@ class BotsList extends Component {
   }
 
   render() {
-    const { bots, actions } = this.props
+    const { bots, scenarios, actions } = this.props
     const { selectedBot, isAlertDialogOpen } = this.state
 
     return (
@@ -100,6 +100,7 @@ class BotsList extends Component {
           children={
             <BotEdit
               bot={ this.state.selectedBot }
+              scenarios={ scenarios }
               actions={ actions }
             />
           }
@@ -120,6 +121,7 @@ class BotsList extends Component {
 
 BotsList.propTypes = {
   bots: PropTypes.array.isRequired,
+  scenarios: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
