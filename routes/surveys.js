@@ -15,6 +15,7 @@ const permittedAttrs = ['name', 'isActive']
 //
 function getAttrs(body) {
   let attrs = getFilteredAttrs(body, permittedAttrs)
+  if (!body.name) delete attrs.name
   attrs.slug = slugify(body.name)
   attrs.isActive = !!body.isActive
   return attrs

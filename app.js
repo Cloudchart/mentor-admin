@@ -14,6 +14,7 @@ var bots = require('./routes/bots').default;
 var surveys = require('./routes/surveys').default;
 var questions = require('./routes/questions').default;
 var scenarios = require('./routes/scenarios').default;
+var courses = require('./routes/courses').default;
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.use(session({
 app.use('/', routes);
 app.use('/', questions);
 app.use('/bots', bots);
+app.use('/courses', courses);
 app.use('/surveys', surveys);
 app.use('/scenarios', scenarios);
 

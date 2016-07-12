@@ -28,3 +28,9 @@ export const scenariosActions = {
   updateScenario: update('scenario'),
   deleteScenario: destroy('scenario'),
 }
+
+export const coursesActions = {
+  createCourse: create('course'),
+  updateCourse: update('course'),
+  deleteCourse: destroy('course'),
+}

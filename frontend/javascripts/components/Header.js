@@ -32,6 +32,10 @@ class Header extends Component {
               onTouchTap={ this.handleMenuItemClick.bind(this, '/bots') }
             />
             <MenuItem
+              primaryText="Courses"
+              onTouchTap={ this.handleMenuItemClick.bind(this, '/courses') }
+            />
+            <MenuItem
               primaryText="Scenarios"
               onTouchTap={ this.handleMenuItemClick.bind(this, '/scenarios') }
             />

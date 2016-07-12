@@ -14,6 +14,7 @@ const permittedAttrs = ['name', 'isActive', 'keys', 'scenarioId']
 //
 function getAttrs(body) {
   let attrs = getFilteredAttrs(body, permittedAttrs)
+  if (!body.name) delete attrs.name
   attrs.isActive = !!body.isActive
   return attrs
 }
