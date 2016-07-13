@@ -15,6 +15,7 @@ var surveys = require('./routes/surveys').default;
 var questions = require('./routes/questions').default;
 var scenarios = require('./routes/scenarios').default;
 var courses = require('./routes/courses').default;
+var cards = require('./routes/cards').default;
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.use(session({
 // routes
 app.use('/', routes);
 app.use('/', questions);
+app.use('/', cards);
 app.use('/bots', bots);
 app.use('/courses', courses);
 app.use('/surveys', surveys);

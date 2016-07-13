@@ -35,7 +35,10 @@ export const coursesActions = {
   createCourse,
   updateCourse,
   deleteCourse,
+  getCards,
   createCard,
+  updateCard,
+  deleteCard,
 }
 
 export const surveysActions = {

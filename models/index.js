@@ -58,8 +58,17 @@ export const Card = Thinky.createModel('Card',
   type.object().schema({
     id: type.string(),
     text: type.string(),
-    originUrl: type.string().validator(validator.isURL),
     author: type.string(),
+    originUrl: type.string(),
+  }).removeExtra()
+)
+
+export const Card_Course = Thinky.createModel('Card_Course',
+  type.object().schema({
+    id: type.string(),
+    cardId: type.string().required(),
+    courseId: type.string().required(),
+    position: type.number().integer().default(0),
   }).removeExtra()
 )
 
@@ -68,7 +77,7 @@ export const Block = Thinky.createModel('Block',
     id: type.string(),
     cardId: type.string(),
     type: type.string().enum(['text', 'image', 'video']),
-    position: type.number().integer(),
+    position: type.number().integer().default(0),
     content: type.object(),
   }).removeExtra()
 )
@@ -84,7 +93,7 @@ export const Survey = Thinky.createModel('Survey',
   type.object().schema({
     id: type.string(),
     courseId: type.string(),
-    name: type.string().default(''),
+    name: type.string(),
     slug: type.string(),
     isActive: type.boolean().default(false),
     createdAt: type.date().default(r.now()),
@@ -118,13 +127,16 @@ ScenarioAction.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
 Bot.hasMany(Course, 'courses', 'id', 'botId')
 Bot.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
 
-Course.hasAndBelongsToMany(Card, 'cards', 'id', 'id')
+Course.hasMany(Card_Course, 'cards', 'id', 'courseId')
 Course.belongsTo(Bot, 'bot', 'botId', 'id')
 Course.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
 
-Card.hasAndBelongsToMany(Course, 'courses', 'id', 'id')
 Card.hasAndBelongsToMany(Tag, 'tags', 'id', 'id')
 Card.hasMany(Block, 'blocks', 'id', 'cardId')
+Card.hasMany(Card_Course, 'courses', 'id', 'cardId')
+
+Card_Course.belongsTo(Course, 'course', 'courseId', 'id')
+Card_Course.belongsTo(Card, 'card', 'cardId', 'id')
 
 Block.belongsTo(Card, 'card', 'cardId', 'id')
 

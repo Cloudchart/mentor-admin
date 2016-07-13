@@ -12,6 +12,8 @@ import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left'
 // https://github.com/callemall/material-ui/issues/3151
 // import SelectField from 'material-ui/SelectField'
 
+import CardsList from './CardsList'
+
 
 class CourseEdit extends Component {
 
@@ -40,11 +42,6 @@ class CourseEdit extends Component {
     this.props.onChange()
   }
 
-  handleCreateCard(event) {
-    console.log('handleCreateCard');
-    // this.props.actions.createCard(this.props.item.id)
-  }
-
   // renderers
   //
   renderOptionsForSelect(item) {
@@ -54,7 +51,7 @@ class CourseEdit extends Component {
   }
 
   render() {
-    const { item, bots, scenarios, actions } = this.props
+    const { item, bots, cards, scenarios, actions } = this.props
 
     return (
       <div>
@@ -109,12 +106,10 @@ class CourseEdit extends Component {
         </form>
 
         <h3>Cards</h3>
-        <FlatButton
-          label="Add card"
-          labelPosition="before"
-          primary={ true }
-          icon={ <ContentAdd/> }
-          onTouchTap={ this.handleCreateCard.bind(this) }
+        <CardsList
+          course={ item }
+          cards={ cards }
+          actions={ actions }
         />
       </div>
     )
@@ -125,6 +120,7 @@ class CourseEdit extends Component {
 CourseEdit.propTypes = {
   item: PropTypes.object.isRequired,
   bots: PropTypes.array.isRequired,
+  cards: PropTypes.array.isRequired,
   scenarios: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
