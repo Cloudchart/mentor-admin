@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  Scenario.filter({ name: '' }).then(result => {
+  Scenario.filter(item => item.hasFields('name').not()).then(result => {
     if (result.length === 0) {
       const scenario = new Scenario({})
       scenario.save().then(result => {

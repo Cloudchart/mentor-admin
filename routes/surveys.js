@@ -32,7 +32,7 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  Survey.filter({ name: '' }).then(result => {
+  Survey.filter(item => item.hasFields('name').not()).then(result => {
     if (result.length === 0) {
       const survey = new Survey({})
       survey.save().then(result => {

@@ -3,6 +3,11 @@ import sortBy from 'lodash/sortBy'
 
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
+import IconButton from 'material-ui/IconButton'
+import FlatButton from 'material-ui/FlatButton'
+
+import ContentAdd from 'material-ui/svg-icons/content/add'
+import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left'
 
 // https://github.com/callemall/material-ui/issues/3151
 // import SelectField from 'material-ui/SelectField'
@@ -31,6 +36,15 @@ class CourseEdit extends Component {
     actions.updateCourse(item.id, this.refs.form)
   }
 
+  handleBack(event) {
+    this.props.onChange()
+  }
+
+  handleCreateCard(event) {
+    console.log('handleCreateCard');
+    // this.props.actions.createCard(this.props.item.id)
+  }
+
   // renderers
   //
   renderOptionsForSelect(item) {
@@ -44,6 +58,13 @@ class CourseEdit extends Component {
 
     return (
       <div>
+        <h3>
+          <IconButton onTouchTap={ this.handleBack.bind(this) }>
+            <ChevronLeft/>
+          </IconButton>
+          <span>{ item.name ? `${item.name} course` : 'New course' }</span>
+        </h3>
+
         <form ref="form" className="course-edit" onSubmit={ this.handleSubmit }>
           <TextField
             defaultValue={ this.state.name }
@@ -86,6 +107,15 @@ class CourseEdit extends Component {
             </select>
           </label>
         </form>
+
+        <h3>Cards</h3>
+        <FlatButton
+          label="Add card"
+          labelPosition="before"
+          primary={ true }
+          icon={ <ContentAdd/> }
+          onTouchTap={ this.handleCreateCard.bind(this) }
+        />
       </div>
     )
   }
@@ -96,6 +126,7 @@ CourseEdit.propTypes = {
   item: PropTypes.object.isRequired,
   bots: PropTypes.array.isRequired,
   scenarios: PropTypes.array.isRequired,
+  onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }
 

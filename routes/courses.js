@@ -39,7 +39,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const courses = await Course.filter({ name: '' })
+    const courses = await Course.filter(item => item.hasFields('name').not())
 
     if (courses.length === 0) {
       const item = new Course({})

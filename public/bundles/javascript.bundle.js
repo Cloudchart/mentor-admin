@@ -29211,7 +29211,11 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.coursesActions = exports.scenariosActions = exports.botsActions = exports.surveysActions = undefined;
+	exports.surveysActions = exports.coursesActions = exports.scenariosActions = exports.botsActions = undefined;
+
+	var _getMany = __webpack_require__(543);
+
+	var _getMany2 = _interopRequireDefault(_getMany);
 
 	var _create = __webpack_require__(356);
 
@@ -29225,50 +29229,50 @@
 
 	var _delete2 = _interopRequireDefault(_delete);
 
-	var _get = __webpack_require__(361);
-
-	var _get2 = _interopRequireDefault(_get);
-
-	var _create3 = __webpack_require__(362);
-
-	var _create4 = _interopRequireDefault(_create3);
-
-	var _update3 = __webpack_require__(363);
-
-	var _update4 = _interopRequireDefault(_update3);
-
-	var _delete3 = __webpack_require__(364);
-
-	var _delete4 = _interopRequireDefault(_delete3);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var surveysActions = exports.surveysActions = {
-	  createSurvey: (0, _create2.default)('survey'),
-	  updateSurvey: (0, _update2.default)('survey'),
-	  deleteSurvey: (0, _delete2.default)('survey'),
-	  getQuestions: _get2.default,
-	  createQuestion: _create4.default,
-	  updateQuestion: _update4.default,
-	  deleteQuestion: _delete4.default
-	};
+	var createBot = (0, _create2.default)('bot');
+	var updateBot = (0, _update2.default)('bot');
+	var deleteBot = (0, _delete2.default)('bot');
 
-	var botsActions = exports.botsActions = {
-	  createBot: (0, _create2.default)('bot'),
-	  updateBot: (0, _update2.default)('bot'),
-	  deleteBot: (0, _delete2.default)('bot')
-	};
+	var createScenario = (0, _create2.default)('scenario');
+	var updateScenario = (0, _update2.default)('scenario');
+	var deleteScenario = (0, _delete2.default)('scenario');
 
-	var scenariosActions = exports.scenariosActions = {
-	  createScenario: (0, _create2.default)('scenario'),
-	  updateScenario: (0, _update2.default)('scenario'),
-	  deleteScenario: (0, _delete2.default)('scenario')
-	};
+	var createCourse = (0, _create2.default)('course');
+	var updateCourse = (0, _update2.default)('course');
+	var deleteCourse = (0, _delete2.default)('course');
+	var createCard = (0, _create2.default)('card', { parentModelName: 'course' });
+	var updateCard = (0, _update2.default)('card', { parentModelName: 'course' });
+	var deleteCard = (0, _delete2.default)('card', { parentModelName: 'course' });
+	var getCards = (0, _getMany2.default)('card', { parentModelName: 'course' });
+
+	var createSurvey = (0, _create2.default)('survey');
+	var updateSurvey = (0, _update2.default)('survey');
+	var deleteSurvey = (0, _delete2.default)('survey');
+	var createQuestion = (0, _create2.default)('question', { parentModelName: 'survey' });
+	var updateQuestion = (0, _update2.default)('question', { parentModelName: 'survey' });
+	var deleteQuestion = (0, _delete2.default)('question', { parentModelName: 'survey' });
+	var getQuestions = (0, _getMany2.default)('question', { parentModelName: 'survey' });
+
+	var botsActions = exports.botsActions = { createBot: createBot, updateBot: updateBot, deleteBot: deleteBot };
+	var scenariosActions = exports.scenariosActions = { createScenario: createScenario, updateScenario: updateScenario, deleteScenario: deleteScenario };
 
 	var coursesActions = exports.coursesActions = {
-	  createCourse: (0, _create2.default)('course'),
-	  updateCourse: (0, _update2.default)('course'),
-	  deleteCourse: (0, _delete2.default)('course')
+	  createCourse: createCourse,
+	  updateCourse: updateCourse,
+	  deleteCourse: deleteCourse,
+	  createCard: createCard
+	};
+
+	var surveysActions = exports.surveysActions = {
+	  createSurvey: createSurvey,
+	  updateSurvey: updateSurvey,
+	  deleteSurvey: deleteSurvey,
+	  getQuestions: getQuestions,
+	  createQuestion: createQuestion,
+	  updateQuestion: updateQuestion,
+	  deleteQuestion: deleteQuestion
 	};
 
 /***/ },
@@ -29294,10 +29298,10 @@
 	  };
 	}
 
-	function receiveCreateItem(modelName, json) {
+	function receiveCreateItem(modelName, item) {
 	  return {
 	    type: 'CREATE_' + modelName.toUpperCase() + '_RECEIVE',
-	    item: json,
+	    item: item,
 	    receivedAt: Date.now()
 	  };
 	}
@@ -29310,11 +29314,16 @@
 	  };
 	}
 
-	function createItem(modelName) {
+	function createItem(modelName, options, parentId) {
+	  var path = '/' + modelName + 's';
+	  if (options.parentModelName) {
+	    path = '/' + options.parentModelName + 's/' + parentId + '/' + modelName + 's';
+	  }
+
 	  return function (dispatch) {
 	    dispatch(requestCreateItem(modelName));
 
-	    return (0, _isomorphicFetch2.default)('/' + modelName + 's', {
+	    return (0, _isomorphicFetch2.default)(path, {
 	      method: 'POST',
 	      credentials: 'same-origin'
 	    }).then(function (response) {
@@ -29332,8 +29341,11 @@
 	}
 
 	function create(modelName) {
+	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
 	  return function () {
-	    return createItem(modelName);
+	    var parentId = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	    return createItem(modelName, options, parentId);
 	  };
 	}
 
@@ -29812,11 +29824,11 @@
 	  };
 	}
 
-	function receiveUpdateItem(modelName, id, json) {
+	function receiveUpdateItem(modelName, id, item) {
 	  return {
 	    type: 'UPDATE_' + modelName.toUpperCase() + '_RECEIVE',
 	    id: id,
-	    item: json,
+	    item: item,
 	    receivedAt: Date.now()
 	  };
 	}
@@ -29830,11 +29842,16 @@
 	  };
 	}
 
-	function updateItem(modelName, id, form) {
+	function updateItem(modelName, options, id, form) {
 	  return function (dispatch) {
+	    var path = '/' + modelName + 's/' + id;
+	    if (options.parentModelName) {
+	      path = '/' + options.parentModelName + '_' + modelName + 's/' + id;
+	    }
+
 	    dispatch(requestUpdateItem(modelName, id));
 
-	    return (0, _isomorphicFetch2.default)('/' + modelName + 's/' + id, {
+	    return (0, _isomorphicFetch2.default)(path, {
 	      method: 'PUT',
 	      body: new FormData(form),
 	      credentials: 'same-origin'
@@ -29853,8 +29870,10 @@
 	}
 
 	function update(modelName) {
+	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
 	  return function (id, form) {
-	    return updateItem(modelName, id, form);
+	    return updateItem(modelName, options, id, form);
 	  };
 	}
 
@@ -29869,8 +29888,10 @@
 	});
 
 	exports.default = function (modelName) {
+	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
 	  return function (id) {
-	    return deleteItem(modelName, id);
+	    return deleteItem(modelName, options, id);
 	  };
 	};
 
@@ -29904,11 +29925,16 @@
 	  };
 	}
 
-	function deleteItem(modelName, id) {
+	function deleteItem(modelName, options, id) {
 	  return function (dispatch) {
+	    var path = '/' + modelName + 's/' + id;
+	    if (options.parentModelName) {
+	      path = '/' + options.parentModelName + '_' + modelName + 's/' + id;
+	    }
+
 	    dispatch(requestDeleteItem(modelName, id));
 
-	    return (0, _isomorphicFetch2.default)('/' + modelName + 's/' + id, {
+	    return (0, _isomorphicFetch2.default)(path, {
 	      method: 'DELETE',
 	      credentials: 'same-origin'
 	    }).then(function (response) {
@@ -29926,262 +29952,10 @@
 	}
 
 /***/ },
-/* 361 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _isomorphicFetch = __webpack_require__(357);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function requestGetQuestions(surveyId) {
-	  return {
-	    type: 'GET_QUESTIONS_REQUEST',
-	    surveyId: surveyId
-	  };
-	}
-
-	function receiveGetQuestions(surveyId, json) {
-	  return {
-	    type: 'GET_QUESTIONS_RECEIVE',
-	    surveyId: surveyId,
-	    questions: json,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchGetQuestionErrors(surveyId, error) {
-	  return {
-	    type: 'GET_QUESTIONS_ERROR',
-	    surveyId: surveyId,
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function getQuestions(surveyId) {
-	  return function (dispatch) {
-	    dispatch(requestGetQuestions());
-
-	    return (0, _isomorphicFetch2.default)('/surveys/' + surveyId + '/questions', {
-	      method: 'GET',
-	      credentials: 'same-origin'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      if (json.error) {
-	        return dispatch(catchGetQuestionErrors(surveyId, json.error));
-	      } else {
-	        return dispatch(receiveGetQuestions(surveyId, json));
-	      }
-	    }).catch(function (error) {
-	      return dispatch(catchGetQuestionErrors(surveyId, error));
-	    });
-	  };
-	}
-
-	exports.default = getQuestions;
-
-/***/ },
-/* 362 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _isomorphicFetch = __webpack_require__(357);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function requestCreateQuestion(surveyId) {
-	  return {
-	    type: 'CREATE_QUESTION_REQUEST',
-	    surveyId: surveyId
-	  };
-	}
-
-	function receiveCreateQuestion(surveyId, json) {
-	  return {
-	    type: 'CREATE_QUESTION_RECEIVE',
-	    surveyId: surveyId,
-	    question: json,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchCreateQuestionError(surveyId, error) {
-	  return {
-	    type: 'CREATE_QUESTION_ERROR',
-	    surveyId: surveyId,
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function createQuestion(surveyId) {
-	  return function (dispatch) {
-	    dispatch(requestCreateQuestion(surveyId));
-
-	    return (0, _isomorphicFetch2.default)('/surveys/' + surveyId + '/questions', {
-	      method: 'POST',
-	      credentials: 'same-origin'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      if (json.error) {
-	        return dispatch(catchCreateQuestionError(surveyId, json.error));
-	      } else {
-	        return dispatch(receiveCreateQuestion(surveyId, json));
-	      }
-	    }).catch(function (error) {
-	      return dispatch(catchCreateQuestionError(surveyId, error));
-	    });
-	  };
-	}
-
-	exports.default = createQuestion;
-
-/***/ },
-/* 363 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _isomorphicFetch = __webpack_require__(357);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function requestUpdateQuestion(id) {
-	  return {
-	    type: 'UPDATE_QUESTION_REQUEST',
-	    id: id
-	  };
-	}
-
-	function receiveUpdateQuestion(id, json) {
-	  return {
-	    type: 'UPDATE_QUESTION_RECEIVE',
-	    id: id,
-	    question: json,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchUpdateQuestionError(id, error) {
-	  return {
-	    type: 'UPDATE_QUESTION_ERROR',
-	    id: id,
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function updateQuestion(id, form) {
-	  return function (dispatch) {
-	    dispatch(requestUpdateQuestion(id));
-
-	    return (0, _isomorphicFetch2.default)('/survey_questions/' + id, {
-	      method: 'PUT',
-	      body: new FormData(form),
-	      credentials: 'same-origin'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      if (json.error) {
-	        return dispatch(catchUpdateQuestionError(id, json.error));
-	      } else {
-	        return dispatch(receiveUpdateQuestion(id, json));
-	      }
-	    }).catch(function (error) {
-	      return dispatch(catchUpdateQuestionError(id, error));
-	    });
-	  };
-	}
-
-	exports.default = updateQuestion;
-
-/***/ },
-/* 364 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _isomorphicFetch = __webpack_require__(357);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function requestDeleteQuestion(id) {
-	  return {
-	    type: 'DELETE_QUESTION_REQUEST',
-	    id: id
-	  };
-	}
-
-	function receiveDeleteQuestion(id, json) {
-	  return {
-	    type: 'DELETE_QUESTION_RECEIVE',
-	    id: id,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchDeleteQuestionError(id, error) {
-	  return {
-	    type: 'DELETE_QUESTION_ERROR',
-	    id: id,
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function deleteQuestion(id) {
-	  return function (dispatch) {
-	    dispatch(requestDeleteQuestion(id));
-
-	    return (0, _isomorphicFetch2.default)('/survey_questions/' + id, {
-	      method: 'DELETE',
-	      credentials: 'same-origin'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      if (json.error) {
-	        return dispatch(catchDeleteQuestionError(id, json.error));
-	      } else {
-	        return dispatch(receiveDeleteQuestion(id, json));
-	      }
-	    }).catch(function (error) {
-	      return dispatch(catchDeleteQuestionError(id, error));
-	    });
-	  };
-	}
-
-	exports.default = deleteQuestion;
-
-/***/ },
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
 /* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -38364,9 +38138,7 @@
 	      var bots = _props.bots;
 	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
-	      var _state = this.state;
-	      var selectedBot = _state.selectedBot;
-	      var isAlertDialogOpen = _state.isAlertDialogOpen;
+	      var selectedBot = this.state.selectedBot;
 
 
 	      return _react2.default.createElement(
@@ -46459,14 +46231,6 @@
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-	var _FlatButton = __webpack_require__(479);
-
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-	var _Dialog = __webpack_require__(482);
-
-	var _Dialog2 = _interopRequireDefault(_Dialog);
-
 	var _Table = __webpack_require__(486);
 
 	var _CourseEdit = __webpack_require__(510);
@@ -46572,72 +46336,63 @@
 	      var courses = _props.courses;
 	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
-	      var _state = this.state;
-	      var selectedItem = _state.selectedItem;
-	      var isAlertDialogOpen = _state.isAlertDialogOpen;
+	      var selectedItem = this.state.selectedItem;
 
 
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          _Table.Table,
-	          { selectable: false },
+	      if (Object.keys(selectedItem).length > 0) {
+	        return _react2.default.createElement(_CourseEdit2.default, {
+	          item: this.state.selectedItem,
+	          bots: bots,
+	          scenarios: scenarios,
+	          onChange: this.handleEditClose.bind(this),
+	          actions: actions
+	        });
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
 	          _react2.default.createElement(
-	            _Table.TableHeader,
-	            null,
+	            _Table.Table,
+	            { selectable: false },
 	            _react2.default.createElement(
-	              _Table.TableRow,
+	              _Table.TableHeader,
 	              null,
 	              _react2.default.createElement(
-	                _Table.TableHeaderColumn,
+	                _Table.TableRow,
 	                null,
-	                'Name'
-	              ),
-	              _react2.default.createElement(
-	                _Table.TableHeaderColumn,
-	                null,
-	                'Active'
-	              ),
-	              _react2.default.createElement(
-	                _Table.TableHeaderColumn,
-	                null,
-	                'Actions'
+	                _react2.default.createElement(
+	                  _Table.TableHeaderColumn,
+	                  null,
+	                  'Name'
+	                ),
+	                _react2.default.createElement(
+	                  _Table.TableHeaderColumn,
+	                  null,
+	                  'Active'
+	                ),
+	                _react2.default.createElement(
+	                  _Table.TableHeaderColumn,
+	                  null,
+	                  'Actions'
+	                )
 	              )
+	            ),
+	            _react2.default.createElement(
+	              _Table.TableBody,
+	              null,
+	              (0, _sortBy2.default)(courses.filter(function (item) {
+	                return item.name;
+	              }), 'name').map(this.renderCourse.bind(this))
 	            )
 	          ),
-	          _react2.default.createElement(
-	            _Table.TableBody,
-	            null,
-	            (0, _sortBy2.default)(courses.filter(function (item) {
-	              return item.name;
-	            }), 'name').map(this.renderCourse.bind(this))
-	          )
-	        ),
-	        _react2.default.createElement(_RaisedButton2.default, {
-	          label: 'New',
-	          primary: true,
-	          style: { marginTop: '20px' },
-	          onTouchTap: this.handleNew.bind(this)
-	        }),
-	        _react2.default.createElement(_Dialog2.default, {
-	          title: selectedItem.name ? selectedItem.name + ' course' : 'New course',
-	          open: Object.keys(this.state.selectedItem).length > 0,
-	          autoScrollBodyContent: true,
-	          children: _react2.default.createElement(_CourseEdit2.default, {
-	            item: this.state.selectedItem,
-	            bots: bots,
-	            scenarios: scenarios,
-	            actions: actions
-	          }),
-	          actions: _react2.default.createElement(_FlatButton2.default, {
-	            label: 'Done',
+	          _react2.default.createElement(_RaisedButton2.default, {
+	            label: 'New',
 	            primary: true,
-	            onTouchTap: this.handleEditClose.bind(this)
-	          }),
-	          onRequestClose: this.handleEditClose.bind(this)
-	        })
-	      );
+	            style: { marginTop: '20px' },
+	            onTouchTap: this.handleNew.bind(this)
+	          })
+	        );
+	      }
 	    }
 	  }]);
 
@@ -46680,6 +46435,22 @@
 	var _TextField = __webpack_require__(502);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
+
+	var _IconButton = __webpack_require__(369);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
+	var _FlatButton = __webpack_require__(479);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _add = __webpack_require__(518);
+
+	var _add2 = _interopRequireDefault(_add);
+
+	var _chevronLeft = __webpack_require__(541);
+
+	var _chevronLeft2 = _interopRequireDefault(_chevronLeft);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46727,6 +46498,17 @@
 
 	      actions.updateCourse(item.id, this.refs.form);
 	    }
+	  }, {
+	    key: 'handleBack',
+	    value: function handleBack(event) {
+	      this.props.onChange();
+	    }
+	  }, {
+	    key: 'handleCreateCard',
+	    value: function handleCreateCard(event) {
+	      console.log('handleCreateCard');
+	      // this.props.actions.createCard(this.props.item.id)
+	    }
 
 	    // renderers
 	    //
@@ -46753,6 +46535,20 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          _react2.default.createElement(
+	            _IconButton2.default,
+	            { onTouchTap: this.handleBack.bind(this) },
+	            _react2.default.createElement(_chevronLeft2.default, null)
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            item.name ? item.name + ' course' : 'New course'
+	          )
+	        ),
 	        _react2.default.createElement(
 	          'form',
 	          { ref: 'form', className: 'course-edit', onSubmit: this.handleSubmit },
@@ -46809,7 +46605,19 @@
 	              (0, _sortBy2.default)(scenarios, 'name').map(this.renderOptionsForSelect.bind(this))
 	            )
 	          )
-	        )
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Cards'
+	        ),
+	        _react2.default.createElement(_FlatButton2.default, {
+	          label: 'Add card',
+	          labelPosition: 'before',
+	          primary: true,
+	          icon: _react2.default.createElement(_add2.default, null),
+	          onTouchTap: this.handleCreateCard.bind(this)
+	        })
 	      );
 	    }
 	  }]);
@@ -46821,6 +46629,7 @@
 	  item: _react.PropTypes.object.isRequired,
 	  bots: _react.PropTypes.array.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  onChange: _react.PropTypes.func,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -47046,9 +46855,7 @@
 	      var _props = this.props;
 	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
-	      var _state = this.state;
-	      var selectedItem = _state.selectedItem;
-	      var isAlertDialogOpen = _state.isAlertDialogOpen;
+	      var selectedItem = this.state.selectedItem;
 
 
 	      return _react2.default.createElement(
@@ -48642,25 +48449,138 @@
 
 	  switch (action.type) {
 	    case 'GET_QUESTIONS_RECEIVE':
-	      return action.questions;
+	      return action.items;
 	    case 'CREATE_QUESTION_RECEIVE':
-	      return state.concat(action.question);
+	      return state.concat(action.item);
 	    case 'DELETE_QUESTION_RECEIVE':
-	      return state.filter(function (question) {
-	        return question.id !== action.id;
+	      return state.filter(function (item) {
+	        return item.id !== action.id;
 	      });
 	    case 'UPDATE_QUESTION_RECEIVE':
-	      return state.map(function (question) {
-	        return question.id === action.id ? Object.assign(action.question, { isFetching: false }) : question;
+	      return state.map(function (item) {
+	        return item.id === action.id ? Object.assign(action.item, { isFetching: false }) : item;
 	      });
 	    case 'UPDATE_QUESTION_ERROR':
-	      return state.map(function (question) {
-	        return question.id === action.id ? Object.assign(question, { isFetching: false, error: action.error }) : question;
+	      return state.map(function (item) {
+	        return item.id === action.id ? Object.assign(item, { isFetching: false, error: action.error }) : item;
 	      });
 	    default:
 	      return state;
 	  }
 	};
+
+/***/ },
+/* 540 */,
+/* 541 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(394);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(402);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var NavigationChevronLeft = function NavigationChevronLeft(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z' })
+	  );
+	};
+	NavigationChevronLeft = (0, _pure2.default)(NavigationChevronLeft);
+	NavigationChevronLeft.displayName = 'NavigationChevronLeft';
+	NavigationChevronLeft.muiName = 'SvgIcon';
+
+	exports.default = NavigationChevronLeft;
+
+/***/ },
+/* 542 */,
+/* 543 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = getMany;
+
+	var _isomorphicFetch = __webpack_require__(357);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestGetItems(modelName) {
+	  return {
+	    type: 'GET_' + modelName.toUpperCase() + 'S_REQUEST'
+	  };
+	}
+
+	function receiveGetItems(modelName, items) {
+	  return {
+	    type: 'GET_' + modelName.toUpperCase() + 'S_RECEIVE',
+	    items: items,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchGetItemsErrors(modelName, error) {
+	  return {
+	    type: 'GET_' + modelName.toUpperCase() + 'S_ERROR',
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function getItems(modelName, options, parentId) {
+	  var path = '/' + modelName + 's';
+	  if (options.parentModelName) {
+	    path = '/' + options.parentModelName + 's/' + parentId + '/' + modelName + 's';
+	  }
+
+	  return function (dispatch) {
+	    dispatch(requestGetItems(modelName));
+
+	    return (0, _isomorphicFetch2.default)(path, {
+	      method: 'GET',
+	      credentials: 'same-origin'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchGetItemsErrors(modelName, json.error));
+	      } else {
+	        return dispatch(receiveGetItems(modelName, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchGetItemsErrors(modelName, error));
+	    });
+	  };
+	}
+
+	function getMany(modelName) {
+	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+	  return function () {
+	    var parentId = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	    return getItems(modelName, options, parentId);
+	  };
+	}
 
 /***/ }
 /******/ ]);

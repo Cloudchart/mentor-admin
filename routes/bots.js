@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  Bot.filter({ name: '' }).then(result => {
+  Bot.filter(item => item.hasFields('name').not()).then(result => {
     if (result.length === 0) {
       const bot = new Bot({})
       bot.save().then(result => {

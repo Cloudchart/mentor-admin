@@ -7,10 +7,10 @@ function requestCreateItem(modelName) {
   }
 }
 
-function receiveCreateItem(modelName, json) {
+function receiveCreateItem(modelName, item) {
   return {
     type: `CREATE_${modelName.toUpperCase()}_RECEIVE`,
-    item: json,
+    item,
     receivedAt: Date.now()
   }
 }
@@ -23,11 +23,16 @@ function catchCreateItemError(modelName, error) {
   }
 }
 
-function createItem(modelName) {
+function createItem(modelName, options, parentId) {
+  let path = `/${modelName}s`
+  if (options.parentModelName) {
+    path = `/${options.parentModelName}s/${parentId}/${modelName}s`
+  }
+
   return function (dispatch) {
     dispatch(requestCreateItem(modelName))
 
-    return fetch(`/${modelName}s`, {
+    return fetch(path, {
       method: 'POST',
       credentials: 'same-origin',
     }).then(response => response.json()).then(json => {
@@ -43,6 +48,6 @@ function createItem(modelName) {
 }
 
 
-export default function create(modelName) {
-  return () => createItem(modelName)
+export default function create(modelName, options={}) {
+  return (parentId=null) => createItem(modelName, options, parentId)
 }

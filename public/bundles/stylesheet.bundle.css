@@ -15,5 +15,8 @@
   body form > div:not(:last-child) {
     margin-bottom: 20px; }
 
+.container.courses > .content form.course-edit {
+  margin-bottom: 40px; }
+
 form.surveys-edit {
   margin-bottom: 40px; }

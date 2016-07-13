@@ -68,7 +68,7 @@ class ScenariosList extends Component {
 
   render() {
     const { scenarios, actions } = this.props
-    const { selectedItem, isAlertDialogOpen } = this.state
+    const { selectedItem } = this.state
 
     return (
       <div>

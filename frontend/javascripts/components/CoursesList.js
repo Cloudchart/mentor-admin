@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import sortBy from 'lodash/sortBy'
 
 import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import Dialog from 'material-ui/Dialog'
 
 import {
   Table,
@@ -69,55 +67,44 @@ class CoursesList extends Component {
 
   render() {
     const { bots, courses, scenarios, actions } = this.props
-    const { selectedItem, isAlertDialogOpen } = this.state
+    const { selectedItem } = this.state
 
-    return (
-      <div>
-        <Table selectable={ false }>
-          <TableHeader>
-            <TableRow>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Active</TableHeaderColumn>
-              <TableHeaderColumn>Actions</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            { sortBy(courses.filter(item => item.name), 'name').map(this.renderCourse.bind(this)) }
-          </TableBody>
-        </Table>
-
-        <RaisedButton
-          label="New"
-          primary={ true }
-          style={{ marginTop: '20px' }}
-          onTouchTap={ this.handleNew.bind(this) }
+    if (Object.keys(selectedItem).length > 0) {
+      return (
+        <CourseEdit
+          item={ this.state.selectedItem }
+          bots={ bots }
+          scenarios={ scenarios }
+          onChange={ this.handleEditClose.bind(this) }
+          actions={ actions }
         />
+      )
+    } else {
+      return (
+        <div>
+          <Table selectable={ false }>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderColumn>Name</TableHeaderColumn>
+                <TableHeaderColumn>Active</TableHeaderColumn>
+                <TableHeaderColumn>Actions</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              { sortBy(courses.filter(item => item.name), 'name').map(this.renderCourse.bind(this)) }
+            </TableBody>
+          </Table>
 
-        <Dialog
-          title={ selectedItem.name ? `${selectedItem.name} course` : 'New course' }
-          open={ Object.keys(this.state.selectedItem).length > 0 }
-          autoScrollBodyContent={ true }
-          children={
-            <CourseEdit
-              item={ this.state.selectedItem }
-              bots={ bots }
-              scenarios={ scenarios }
-              actions={ actions }
-            />
-          }
-          actions={
-            <FlatButton
-              label="Done"
-              primary={ true }
-              onTouchTap={ this.handleEditClose.bind(this) }
-            />
-          }
-          onRequestClose={ this.handleEditClose.bind(this) }
-        />
-      </div>
-    )
+          <RaisedButton
+            label="New"
+            primary={ true }
+            style={{ marginTop: '20px' }}
+            onTouchTap={ this.handleNew.bind(this) }
+          />
+        </div>
+      )
+    }
   }
-
 }
 
 CoursesList.propTypes = {

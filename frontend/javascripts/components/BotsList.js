@@ -69,7 +69,7 @@ class BotsList extends Component {
 
   render() {
     const { bots, scenarios, actions } = this.props
-    const { selectedBot, isAlertDialogOpen } = this.state
+    const { selectedBot } = this.state
 
     return (
       <div>

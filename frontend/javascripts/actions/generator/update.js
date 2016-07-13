@@ -8,11 +8,11 @@ function requestUpdateItem(modelName, id) {
   }
 }
 
-function receiveUpdateItem(modelName, id, json) {
+function receiveUpdateItem(modelName, id, item) {
   return {
     type: `UPDATE_${modelName.toUpperCase()}_RECEIVE`,
     id,
-    item: json,
+    item,
     receivedAt: Date.now()
   }
 }
@@ -26,11 +26,16 @@ function catchUpdateItemError(modelName, id, error) {
   }
 }
 
-function updateItem(modelName, id, form) {
+function updateItem(modelName, options, id, form) {
   return function (dispatch) {
+    let path = `/${modelName}s/${id}`
+    if (options.parentModelName) {
+      path = `/${options.parentModelName}_${modelName}s/${id}`
+    }
+
     dispatch(requestUpdateItem(modelName, id))
 
-    return fetch(`/${modelName}s/${id}`, {
+    return fetch(path, {
       method: 'PUT',
       body: new FormData(form),
       credentials: 'same-origin',
@@ -47,6 +52,6 @@ function updateItem(modelName, id, form) {
 }
 
 
-export default function update(modelName) {
-  return (id, form) => updateItem(modelName, id, form)
+export default function update(modelName, options={}) {
+  return (id, form) => updateItem(modelName, options, id, form)
 }

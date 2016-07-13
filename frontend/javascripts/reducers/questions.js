@@ -1,20 +1,20 @@
 export default function (state = [], action) {
   switch (action.type) {
     case 'GET_QUESTIONS_RECEIVE':
-      return action.questions
+      return action.items
     case 'CREATE_QUESTION_RECEIVE':
-      return state.concat(action.question)
+      return state.concat(action.item)
     case 'DELETE_QUESTION_RECEIVE':
-      return state.filter(question => question.id !== action.id)
+      return state.filter(item => item.id !== action.id)
     case 'UPDATE_QUESTION_RECEIVE':
-      return state.map(question => question.id === action.id ?
-        Object.assign(action.question, { isFetching: false }) :
-        question
+      return state.map(item => item.id === action.id ?
+        Object.assign(action.item, { isFetching: false }) :
+        item
       )
     case 'UPDATE_QUESTION_ERROR':
-      return state.map(question => question.id === action.id ?
-        Object.assign(question, { isFetching: false, error: action.error }) :
-        question
+      return state.map(item => item.id === action.id ?
+        Object.assign(item, { isFetching: false, error: action.error }) :
+        item
       )
     default:
       return state

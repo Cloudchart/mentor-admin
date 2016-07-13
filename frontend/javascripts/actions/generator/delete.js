@@ -25,11 +25,16 @@ function catchDeleteItemError(modelName, id, error) {
   }
 }
 
-function deleteItem(modelName, id) {
+function deleteItem(modelName, options, id) {
   return function (dispatch) {
+    let path = `/${modelName}s/${id}`
+    if (options.parentModelName) {
+      path = `/${options.parentModelName}_${modelName}s/${id}`
+    }
+
     dispatch(requestDeleteItem(modelName, id))
 
-    return fetch(`/${modelName}s/${id}`, {
+    return fetch(path, {
       method: 'DELETE',
       credentials: 'same-origin',
     }).then(response => response.json()).then(json => {
@@ -45,6 +50,6 @@ function deleteItem(modelName, id) {
 }
 
 
-export default function (modelName) {
-  return (id) => deleteItem(modelName, id)
+export default function (modelName, options={}) {
+  return (id) => deleteItem(modelName, options, id)
 }
