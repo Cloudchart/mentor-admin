@@ -39,7 +39,7 @@ class CardEdit extends Component {
 
     return (
       <li>
-        <Paper style={{ marginBottom: '20px' }}>
+        <Paper style={{ marginBottom: '20px', padding: '20px' }}>
           <form ref="form" onSubmit={ this.handleSubmit }>
             <TextField
               name="card[text]"

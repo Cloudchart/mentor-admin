@@ -48846,7 +48846,7 @@
 	        null,
 	        _react2.default.createElement(
 	          _Paper2.default,
-	          { style: { marginBottom: '20px' } },
+	          { style: { marginBottom: '20px', padding: '20px' } },
 	          _react2.default.createElement(
 	            'form',
 	            { ref: 'form', onSubmit: this.handleSubmit },
