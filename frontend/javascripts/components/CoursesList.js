@@ -52,6 +52,7 @@ class CoursesList extends Component {
   renderCourse(item) {
     return(
       <TableRow key={ item.id }>
+        <TableRowColumn>{ item.id }</TableRowColumn>
         <TableRowColumn>{ item.name }</TableRowColumn>
         <TableRowColumn>{ item.isActive ? 'Active' : 'Inactive' }</TableRowColumn>
         <TableRowColumn>
@@ -88,6 +89,7 @@ class CoursesList extends Component {
           <Table selectable={ false }>
             <TableHeader>
               <TableRow>
+                <TableHeaderColumn>ID</TableHeaderColumn>
                 <TableHeaderColumn>Name</TableHeaderColumn>
                 <TableHeaderColumn>Active</TableHeaderColumn>
                 <TableHeaderColumn>Actions</TableHeaderColumn>

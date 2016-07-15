@@ -46398,6 +46398,11 @@
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
 	          null,
+	          item.id
+	        ),
+	        _react2.default.createElement(
+	          _Table.TableRowColumn,
+	          null,
 	          item.name
 	        ),
 	        _react2.default.createElement(
@@ -46461,6 +46466,11 @@
 	              _react2.default.createElement(
 	                _Table.TableRow,
 	                null,
+	                _react2.default.createElement(
+	                  _Table.TableHeaderColumn,
+	                  null,
+	                  'ID'
+	                ),
 	                _react2.default.createElement(
 	                  _Table.TableHeaderColumn,
 	                  null,
@@ -46680,6 +46690,12 @@
 	        _react2.default.createElement(
 	          'form',
 	          { ref: 'form', className: 'course-edit', onSubmit: this.handleSubmit },
+	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: item.id,
+	            floatingLabelText: 'ID',
+	            disabled: true
+	          }),
+	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(_TextField2.default, {
 	            defaultValue: item.name,
 	            autoFocus: !item.name,

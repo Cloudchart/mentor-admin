@@ -89,6 +89,13 @@ class CourseEdit extends Component {
 
         <form ref="form" className="course-edit" onSubmit={ this.handleSubmit }>
           <TextField
+            defaultValue={ item.id }
+            floatingLabelText="ID"
+            disabled={ true }
+          />
+          <br/>
+
+          <TextField
             defaultValue={ item.name }
             autoFocus={ !item.name }
             floatingLabelText="Name"
