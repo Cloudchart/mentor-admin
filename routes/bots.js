@@ -59,18 +59,8 @@ router.post('/', (req, res, next) => {
 })
 
 router.put('/:id', upload.array(), (req, res, next) => {
-  Bot.get(req.params.id).then(bot => {
-    // temp lines
-    let attrs = getAttrs(req.body)
-    if (!bot.keys || !bot.keys.facebookVerificationKey) {
-      attrs.keys.facebookVerificationKey = uuid.v4()
-    }
-    bot.merge(attrs)
-    //
-
-    bot.saveAll().then(result => {
-      res.json(result)
-    }).error(handleThinkyError(res))
+  Bot.get(req.params.id).update(getAttrs(req.body)).run().then(result => {
+    res.json(result)
   }).error(handleThinkyError(res))
 })
 
