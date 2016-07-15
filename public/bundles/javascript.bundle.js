@@ -50201,6 +50201,8 @@
 	      return state.filter(function (item) {
 	        return item.id !== action.id;
 	      });
+	    case 'UPDATE_CARD_RECEIVE':
+	      return (0, _uniqBy2.default)(state.concat(action.item.card.tags), 'id');
 	    default:
 	      return state;
 	  }

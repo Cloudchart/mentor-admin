@@ -21,6 +21,8 @@ export default function (state = [], action) {
       )
     case 'DELETE_TAG_RECEIVE':
       return state.filter(item => item.id !== action.id)
+    case 'UPDATE_CARD_RECEIVE':
+      return uniqBy(state.concat(action.item.card.tags), 'id')
     default:
       return state
   }
