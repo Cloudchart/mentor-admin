@@ -39,6 +39,7 @@ export const Bot = Thinky.createModel('Bot',
     isActive: type.boolean().default(false),
     keys: type.object().schema({
       facebookKey: type.string(),
+      facebookVerificationKey: type.string(),
       telegramKey: type.string(),
     }).removeExtra(),
   }).removeExtra()

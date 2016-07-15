@@ -18,6 +18,7 @@ class BotEdit extends Component {
       isActive: props.bot.isActive,
       scenarioId: props.bot.scenarioId,
       facebookKey: props.bot.keys.facebookKey,
+      facebookVerificationKey: props.bot.keys.facebookVerificationKey,
       telegramKey: props.bot.keys.telegramKey,
     }
   }
@@ -73,21 +74,31 @@ class BotEdit extends Component {
           />
 
           <TextField
+            defaultValue={ this.state.facebookVerificationKey }
+            floatingLabelText="Facebook verification key"
+            disabled={ true }
+          />
+
+          <TextField
             defaultValue={ this.state.telegramKey }
             floatingLabelText="Telegram key"
             hintText="Enter telegram key"
             name="keys[telegramKey]"
             onBlur={ this.handleUpdate.bind(this) }
           />
+          <br/>
 
-          <select
-            name="scenarioId"
-            defaultValue={ this.state.scenarioId }
-            onBlur={ this.handleUpdate.bind(this) }
-          >
-            <option></option>
-            { sortBy(scenarios, 'name').map(this.renderScenariosOptions.bind(this)) }
-          </select>
+          <label>
+            <span>Scenario</span>
+            <select
+              name="scenarioId"
+              defaultValue={ this.state.scenarioId }
+              onBlur={ this.handleUpdate.bind(this) }
+            >
+              <option></option>
+              { sortBy(scenarios, 'name').map(this.renderScenariosOptions.bind(this)) }
+            </select>
+          </label>
         </form>
       </div>
     )

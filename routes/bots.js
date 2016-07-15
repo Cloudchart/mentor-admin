@@ -1,4 +1,5 @@
 import multer from 'multer'
+import uuid from 'node-uuid'
 import { Router } from 'express'
 
 import { getFilteredAttrs, handleThinkyError } from './helpers'
@@ -17,6 +18,14 @@ function getAttrs(body) {
   attrs.name = body.name || null
   attrs.isActive = !!body.isActive
   return attrs
+}
+
+function getDefaultValues() {
+  return {
+    keys: {
+      facebookVerificationKey: uuid.v4()
+    }
+  }
 }
 
 // actions
@@ -39,7 +48,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', (req, res, next) => {
   Bot.filter(item => item.hasFields('name').not()).then(result => {
     if (result.length === 0) {
-      const bot = new Bot({})
+      const bot = new Bot(getDefaultValues())
       bot.save().then(result => {
         res.json(result)
       }).error(handleThinkyError(res))

@@ -10,6 +10,16 @@ const upload = multer()
 const permittedAttrs = ['name', 'actionsJSON']
 
 
+// helpers
+//
+function getAttrs(body) {
+  let attrs = getFilteredAttrs(body, permittedAttrs)
+  attrs.name = body.name || null
+  return attrs
+}
+
+// actions
+//
 router.get('/', async (req, res, next) => {
   Scenario.run().then(scenarios => {
     res.render('scenarios', { title: `${appName} – Scenarios`, scenarios: scenarios })
@@ -32,8 +42,7 @@ router.post('/', (req, res, next) => {
 })
 
 router.put('/:id', upload.array(), (req, res, next) => {
-  const attrs = getFilteredAttrs(req.body, permittedAttrs)
-  Scenario.get(req.params.id).update(attrs).run().then(result => {
+  Scenario.get(req.params.id).update(getAttrs(req.body)).run().then(result => {
     res.json(result)
   }).error(handleThinkyError(res))
 })

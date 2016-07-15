@@ -44617,6 +44617,7 @@
 	      isActive: props.bot.isActive,
 	      scenarioId: props.bot.scenarioId,
 	      facebookKey: props.bot.keys.facebookKey,
+	      facebookVerificationKey: props.bot.keys.facebookVerificationKey,
 	      telegramKey: props.bot.keys.telegramKey
 	    };
 	    return _this;
@@ -44691,21 +44692,36 @@
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: this.state.facebookVerificationKey,
+	            floatingLabelText: 'Facebook verification key',
+	            disabled: true
+	          }),
+	          _react2.default.createElement(_TextField2.default, {
 	            defaultValue: this.state.telegramKey,
 	            floatingLabelText: 'Telegram key',
 	            hintText: 'Enter telegram key',
 	            name: 'keys[telegramKey]',
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
+	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(
-	            'select',
-	            {
-	              name: 'scenarioId',
-	              defaultValue: this.state.scenarioId,
-	              onBlur: this.handleUpdate.bind(this)
-	            },
-	            _react2.default.createElement('option', null),
-	            (0, _sortBy2.default)(scenarios, 'name').map(this.renderScenariosOptions.bind(this))
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Scenario'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              {
+	                name: 'scenarioId',
+	                defaultValue: this.state.scenarioId,
+	                onBlur: this.handleUpdate.bind(this)
+	              },
+	              _react2.default.createElement('option', null),
+	              (0, _sortBy2.default)(scenarios, 'name').map(this.renderScenariosOptions.bind(this))
+	            )
 	          )
 	        )
 	      );
