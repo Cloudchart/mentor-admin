@@ -3,11 +3,10 @@ import sortBy from 'lodash/sortBy'
 
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
-import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
+import RaisedButton from 'material-ui/RaisedButton'
 
-import ContentAdd from 'material-ui/svg-icons/content/add'
-import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left'
+import ContentAddIcon from 'material-ui/svg-icons/content/add'
 
 // https://github.com/callemall/material-ui/issues/3151
 // import SelectField from 'material-ui/SelectField'
@@ -20,11 +19,20 @@ class CourseEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: props.item.name,
-      isActive: props.item.isActive,
-      botId: props.item.botId,
-      scenarioId: props.item.scenarioId,
+      item: this.getItem(props),
     }
+  }
+
+  // lifecycle
+  //
+  componentWillReceiveProps(nextProps) {
+    this.setState({ item: this.getItem(nextProps) })
+  }
+
+  // helpers
+  //
+  getItem(props) {
+    return props.courses.find(course => course.id === props.courseId)
   }
 
   // handlers
@@ -33,9 +41,12 @@ class CourseEdit extends Component {
     event.preventDefault()
   }
 
+  handleCreateCard(event) {
+    this.props.actions.createCard(this.state.item.id)
+  }
+
   handleUpdate(event) {
-    const { item, actions } = this.props
-    actions.updateCourse(item.id, this.refs.form)
+    this.props.actions.updateCourse(this.state.item.id, this.refs.form)
   }
 
   handleBack(event) {
@@ -51,21 +62,23 @@ class CourseEdit extends Component {
   }
 
   render() {
-    const { item, bots, cards, scenarios, actions } = this.props
+    const { item } = this.state
+    const { bots, cards, scenarios, tags, actions } = this.props
 
     return (
       <div>
-        <h3>
-          <IconButton onTouchTap={ this.handleBack.bind(this) }>
-            <ChevronLeft/>
-          </IconButton>
-          <span>{ item.name ? `${item.name} course` : 'New course' }</span>
-        </h3>
+        <RaisedButton
+          label="Back"
+          style={{ marginBottom: '30px' }}
+          onTouchTap={ this.handleBack.bind(this) }
+        />
+
+        <h3>{ item.name ? `${item.name} course` : 'New course' }</h3>
 
         <form ref="form" className="course-edit" onSubmit={ this.handleSubmit }>
           <TextField
-            defaultValue={ this.state.name }
-            autoFocus={ !this.state.name }
+            defaultValue={ item.name }
+            autoFocus={ !item.name }
             floatingLabelText="Name"
             hintText="Enter course name"
             name="name"
@@ -76,7 +89,7 @@ class CourseEdit extends Component {
             label="Is active"
             labelPosition="right"
             name="isActive"
-            defaultToggled={ this.state.isActive }
+            defaultToggled={ item.isActive }
             onBlur={ this.handleUpdate.bind(this) }
           />
 
@@ -84,7 +97,7 @@ class CourseEdit extends Component {
             <span>Bot</span>
             <select
               name="botId"
-              defaultValue={ this.state.botId }
+              defaultValue={ item.botId }
               onBlur={ this.handleUpdate.bind(this) }
             >
               <option></option>
@@ -96,7 +109,7 @@ class CourseEdit extends Component {
             <span>Scenario</span>
             <select
               name="scenarioId"
-              defaultValue={ this.state.scenarioId }
+              defaultValue={ item.scenarioId }
               onBlur={ this.handleUpdate.bind(this) }
             >
               <option></option>
@@ -106,9 +119,19 @@ class CourseEdit extends Component {
         </form>
 
         <h3>Cards</h3>
+
+        <FlatButton
+          label="Add card"
+          labelPosition="before"
+          primary={ true }
+          icon={ <ContentAddIcon/> }
+          onTouchTap={ this.handleCreateCard.bind(this) }
+        />
+
         <CardsList
           course={ item }
           cards={ cards }
+          tags={ tags }
           actions={ actions }
         />
       </div>
@@ -118,10 +141,12 @@ class CourseEdit extends Component {
 }
 
 CourseEdit.propTypes = {
-  item: PropTypes.object.isRequired,
+  courseId: PropTypes.string.isRequired,
+  courses: PropTypes.array.isRequired,
   bots: PropTypes.array.isRequired,
   cards: PropTypes.array.isRequired,
   scenarios: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }

@@ -3,7 +3,7 @@ import { Router } from 'express'
 
 import { getFilteredAttrs, _handleThinkyError } from './helpers'
 import { appName } from '../lib'
-import { Bot, Course, Scenario } from '../models'
+import { Bot, Course, Scenario, Tag } from '../models'
 
 const router = Router()
 const upload = multer()
@@ -14,7 +14,7 @@ const permittedAttrs = ['name', 'isActive', 'botId', 'scenarioId']
 //
 function getAttrs(body) {
   let attrs = getFilteredAttrs(body, permittedAttrs)
-  if (!body.name) delete attrs.name
+  attrs.name = body.name || null
   attrs.isActive = !!body.isActive
   return attrs
 }
@@ -26,11 +26,13 @@ router.get('/', async (req, res, next) => {
     const courses = await Course.run()
     const bots = await Bot.filter(item => item.hasFields('name'))
     const scenarios = await Scenario.filter(item => item.hasFields('name'))
+    const tags = await Tag.filter(item => item.hasFields('name'))
 
     res.render('courses', { title: `${appName} – Courses`,
-      bots: bots,
       courses: courses,
+      bots: bots,
       scenarios: scenarios,
+      tags: tags,
     })
   } catch (err) {
     res.status(500).render('error', { message: err, error: {} })

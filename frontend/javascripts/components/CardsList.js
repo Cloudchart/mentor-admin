@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import sortBy from 'lodash/sortBy'
 
-import FlatButton from 'material-ui/FlatButton'
-import ContentAdd from 'material-ui/svg-icons/content/add'
-
 import CardEdit from './CardEdit'
 
 
@@ -24,38 +21,24 @@ class CardsList extends Component {
     )
   }
 
-
-  // handlers
-  //
-  handleCreateCard(event) {
-    this.props.actions.createCard(this.props.course.id)
-  }
-
   // renderers
   //
-  render() {
-    console.log(this.props.cards);
-    const { course, actions } = this.props
+  renderItem(item) {
+    const { cards, tags, actions } = this.props
 
     return (
-      <div>
-        <ul className="cards">
-          {
-            this.getCards().map(item => {
-              return <CardEdit key={ item.id } item={ item } actions={ actions } />
-            })
-          }
-        </ul>
-
-        <FlatButton
-          label="Add card"
-          labelPosition="before"
-          primary={ true }
-          icon={ <ContentAdd/> }
-          onTouchTap={ this.handleCreateCard.bind(this) }
-        />
-      </div>
+      <CardEdit
+        key={ item.id }
+        cardId={ item.id }
+        cards={ cards }
+        tags={ tags }
+        actions={ actions }
+      />
     )
+  }
+
+  render() {
+    return <ul className="cards">{ this.getCards().map(this.renderItem.bind(this)) }</ul>
   }
 
 }
@@ -63,6 +46,7 @@ class CardsList extends Component {
 CardsList.propTypes = {
   course: PropTypes.object.isRequired,
   cards: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

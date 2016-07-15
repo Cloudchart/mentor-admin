@@ -20,7 +20,7 @@ class CoursesList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedItem: {},
+      selectedItemId: '',
     }
   }
 
@@ -28,18 +28,18 @@ class CoursesList extends Component {
   //
   handleNew(event) {
     this.props.actions.createCourse().then(res => {
-      this.setState({ selectedItem: res.item })
+      this.setState({ selectedItemId: res.item.id })
     })
 
   }
 
   handleEditClose(event) {
-    this.setState({ selectedItem: {} })
+    this.setState({ selectedItemId: '' })
   }
 
   handleEdit(item, event) {
     event.preventDefault()
-    this.setState({ selectedItem: item })
+    this.setState({ selectedItemId: item.id })
   }
 
   handleDelete(id, event) {
@@ -66,16 +66,18 @@ class CoursesList extends Component {
   }
 
   render() {
-    const { bots, courses, cards, scenarios, actions } = this.props
-    const { selectedItem } = this.state
+    const { bots, courses, cards, scenarios, tags, actions } = this.props
+    const { selectedItemId } = this.state
 
-    if (Object.keys(selectedItem).length > 0) {
+    if (selectedItemId) {
       return (
         <CourseEdit
-          item={ this.state.selectedItem }
+          courseId={ selectedItemId }
+          courses={ courses }
           bots={ bots }
           cards={ cards }
           scenarios={ scenarios }
+          tags={ tags }
           onChange={ this.handleEditClose.bind(this) }
           actions={ actions }
         />
@@ -113,6 +115,7 @@ CoursesList.propTypes = {
   courses: PropTypes.array.isRequired,
   cards: PropTypes.array.isRequired,
   scenarios: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
