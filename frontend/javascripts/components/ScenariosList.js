@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import sortBy from 'lodash/sortBy'
 
 import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import Dialog from 'material-ui/Dialog'
 
 import {
   Table,
@@ -22,7 +20,7 @@ class ScenariosList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedItem: {},
+      selectedItemId: '',
     }
   }
 
@@ -30,18 +28,18 @@ class ScenariosList extends Component {
   //
   handleNew(event) {
     this.props.actions.createScenario().then(res => {
-      this.setState({ selectedItem: res.item })
+      this.setState({ selectedItemId: res.item.id })
     })
 
   }
 
   handleEditClose(event) {
-    this.setState({ selectedItem: {} })
+    this.setState({ selectedItemId: '' })
   }
 
   handleEdit(item, event) {
     event.preventDefault()
-    this.setState({ selectedItem: item })
+    this.setState({ selectedItemId: item.id })
   }
 
   handleDelete(id, event) {
@@ -68,52 +66,42 @@ class ScenariosList extends Component {
 
   render() {
     const { scenarios, actions } = this.props
-    const { selectedItem } = this.state
+    const { selectedItemId } = this.state
 
-    return (
-      <div>
-        <Table selectable={ false }>
-          <TableHeader>
-            <TableRow>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Actions</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            { sortBy(scenarios.filter(scenario => scenario.name), 'name').map(this.renderItem.bind(this)) }
-          </TableBody>
-        </Table>
-
-        <RaisedButton
-          label="New"
-          primary={ true }
-          style={{ marginTop: '20px' }}
-          onTouchTap={ this.handleNew.bind(this) }
+    if (selectedItemId) {
+      return (
+        <ScenarioEdit
+          scenarioId={ this.state.selectedItemId }
+          scenarios={ scenarios }
+          onChange={ this.handleEditClose.bind(this) }
+          actions={ actions }
         />
+      )
+    } else {
+      return (
+        <div>
+          <Table selectable={ false }>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderColumn>Name</TableHeaderColumn>
+                <TableHeaderColumn>Actions</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              { sortBy(scenarios.filter(scenario => scenario.name), 'name').map(this.renderItem.bind(this)) }
+            </TableBody>
+          </Table>
 
-        <Dialog
-          title={ selectedItem.name ? `${selectedItem.name} scenario` : 'New scenario' }
-          open={ Object.keys(this.state.selectedItem).length > 0 }
-          autoScrollBodyContent={ true }
-          children={
-            <ScenarioEdit
-              scenario={ this.state.selectedItem }
-              actions={ actions }
-            />
-          }
-          actions={
-            <FlatButton
-              label="Done"
-              primary={ true }
-              onTouchTap={ this.handleEditClose.bind(this) }
-            />
-          }
-          onRequestClose={ this.handleEditClose.bind(this) }
-        />
-      </div>
-    )
+          <RaisedButton
+            label="New"
+            primary={ true }
+            style={{ marginTop: '20px' }}
+            onTouchTap={ this.handleNew.bind(this) }
+          />
+        </div>
+      )
+    }
   }
-
 }
 
 ScenariosList.propTypes = {

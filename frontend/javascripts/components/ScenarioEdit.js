@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
+import RaisedButton from 'material-ui/RaisedButton'
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
 
@@ -9,33 +10,64 @@ class ScenarioEdit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: props.scenario.name,
-      actionsJSON: props.scenario.actionsJSON,
+      item: this.getItem(props),
     }
+  }
+
+  // lifecycle
+  //
+  componentWillMount() {
+    document.addEventListener('keydown', this.handleEscape.bind(this))
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ item: this.getItem(nextProps) })
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleEscape.bind(this))
+  }
+
+  // helpers
+  //
+  getItem(props) {
+    return props.scenarios.find(scenario => scenario.id === props.scenarioId)
   }
 
   // handlers
   //
+  handleEscape(event) {
+    if (event.keyCode == 27) this.props.onChange()
+  }
+
   handleSubmit(event) {
     event.preventDefault()
   }
 
   handleUpdate(event) {
-    const { scenario, actions } = this.props
-    actions.updateScenario(scenario.id, this.refs.form)
+    this.props.actions.updateScenario(this.props.scenarioId, this.refs.form)
   }
 
   // renderers
   //
   render() {
+    const { item } = this.state
     const { scenario, actions } = this.props
 
     return (
       <div>
-        <form ref="form" className="scenarios-edit" onSubmit={ this.handleSubmit }>
+        <RaisedButton
+          label="Back"
+          style={{ marginBottom: '30px' }}
+          onTouchTap={ this.props.onChange }
+        />
+
+        <h3>{ item.name ? `${item.name} scenario` : 'New scenario' }</h3>
+
+        <form ref="form" className="scenario-edit" onSubmit={ this.handleSubmit }>
           <TextField
-            defaultValue={ this.state.name }
-            autoFocus={ !this.state.name }
+            defaultValue={ item.name }
+            autoFocus={ !item.name }
             floatingLabelText="Name"
             hintText="Enter scenario name"
             name="name"
@@ -43,7 +75,7 @@ class ScenarioEdit extends Component {
           />
 
           <TextField
-            defaultValue={ this.state.actionsJSON }
+            defaultValue={ item.actionsJSON }
             fullWidth={ true }
             multiLine={ true }
             floatingLabelText="Actions"
@@ -59,7 +91,9 @@ class ScenarioEdit extends Component {
 }
 
 ScenarioEdit.propTypes = {
-  scenario: PropTypes.object.isRequired,
+  scenarioId: PropTypes.string.isRequired,
+  scenarios: PropTypes.array.isRequired,
+  onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }
 

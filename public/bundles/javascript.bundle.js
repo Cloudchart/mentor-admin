@@ -46569,9 +46569,19 @@
 
 
 	  _createClass(CourseEdit, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      document.addEventListener('keydown', this.handleEscape.bind(this));
+	    }
+	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      this.setState({ item: this.getItem(nextProps) });
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      document.removeEventListener('keydown', this.handleEscape.bind(this));
 	    }
 
 	    // helpers
@@ -46588,6 +46598,11 @@
 	    // handlers
 	    //
 
+	  }, {
+	    key: 'handleEscape',
+	    value: function handleEscape(event) {
+	      if (event.keyCode == 27) this.props.onChange();
+	    }
 	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(event) {
@@ -48484,14 +48499,6 @@
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-	var _FlatButton = __webpack_require__(476);
-
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-	var _Dialog = __webpack_require__(479);
-
-	var _Dialog2 = _interopRequireDefault(_Dialog);
-
 	var _Table = __webpack_require__(483);
 
 	var _ScenarioEdit = __webpack_require__(522);
@@ -48515,7 +48522,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScenariosList).call(this, props));
 
 	    _this.state = {
-	      selectedItem: {}
+	      selectedItemId: ''
 	    };
 	    return _this;
 	  }
@@ -48530,19 +48537,19 @@
 	      var _this2 = this;
 
 	      this.props.actions.createScenario().then(function (res) {
-	        _this2.setState({ selectedItem: res.item });
+	        _this2.setState({ selectedItemId: res.item.id });
 	      });
 	    }
 	  }, {
 	    key: 'handleEditClose',
 	    value: function handleEditClose(event) {
-	      this.setState({ selectedItem: {} });
+	      this.setState({ selectedItemId: '' });
 	    }
 	  }, {
 	    key: 'handleEdit',
 	    value: function handleEdit(item, event) {
 	      event.preventDefault();
-	      this.setState({ selectedItem: item });
+	      this.setState({ selectedItemId: item.id });
 	    }
 	  }, {
 	    key: 'handleDelete',
@@ -48590,63 +48597,57 @@
 	      var _props = this.props;
 	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
-	      var selectedItem = this.state.selectedItem;
+	      var selectedItemId = this.state.selectedItemId;
 
 
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          _Table.Table,
-	          { selectable: false },
+	      if (selectedItemId) {
+	        return _react2.default.createElement(_ScenarioEdit2.default, {
+	          scenarioId: this.state.selectedItemId,
+	          scenarios: scenarios,
+	          onChange: this.handleEditClose.bind(this),
+	          actions: actions
+	        });
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
 	          _react2.default.createElement(
-	            _Table.TableHeader,
-	            null,
+	            _Table.Table,
+	            { selectable: false },
 	            _react2.default.createElement(
-	              _Table.TableRow,
+	              _Table.TableHeader,
 	              null,
 	              _react2.default.createElement(
-	                _Table.TableHeaderColumn,
+	                _Table.TableRow,
 	                null,
-	                'Name'
-	              ),
-	              _react2.default.createElement(
-	                _Table.TableHeaderColumn,
-	                null,
-	                'Actions'
+	                _react2.default.createElement(
+	                  _Table.TableHeaderColumn,
+	                  null,
+	                  'Name'
+	                ),
+	                _react2.default.createElement(
+	                  _Table.TableHeaderColumn,
+	                  null,
+	                  'Actions'
+	                )
 	              )
+	            ),
+	            _react2.default.createElement(
+	              _Table.TableBody,
+	              null,
+	              (0, _sortBy2.default)(scenarios.filter(function (scenario) {
+	                return scenario.name;
+	              }), 'name').map(this.renderItem.bind(this))
 	            )
 	          ),
-	          _react2.default.createElement(
-	            _Table.TableBody,
-	            null,
-	            (0, _sortBy2.default)(scenarios.filter(function (scenario) {
-	              return scenario.name;
-	            }), 'name').map(this.renderItem.bind(this))
-	          )
-	        ),
-	        _react2.default.createElement(_RaisedButton2.default, {
-	          label: 'New',
-	          primary: true,
-	          style: { marginTop: '20px' },
-	          onTouchTap: this.handleNew.bind(this)
-	        }),
-	        _react2.default.createElement(_Dialog2.default, {
-	          title: selectedItem.name ? selectedItem.name + ' scenario' : 'New scenario',
-	          open: Object.keys(this.state.selectedItem).length > 0,
-	          autoScrollBodyContent: true,
-	          children: _react2.default.createElement(_ScenarioEdit2.default, {
-	            scenario: this.state.selectedItem,
-	            actions: actions
-	          }),
-	          actions: _react2.default.createElement(_FlatButton2.default, {
-	            label: 'Done',
+	          _react2.default.createElement(_RaisedButton2.default, {
+	            label: 'New',
 	            primary: true,
-	            onTouchTap: this.handleEditClose.bind(this)
-	          }),
-	          onRequestClose: this.handleEditClose.bind(this)
-	        })
-	      );
+	            style: { marginTop: '20px' },
+	            onTouchTap: this.handleNew.bind(this)
+	          })
+	        );
+	      }
 	    }
 	  }]);
 
@@ -48676,6 +48677,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _RaisedButton = __webpack_require__(474);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
 	var _Toggle = __webpack_require__(497);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
@@ -48701,17 +48706,51 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScenarioEdit).call(this, props));
 
 	    _this.state = {
-	      name: props.scenario.name,
-	      actionsJSON: props.scenario.actionsJSON
+	      item: _this.getItem(props)
 	    };
 	    return _this;
 	  }
 
-	  // handlers
+	  // lifecycle
 	  //
 
 
 	  _createClass(ScenarioEdit, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      document.addEventListener('keydown', this.handleEscape.bind(this));
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.setState({ item: this.getItem(nextProps) });
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      document.removeEventListener('keydown', this.handleEscape.bind(this));
+	    }
+
+	    // helpers
+	    //
+
+	  }, {
+	    key: 'getItem',
+	    value: function getItem(props) {
+	      return props.scenarios.find(function (scenario) {
+	        return scenario.id === props.scenarioId;
+	      });
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: 'handleEscape',
+	    value: function handleEscape(event) {
+	      if (event.keyCode == 27) this.props.onChange();
+	    }
+	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(event) {
 	      event.preventDefault();
@@ -48719,11 +48758,7 @@
 	  }, {
 	    key: 'handleUpdate',
 	    value: function handleUpdate(event) {
-	      var _props = this.props;
-	      var scenario = _props.scenario;
-	      var actions = _props.actions;
-
-	      actions.updateScenario(scenario.id, this.refs.form);
+	      this.props.actions.updateScenario(this.props.scenarioId, this.refs.form);
 	    }
 
 	    // renderers
@@ -48732,27 +48767,38 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props2 = this.props;
-	      var scenario = _props2.scenario;
-	      var actions = _props2.actions;
+	      var item = this.state.item;
+	      var _props = this.props;
+	      var scenario = _props.scenario;
+	      var actions = _props.actions;
 
 
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(_RaisedButton2.default, {
+	          label: 'Back',
+	          style: { marginBottom: '30px' },
+	          onTouchTap: this.props.onChange
+	        }),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          item.name ? item.name + ' scenario' : 'New scenario'
+	        ),
 	        _react2.default.createElement(
 	          'form',
-	          { ref: 'form', className: 'scenarios-edit', onSubmit: this.handleSubmit },
+	          { ref: 'form', className: 'scenario-edit', onSubmit: this.handleSubmit },
 	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: this.state.name,
-	            autoFocus: !this.state.name,
+	            defaultValue: item.name,
+	            autoFocus: !item.name,
 	            floatingLabelText: 'Name',
 	            hintText: 'Enter scenario name',
 	            name: 'name',
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: this.state.actionsJSON,
+	            defaultValue: item.actionsJSON,
 	            fullWidth: true,
 	            multiLine: true,
 	            floatingLabelText: 'Actions',
@@ -48769,7 +48815,9 @@
 	}(_react.Component);
 
 	ScenarioEdit.propTypes = {
-	  scenario: _react.PropTypes.object.isRequired,
+	  scenarioId: _react.PropTypes.string.isRequired,
+	  scenarios: _react.PropTypes.array.isRequired,
+	  onChange: _react.PropTypes.func,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
