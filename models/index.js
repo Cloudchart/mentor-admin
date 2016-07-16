@@ -77,9 +77,9 @@ export const Block = Thinky.createModel('Block',
   type.object().schema({
     id: type.string(),
     cardId: type.string(),
-    type: type.string().enum(['text', 'image', 'video']),
+    type: type.string().enum(['text', 'image', 'video']).default('text'),
     position: type.number().integer().default(0),
-    content: type.object(),
+    content: type.string(),
   }).removeExtra()
 )
 

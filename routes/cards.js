@@ -38,7 +38,7 @@ router.get('/courses/:courseId/cards', async (req, res, next) => {
   try {
     const items = await Card_Course
       .filter({ courseId: req.params.courseId })
-      .getJoin({ card: { tags: true } })
+      .getJoin({ card: { tags: true, blocks: true } })
 
     res.json(items)
   } catch (err) {
@@ -63,7 +63,10 @@ router.post('/courses/:courseId/cards', async (req, res, next) => {
 router.put('/course_cards/:id', upload.array(), async (req, res, next) => {
   try {
     let attrs = getFilteredAttrs(req.body, permittedAttrs)
-    const cardCourse = await Card_Course.get(req.params.id).getJoin({ card: { tags: true } })
+    const cardCourse = await Card_Course
+      .get(req.params.id)
+      .getJoin({ card: { tags: true, blocks: true } })
+
     attrs.card.tags = await findOrCreateTags(attrs.card.tags)
     cardCourse.merge(attrs)
 
@@ -77,7 +80,7 @@ router.put('/course_cards/:id', upload.array(), async (req, res, next) => {
 router.delete('/course_cards/:id', async (req, res, next) => {
   try {
     const cardCourse = await Card_Course.get(req.params.id).getJoin({ card: true })
-    const result = await cardCourse.deleteAll({ card: true })
+    if (cardCourse.card.text) { await cardCourse.delete() } else { await cardCourse.deleteAll() }
     res.json({ message: 'ok' })
   } catch (err) {
     _handleThinkyError(err, res)

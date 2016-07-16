@@ -10,6 +10,8 @@ import AutoComplete from 'material-ui/AutoComplete'
 
 import ContentClearIcon from 'material-ui/svg-icons/content/clear'
 
+import BlocksList from './BlocksList'
+
 
 class CardEdit extends Component {
 
@@ -105,13 +107,23 @@ class CardEdit extends Component {
             <ContentClearIcon />
           </IconButton>
 
-          <form ref="form" onSubmit={ this.handleSubmit }>
+          <form ref="form" style={{ marginBottom: '40px' }} onSubmit={ this.handleSubmit }>
             <TextField
               name="card[text]"
               defaultValue={ item.card.text }
               multiLine={ true }
               floatingLabelText="Text"
               hintText="Enter card text"
+              onBlur={ this.handleUpdate.bind(this) }
+            />
+            <br/>
+
+            <TextField
+              name="position"
+              type="number"
+              defaultValue={ item.position }
+              floatingLabelText="Position"
+              hintText="Enter card position"
               onBlur={ this.handleUpdate.bind(this) }
             />
             <br/>
@@ -132,16 +144,6 @@ class CardEdit extends Component {
               onBlur={ this.handleUpdate.bind(this) }
             />
 
-            <TextField
-              name="position"
-              type="number"
-              defaultValue={ item.position }
-              floatingLabelText="Position"
-              hintText="Enter card position"
-              onBlur={ this.handleUpdate.bind(this) }
-            />
-            <br/>
-
             <AutoComplete
               floatingLabelText="Tags"
               hintText="Type anything"
@@ -151,7 +153,16 @@ class CardEdit extends Component {
               onUpdateInput={ this.handleTagsInputUpdate.bind(this) }
             />
             { this.renderTags() }
+
           </form>
+
+          <h3>Blocks</h3>
+
+          <BlocksList
+            items={ item.card.blocks || [] }
+            cardCourseId={ item.id }
+            actions={ actions }
+          />
         </Paper>
       </li>
     )

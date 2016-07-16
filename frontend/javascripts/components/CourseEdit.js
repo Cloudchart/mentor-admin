@@ -3,10 +3,7 @@ import sortBy from 'lodash/sortBy'
 
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
-import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
-
-import ContentAddIcon from 'material-ui/svg-icons/content/add'
 
 // https://github.com/callemall/material-ui/issues/3151
 // import SelectField from 'material-ui/SelectField'
@@ -51,10 +48,6 @@ class CourseEdit extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-  }
-
-  handleCreateCard(event) {
-    this.props.actions.createCard(this.state.item.id)
   }
 
   handleUpdate(event) {
@@ -139,16 +132,8 @@ class CourseEdit extends Component {
 
         <h3>Cards</h3>
 
-        <FlatButton
-          label="Add card"
-          labelPosition="before"
-          primary={ true }
-          icon={ <ContentAddIcon/> }
-          onTouchTap={ this.handleCreateCard.bind(this) }
-        />
-
         <CardsList
-          course={ item }
+          courseId={ item.id }
           cards={ cards }
           tags={ tags }
           actions={ actions }

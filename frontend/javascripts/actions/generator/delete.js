@@ -8,10 +8,11 @@ function requestDeleteItem(modelName, id) {
   }
 }
 
-function receiveDeleteItem(modelName, id, json) {
+function receiveDeleteItem(modelName, id, item) {
   return {
     type: `DELETE_${modelName.toUpperCase()}_RECEIVE`,
     id,
+    item,
     receivedAt: Date.now()
   }
 }
