@@ -51001,6 +51001,10 @@
 
 	var _truncate2 = _interopRequireDefault(_truncate);
 
+	var _Chip = __webpack_require__(512);
+
+	var _Chip2 = _interopRequireDefault(_Chip);
+
 	var _Paper = __webpack_require__(402);
 
 	var _Paper2 = _interopRequireDefault(_Paper);
@@ -51009,9 +51013,9 @@
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
-	var _Chip = __webpack_require__(512);
+	var _FlatButton = __webpack_require__(477);
 
-	var _Chip2 = _interopRequireDefault(_Chip);
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51041,7 +51045,8 @@
 
 	    _this.state = {
 	      query: '',
-	      data: []
+	      data: { hits: [] },
+	      isFetching: false
 	    };
 	    return _this;
 	  }
@@ -51051,22 +51056,46 @@
 
 
 	  _createClass(CardsSearch, [{
-	    key: 'handleInputChange',
-	    value: function handleInputChange(event) {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(event) {
 	      var _this2 = this;
 
-	      var query = event.target.value;
-	      this.setState({ query: query });
-	      if (query.length >= 3) {
-	        index.search(query, function (err, content) {
-	          return _this2.setState({ data: content.hits });
-	        });
-	      }
+	      event.preventDefault();
+	      if (this.state.query.length < 2) return;
+
+	      this.setState({ isFetching: true });
+	      index.search(this.state.query, { hitsPerPage: 1000 }, function (err, content) {
+	        _this2.setState({ data: content, isFetching: false });
+	      });
+	    }
+	  }, {
+	    key: 'handleInputChange',
+	    value: function handleInputChange(event) {
+	      this.setState({ query: event.target.value });
 	    }
 
 	    // renderers
 	    //
 
+	  }, {
+	    key: 'renderResultsHeader',
+	    value: function renderResultsHeader(hits) {
+	      var text = void 0;
+	      var hitsLength = hits.length;
+
+	      if (this.state.isFetching) {
+	        text = 'Fetching...';
+	      } else if (hitsLength > 0) {
+	        var resultsPerPageNum = hitsLength >= 20 ? '20' : hitsLength;
+	        text = 'Showing ' + resultsPerPageNum + ' of ' + hitsLength + ' results';
+	      }
+
+	      return _react2.default.createElement(
+	        'h4',
+	        null,
+	        text
+	      );
+	    }
 	  }, {
 	    key: 'renderTag',
 	    value: function renderTag(tag, index) {
@@ -51102,20 +51131,44 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this3 = this;
+
+	      var hits = this.state.data.hits.filter(function (hit) {
+	        return hit.pinboard_tags.includes(_this3.state.data.query);
+	      });
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(_TextField2.default, {
-	          value: this.state.query,
-	          floatingLabelText: 'Search',
-	          hintText: 'Type anything',
-	          autoFocus: true,
-	          onChange: this.handleInputChange.bind(this)
-	        }),
+	        _react2.default.createElement(
+	          'form',
+	          { onSubmit: this.handleSubmit.bind(this) },
+	          _react2.default.createElement(_TextField2.default, {
+	            value: this.state.query,
+	            floatingLabelText: 'Search',
+	            hintText: 'Type at least two characters',
+	            autoFocus: true,
+	            onChange: this.handleInputChange.bind(this)
+	          }),
+	          _react2.default.createElement(
+	            _FlatButton2.default,
+	            {
+	              type: 'sublit',
+	              primary: true,
+	              disabled: this.state.isFetching
+	            },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'search'
+	            )
+	          )
+	        ),
+	        this.renderResultsHeader(hits),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'results', style: { height: '600px' } },
-	          this.state.data.map(this.renderResult.bind(this))
+	          hits.slice(0, 20).map(this.renderResult.bind(this))
 	        )
 	      );
 	    }
@@ -55004,7 +55057,7 @@
 /* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
