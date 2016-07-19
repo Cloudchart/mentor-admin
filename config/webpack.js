@@ -52,10 +52,12 @@ module.exports = {
       remove: true
     }),
     new webpack.DefinePlugin({
-      "process.env": {
+      ENV: {
+        APP_NAME: JSON.stringify(appName),
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         ROOT_URL: JSON.stringify(process.env.ROOT_URL),
-        APP_NAME: JSON.stringify(appName)
+        ALGOLIASEARCH_APP_ID: JSON.stringify(process.env.ALGOLIASEARCH_APP_ID),
+        ALGOLIASEARCH_API_KEY: JSON.stringify(process.env.ALGOLIASEARCH_API_KEY)
       }
     }),
 

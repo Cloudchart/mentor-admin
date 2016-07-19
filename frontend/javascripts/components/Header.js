@@ -18,9 +18,7 @@ class Header extends Component {
   // renderers
   //
   render() {
-    const title = this.props.title ?
-      `${process.env.APP_NAME} – ${this.props.title}` :
-      process.env.APP_NAME
+    const title = this.props.title ? `${ENV['APP_NAME']} – ${this.props.title}` : ENV['APP_NAME']
 
     return (
       <AppBar
