@@ -3,6 +3,8 @@ import create from './generator/create'
 import update from './generator/update'
 import destroy from './generator/delete'
 
+import importCards from './cards/import'
+
 const createBot = create('bot')
 const updateBot = update('bot')
 const deleteBot = destroy('bot')
@@ -42,6 +44,7 @@ export const coursesActions = {
   createCard,
   updateCard,
   deleteCard,
+  importCards,
   createBlock,
   updateBlock,
   deleteBlock,
