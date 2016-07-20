@@ -22,13 +22,13 @@ class CourseEdit extends Component {
 
   // lifecycle
   //
-  // componentWillMount() {
-  //   document.addEventListener('keydown', this.handleEscape.bind(this))
-  // }
-
   componentWillReceiveProps(nextProps) {
     this.setState({ item: this.getItem(nextProps) })
   }
+
+  // componentWillMount() {
+  //   document.addEventListener('keydown', this.handleEscape.bind(this))
+  // }
 
   // componentWillUnmount() {
   //   document.removeEventListener('keydown', this.handleEscape.bind(this))
@@ -42,10 +42,6 @@ class CourseEdit extends Component {
 
   // handlers
   //
-  // handleEscape(event) {
-  //   if (event.keyCode == 27) this.props.onChange()
-  // }
-
   handleSubmit(event) {
     event.preventDefault()
   }
@@ -57,6 +53,10 @@ class CourseEdit extends Component {
   handleBack(event) {
     this.props.onChange()
   }
+
+  // handleEscape(event) {
+  //   if (event.keyCode == 27) this.props.onChange()
+  // }
 
   // renderers
   //

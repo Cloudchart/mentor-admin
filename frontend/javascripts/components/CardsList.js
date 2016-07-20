@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import sortBy from 'lodash/sortBy'
 
 import FlatButton from 'material-ui/FlatButton'
 import ContentAddIcon from 'material-ui/svg-icons/content/add'
@@ -16,13 +15,6 @@ class CardsList extends Component {
     this.props.actions.getCards(this.props.courseId)
   }
 
-  // helpers
-  //
-  getCards() {
-    const { cards, courseId } = this.props
-    return sortBy(cards.filter(item => item.courseId === courseId), 'position')
-  }
-
   // handlers
   //
   handleCreate(event) {
@@ -31,6 +23,13 @@ class CardsList extends Component {
 
   // renderers
   //
+  renderItems() {
+    return this.props.cards
+      .filter(item => item.courseId === this.props.courseId)
+      .sort((a, b) => a.position - b.position)
+      .map(this.renderItem.bind(this))
+  }
+
   renderItem(item) {
     const { cards, tags, actions } = this.props
 
@@ -62,7 +61,7 @@ class CardsList extends Component {
         />
 
         <ul className="cards">
-          { this.getCards().map(this.renderItem.bind(this)) }
+          { this.renderItems() }
         </ul>
       </div>
     )

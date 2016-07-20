@@ -46872,15 +46872,17 @@
 
 	  // lifecycle
 	  //
-	  // componentWillMount() {
-	  //   document.addEventListener('keydown', this.handleEscape.bind(this))
-	  // }
+
 
 	  _createClass(CourseEdit, [{
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      this.setState({ item: this.getItem(nextProps) });
 	    }
+
+	    // componentWillMount() {
+	    //   document.addEventListener('keydown', this.handleEscape.bind(this))
+	    // }
 
 	    // componentWillUnmount() {
 	    //   document.removeEventListener('keydown', this.handleEscape.bind(this))
@@ -46899,9 +46901,6 @@
 
 	    // handlers
 	    //
-	    // handleEscape(event) {
-	    //   if (event.keyCode == 27) this.props.onChange()
-	    // }
 
 	  }, {
 	    key: 'handleSubmit',
@@ -46918,6 +46917,10 @@
 	    value: function handleBack(event) {
 	      this.props.onChange();
 	    }
+
+	    // handleEscape(event) {
+	    //   if (event.keyCode == 27) this.props.onChange()
+	    // }
 
 	    // renderers
 	    //
@@ -47066,10 +47069,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _sortBy = __webpack_require__(429);
-
-	var _sortBy2 = _interopRequireDefault(_sortBy);
-
 	var _FlatButton = __webpack_require__(478);
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
@@ -47078,11 +47077,11 @@
 
 	var _add2 = _interopRequireDefault(_add);
 
-	var _CardEdit = __webpack_require__(513);
+	var _CardEdit = __webpack_require__(512);
 
 	var _CardEdit2 = _interopRequireDefault(_CardEdit);
 
-	var _CardsImport = __webpack_require__(525);
+	var _CardsImport = __webpack_require__(524);
 
 	var _CardsImport2 = _interopRequireDefault(_CardsImport);
 
@@ -47113,21 +47112,6 @@
 	      this.props.actions.getCards(this.props.courseId);
 	    }
 
-	    // helpers
-	    //
-
-	  }, {
-	    key: 'getCards',
-	    value: function getCards() {
-	      var _props = this.props;
-	      var cards = _props.cards;
-	      var courseId = _props.courseId;
-
-	      return (0, _sortBy2.default)(cards.filter(function (item) {
-	        return item.courseId === courseId;
-	      }), 'position');
-	    }
-
 	    // handlers
 	    //
 
@@ -47141,12 +47125,23 @@
 	    //
 
 	  }, {
+	    key: 'renderItems',
+	    value: function renderItems() {
+	      var _this2 = this;
+
+	      return this.props.cards.filter(function (item) {
+	        return item.courseId === _this2.props.courseId;
+	      }).sort(function (a, b) {
+	        return a.position - b.position;
+	      }).map(this.renderItem.bind(this));
+	    }
+	  }, {
 	    key: 'renderItem',
 	    value: function renderItem(item) {
-	      var _props2 = this.props;
-	      var cards = _props2.cards;
-	      var tags = _props2.tags;
-	      var actions = _props2.actions;
+	      var _props = this.props;
+	      var cards = _props.cards;
+	      var tags = _props.tags;
+	      var actions = _props.actions;
 
 
 	      return _react2.default.createElement(_CardEdit2.default, {
@@ -47177,7 +47172,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'cards' },
-	          this.getCards().map(this.renderItem.bind(this))
+	          this.renderItems()
 	        )
 	      );
 	    }
@@ -47242,43 +47237,6 @@
 	  value: true
 	});
 
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pure = __webpack_require__(393);
-
-	var _pure2 = _interopRequireDefault(_pure);
-
-	var _SvgIcon = __webpack_require__(401);
-
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ContentContentCopy = function ContentContentCopy(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z' })
-	  );
-	};
-	ContentContentCopy = (0, _pure2.default)(ContentContentCopy);
-	ContentContentCopy.displayName = 'ContentContentCopy';
-	ContentContentCopy.muiName = 'SvgIcon';
-
-	exports.default = ContentContentCopy;
-
-/***/ },
-/* 513 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
@@ -47297,19 +47255,19 @@
 
 	var _IconButton2 = _interopRequireDefault(_IconButton);
 
-	var _Chip = __webpack_require__(514);
+	var _Chip = __webpack_require__(513);
 
 	var _Chip2 = _interopRequireDefault(_Chip);
 
-	var _AutoComplete = __webpack_require__(517);
+	var _AutoComplete = __webpack_require__(516);
 
 	var _AutoComplete2 = _interopRequireDefault(_AutoComplete);
 
-	var _clear = __webpack_require__(522);
+	var _clear = __webpack_require__(521);
 
 	var _clear2 = _interopRequireDefault(_clear);
 
-	var _BlocksList = __webpack_require__(523);
+	var _BlocksList = __webpack_require__(522);
 
 	var _BlocksList2 = _interopRequireDefault(_BlocksList);
 
@@ -47546,7 +47504,7 @@
 	exports.default = CardEdit;
 
 /***/ },
-/* 514 */
+/* 513 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47556,7 +47514,7 @@
 	});
 	exports.default = undefined;
 
-	var _Chip = __webpack_require__(515);
+	var _Chip = __webpack_require__(514);
 
 	var _Chip2 = _interopRequireDefault(_Chip);
 
@@ -47565,7 +47523,7 @@
 	exports.default = _Chip2.default;
 
 /***/ },
-/* 515 */
+/* 514 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47596,7 +47554,7 @@
 
 	var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
 
-	var _cancel = __webpack_require__(516);
+	var _cancel = __webpack_require__(515);
 
 	var _cancel2 = _interopRequireDefault(_cancel);
 
@@ -47890,7 +47848,7 @@
 	exports.default = Chip;
 
 /***/ },
-/* 516 */
+/* 515 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47927,7 +47885,7 @@
 	exports.default = NavigationCancel;
 
 /***/ },
-/* 517 */
+/* 516 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47937,7 +47895,7 @@
 	});
 	exports.default = undefined;
 
-	var _AutoComplete = __webpack_require__(518);
+	var _AutoComplete = __webpack_require__(517);
 
 	var _AutoComplete2 = _interopRequireDefault(_AutoComplete);
 
@@ -47946,7 +47904,7 @@
 	exports.default = _AutoComplete2.default;
 
 /***/ },
-/* 518 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -47981,7 +47939,7 @@
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
-	var _Menu = __webpack_require__(519);
+	var _Menu = __webpack_require__(518);
 
 	var _Menu2 = _interopRequireDefault(_Menu);
 
@@ -47989,7 +47947,7 @@
 
 	var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
-	var _Divider = __webpack_require__(520);
+	var _Divider = __webpack_require__(519);
 
 	var _Divider2 = _interopRequireDefault(_Divider);
 
@@ -48609,7 +48567,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 519 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48634,7 +48592,7 @@
 	exports.default = _Menu3.default;
 
 /***/ },
-/* 520 */
+/* 519 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48644,7 +48602,7 @@
 	});
 	exports.default = undefined;
 
-	var _Divider = __webpack_require__(521);
+	var _Divider = __webpack_require__(520);
 
 	var _Divider2 = _interopRequireDefault(_Divider);
 
@@ -48653,7 +48611,7 @@
 	exports.default = _Divider2.default;
 
 /***/ },
-/* 521 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48731,7 +48689,7 @@
 	exports.default = Divider;
 
 /***/ },
-/* 522 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48768,7 +48726,7 @@
 	exports.default = ContentClear;
 
 /***/ },
-/* 523 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48795,7 +48753,7 @@
 
 	var _add2 = _interopRequireDefault(_add);
 
-	var _BlockEdit = __webpack_require__(524);
+	var _BlockEdit = __webpack_require__(523);
 
 	var _BlockEdit2 = _interopRequireDefault(_BlockEdit);
 
@@ -48868,7 +48826,7 @@
 	exports.default = BlocksList;
 
 /***/ },
-/* 524 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48895,7 +48853,7 @@
 
 	var _IconButton2 = _interopRequireDefault(_IconButton);
 
-	var _clear = __webpack_require__(522);
+	var _clear = __webpack_require__(521);
 
 	var _clear2 = _interopRequireDefault(_clear);
 
@@ -49029,7 +48987,7 @@
 	exports.default = BlockEdit;
 
 /***/ },
-/* 525 */
+/* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49044,15 +49002,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _algoliasearch = __webpack_require__(526);
+	var _algoliasearch = __webpack_require__(525);
 
 	var _algoliasearch2 = _interopRequireDefault(_algoliasearch);
 
-	var _truncate = __webpack_require__(558);
+	var _truncate = __webpack_require__(557);
 
 	var _truncate2 = _interopRequireDefault(_truncate);
 
-	var _Chip = __webpack_require__(514);
+	var _Chip = __webpack_require__(513);
 
 	var _Chip2 = _interopRequireDefault(_Chip);
 
@@ -49072,7 +49030,7 @@
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-	var _contentCopy = __webpack_require__(512);
+	var _contentCopy = __webpack_require__(564);
 
 	var _contentCopy2 = _interopRequireDefault(_contentCopy);
 
@@ -49308,29 +49266,29 @@
 	exports.default = CardsImport;
 
 /***/ },
-/* 526 */
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var AlgoliaSearch = __webpack_require__(527);
-	var createAlgoliasearch = __webpack_require__(547);
+	var AlgoliaSearch = __webpack_require__(526);
+	var createAlgoliasearch = __webpack_require__(546);
 
 	module.exports = createAlgoliasearch(AlgoliaSearch);
 
 
 /***/ },
-/* 527 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = AlgoliaSearch;
 
-	var Index = __webpack_require__(528);
-	var deprecate = __webpack_require__(535);
-	var deprecatedMessage = __webpack_require__(536);
-	var AlgoliaSearchCore = __webpack_require__(543);
-	var inherits = __webpack_require__(529);
-	var errors = __webpack_require__(532);
+	var Index = __webpack_require__(527);
+	var deprecate = __webpack_require__(534);
+	var deprecatedMessage = __webpack_require__(535);
+	var AlgoliaSearchCore = __webpack_require__(542);
+	var inherits = __webpack_require__(528);
+	var errors = __webpack_require__(531);
 
 	function AlgoliaSearch() {
 	  AlgoliaSearchCore.apply(this, arguments);
@@ -49411,7 +49369,7 @@
 	 *  content: the server answer that contains the task ID
 	 */
 	AlgoliaSearch.prototype.getLogs = function(offset, length, callback) {
-	  var clone = __webpack_require__(540);
+	  var clone = __webpack_require__(539);
 	  var params = {};
 	  if (typeof offset === 'object') {
 	    // getLogs(params)
@@ -49563,7 +49521,7 @@
 	 * @see {@link https://www.algolia.com/doc/rest_api#AddKey|Algolia REST API Documentation}
 	 */
 	AlgoliaSearch.prototype.addUserKey = function(acls, params, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: client.addUserKey(arrayOfAcls[, params, callback])';
 
 	  if (!isArray(acls)) {
@@ -49648,7 +49606,7 @@
 	 * @see {@link https://www.algolia.com/doc/rest_api#UpdateIndexKey|Algolia REST API Documentation}
 	 */
 	AlgoliaSearch.prototype.updateUserKey = function(key, acls, params, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: client.updateUserKey(key, arrayOfAcls[, params, callback])';
 
 	  if (!isArray(acls)) {
@@ -49749,7 +49707,7 @@
 	 * }], cb)
 	 */
 	AlgoliaSearch.prototype.batch = function(operations, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: client.batch(operations[, callback])';
 
 	  if (!isArray(operations)) {
@@ -49784,15 +49742,15 @@
 
 
 /***/ },
-/* 528 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var inherits = __webpack_require__(529);
-	var IndexCore = __webpack_require__(530);
-	var deprecate = __webpack_require__(535);
-	var deprecatedMessage = __webpack_require__(536);
-	var exitPromise = __webpack_require__(537);
-	var errors = __webpack_require__(532);
+	var inherits = __webpack_require__(528);
+	var IndexCore = __webpack_require__(529);
+	var deprecate = __webpack_require__(534);
+	var deprecatedMessage = __webpack_require__(535);
+	var exitPromise = __webpack_require__(536);
+	var errors = __webpack_require__(531);
 
 	module.exports = Index;
 
@@ -49841,7 +49799,7 @@
 	*  content: the server answer that updateAt and taskID
 	*/
 	Index.prototype.addObjects = function(objects, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: index.addObjects(arrayOfObjects[, callback])';
 
 	  if (!isArray(objects)) {
@@ -49910,8 +49868,8 @@
 	* @param objectIDs the array of unique identifier of objects to retrieve
 	*/
 	Index.prototype.getObjects = function(objectIDs, attributesToRetrieve, callback) {
-	  var isArray = __webpack_require__(538);
-	  var map = __webpack_require__(539);
+	  var isArray = __webpack_require__(537);
+	  var map = __webpack_require__(538);
 
 	  var usage = 'Usage: index.getObjects(arrayOfObjectIDs[, callback])';
 
@@ -49990,7 +49948,7 @@
 	*  content: the server answer that updateAt and taskID
 	*/
 	Index.prototype.partialUpdateObjects = function(objects, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: index.partialUpdateObjects(arrayOfObjects[, callback])';
 
 	  if (!isArray(objects)) {
@@ -50046,7 +50004,7 @@
 	*  content: the server answer that updateAt and taskID
 	*/
 	Index.prototype.saveObjects = function(objects, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: index.saveObjects(arrayOfObjects[, callback])';
 
 	  if (!isArray(objects)) {
@@ -50111,8 +50069,8 @@
 	*  content: the server answer that contains 3 elements: createAt, taskId and objectID
 	*/
 	Index.prototype.deleteObjects = function(objectIDs, callback) {
-	  var isArray = __webpack_require__(538);
-	  var map = __webpack_require__(539);
+	  var isArray = __webpack_require__(537);
+	  var map = __webpack_require__(538);
 
 	  var usage = 'Usage: index.deleteObjects(arrayOfObjectIDs[, callback])';
 
@@ -50151,8 +50109,8 @@
 	*  error: null or Error('message')
 	*/
 	Index.prototype.deleteByQuery = function(query, params, callback) {
-	  var clone = __webpack_require__(540);
-	  var map = __webpack_require__(539);
+	  var clone = __webpack_require__(539);
+	  var map = __webpack_require__(538);
 
 	  var indexObj = this;
 	  var client = indexObj.as;
@@ -50262,9 +50220,9 @@
 	    query = undefined;
 	  }
 
-	  var merge = __webpack_require__(534);
+	  var merge = __webpack_require__(533);
 
-	  var IndexBrowser = __webpack_require__(541);
+	  var IndexBrowser = __webpack_require__(540);
 
 	  var browser = new IndexBrowser();
 	  var client = this.as;
@@ -50724,7 +50682,7 @@
 	* @see {@link https://www.algolia.com/doc/rest_api#AddIndexKey|Algolia REST API Documentation}
 	*/
 	Index.prototype.addUserKey = function(acls, params, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: index.addUserKey(arrayOfAcls[, params, callback])';
 
 	  if (!isArray(acls)) {
@@ -50807,7 +50765,7 @@
 	* @see {@link https://www.algolia.com/doc/rest_api#UpdateIndexKey|Algolia REST API Documentation}
 	*/
 	Index.prototype.updateUserKey = function(key, acls, params, callback) {
-	  var isArray = __webpack_require__(538);
+	  var isArray = __webpack_require__(537);
 	  var usage = 'Usage: index.updateUserKey(key, arrayOfAcls[, params, callback])';
 
 	  if (!isArray(acls)) {
@@ -50847,7 +50805,7 @@
 
 
 /***/ },
-/* 529 */
+/* 528 */
 /***/ function(module, exports) {
 
 	if (typeof Object.create === 'function') {
@@ -50876,10 +50834,10 @@
 
 
 /***/ },
-/* 530 */
+/* 529 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var buildSearchMethod = __webpack_require__(531);
+	var buildSearchMethod = __webpack_require__(530);
 
 	module.exports = IndexCore;
 
@@ -51031,7 +50989,7 @@
 	* @see {@link https://www.algolia.com/doc/rest_api#Browse|Algolia REST API Documentation}
 	*/
 	IndexCore.prototype.browse = function(query, queryParameters, callback) {
-	  var merge = __webpack_require__(534);
+	  var merge = __webpack_require__(533);
 
 	  var indexObj = this;
 
@@ -51134,12 +51092,12 @@
 
 
 /***/ },
-/* 531 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = buildSearchMethod;
 
-	var errors = __webpack_require__(532);
+	var errors = __webpack_require__(531);
 
 	function buildSearchMethod(queryParam, url) {
 	  return function search(query, args, callback) {
@@ -51186,7 +51144,7 @@
 
 
 /***/ },
-/* 532 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51195,10 +51153,10 @@
 	// We use custom error "types" so that we can act on them when we need it
 	// e.g.: if error instanceof errors.UnparsableJSON then..
 
-	var inherits = __webpack_require__(529);
+	var inherits = __webpack_require__(528);
 
 	function AlgoliaSearchError(message, extraProperties) {
-	  var forEach = __webpack_require__(533);
+	  var forEach = __webpack_require__(532);
 
 	  var error = this;
 
@@ -51270,7 +51228,7 @@
 
 
 /***/ },
-/* 533 */
+/* 532 */
 /***/ function(module, exports) {
 
 	
@@ -51298,10 +51256,10 @@
 
 
 /***/ },
-/* 534 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var foreach = __webpack_require__(533);
+	var foreach = __webpack_require__(532);
 
 	module.exports = function merge(destination/* , sources */) {
 	  var sources = Array.prototype.slice.call(arguments);
@@ -51323,7 +51281,7 @@
 
 
 /***/ },
-/* 535 */
+/* 534 */
 /***/ function(module, exports) {
 
 	module.exports = function deprecate(fn, message) {
@@ -51344,7 +51302,7 @@
 
 
 /***/ },
-/* 536 */
+/* 535 */
 /***/ function(module, exports) {
 
 	module.exports = function deprecatedMessage(previousUsage, newUsage) {
@@ -51358,7 +51316,7 @@
 
 
 /***/ },
-/* 537 */
+/* 536 */
 /***/ function(module, exports) {
 
 	// Parse cloud does not supports setTimeout
@@ -51371,7 +51329,7 @@
 
 
 /***/ },
-/* 538 */
+/* 537 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -51382,10 +51340,10 @@
 
 
 /***/ },
-/* 539 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var foreach = __webpack_require__(533);
+	var foreach = __webpack_require__(532);
 
 	module.exports = function map(arr, fn) {
 	  var newArr = [];
@@ -51397,7 +51355,7 @@
 
 
 /***/ },
-/* 540 */
+/* 539 */
 /***/ function(module, exports) {
 
 	module.exports = function clone(obj) {
@@ -51406,7 +51364,7 @@
 
 
 /***/ },
-/* 541 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51415,8 +51373,8 @@
 
 	module.exports = IndexBrowser;
 
-	var inherits = __webpack_require__(529);
-	var EventEmitter = __webpack_require__(542).EventEmitter;
+	var inherits = __webpack_require__(528);
+	var EventEmitter = __webpack_require__(541).EventEmitter;
 
 	function IndexBrowser() {
 	}
@@ -51451,7 +51409,7 @@
 
 
 /***/ },
-/* 542 */
+/* 541 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -51759,14 +51717,14 @@
 
 
 /***/ },
-/* 543 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = AlgoliaSearchCore;
 
-	var errors = __webpack_require__(532);
-	var exitPromise = __webpack_require__(537);
-	var IndexCore = __webpack_require__(530);
+	var errors = __webpack_require__(531);
+	var exitPromise = __webpack_require__(536);
+	var IndexCore = __webpack_require__(529);
 
 	// We will always put the API KEY in the JSON body in case of too long API KEY
 	var MAX_API_KEY_LENGTH = 500;
@@ -51797,11 +51755,11 @@
 	 *           If you provide them, you will less benefit from our HA implementation
 	 */
 	function AlgoliaSearchCore(applicationID, apiKey, opts) {
-	  var debug = __webpack_require__(544)('algoliasearch');
+	  var debug = __webpack_require__(543)('algoliasearch');
 
-	  var clone = __webpack_require__(540);
-	  var isArray = __webpack_require__(538);
-	  var map = __webpack_require__(539);
+	  var clone = __webpack_require__(539);
+	  var isArray = __webpack_require__(537);
+	  var map = __webpack_require__(538);
 
 	  var usage = 'Usage: algoliasearch(applicationID, apiKey, opts)';
 
@@ -51913,7 +51871,7 @@
 	 * Wrapper that try all hosts to maximize the quality of service
 	 */
 	AlgoliaSearchCore.prototype._jsonRequest = function(initialOpts) {
-	  var requestDebug = __webpack_require__(544)('algoliasearch:' + initialOpts.url);
+	  var requestDebug = __webpack_require__(543)('algoliasearch:' + initialOpts.url);
 
 	  var body;
 	  var cache = initialOpts.cache;
@@ -52195,7 +52153,7 @@
 	};
 
 	AlgoliaSearchCore.prototype._computeRequestHeaders = function(withAPIKey) {
-	  var forEach = __webpack_require__(533);
+	  var forEach = __webpack_require__(532);
 
 	  var requestHeaders = {
 	    'x-algolia-agent': this._ua,
@@ -52237,8 +52195,8 @@
 	 * @return {Promise|undefined} Returns a promise if no callback given
 	 */
 	AlgoliaSearchCore.prototype.search = function(queries, opts, callback) {
-	  var isArray = __webpack_require__(538);
-	  var map = __webpack_require__(539);
+	  var isArray = __webpack_require__(537);
+	  var map = __webpack_require__(538);
 
 	  var usage = 'Usage: client.search(arrayOfQueries[, callback])';
 
@@ -52425,7 +52383,7 @@
 
 
 /***/ },
-/* 544 */
+/* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -52435,7 +52393,7 @@
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = __webpack_require__(545);
+	exports = module.exports = __webpack_require__(544);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -52599,7 +52557,7 @@
 
 
 /***/ },
-/* 545 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -52615,7 +52573,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(546);
+	exports.humanize = __webpack_require__(545);
 
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -52802,7 +52760,7 @@
 
 
 /***/ },
-/* 546 */
+/* 545 */
 /***/ function(module, exports) {
 
 	/**
@@ -52937,33 +52895,33 @@
 
 
 /***/ },
-/* 547 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var global = __webpack_require__(548);
-	var Promise = global.Promise || __webpack_require__(549).Promise;
+	var global = __webpack_require__(547);
+	var Promise = global.Promise || __webpack_require__(548).Promise;
 
 	// This is the standalone browser build entry point
 	// Browser implementation of the Algolia Search JavaScript client,
 	// using XMLHttpRequest, XDomainRequest and JSONP as fallback
 	module.exports = function createAlgoliasearch(AlgoliaSearch, uaSuffix) {
-	  var inherits = __webpack_require__(529);
-	  var errors = __webpack_require__(532);
-	  var inlineHeaders = __webpack_require__(552);
-	  var jsonpRequest = __webpack_require__(554);
-	  var places = __webpack_require__(555);
+	  var inherits = __webpack_require__(528);
+	  var errors = __webpack_require__(531);
+	  var inlineHeaders = __webpack_require__(551);
+	  var jsonpRequest = __webpack_require__(553);
+	  var places = __webpack_require__(554);
 	  uaSuffix = uaSuffix || '';
 
 	  if (process.env.NODE_ENV === 'development') {
-	    __webpack_require__(544).enable('algoliasearch*');
+	    __webpack_require__(543).enable('algoliasearch*');
 	  }
 
 	  function algoliasearch(applicationID, apiKey, opts) {
-	    var cloneDeep = __webpack_require__(540);
+	    var cloneDeep = __webpack_require__(539);
 
-	    var getDocumentProtocol = __webpack_require__(556);
+	    var getDocumentProtocol = __webpack_require__(555);
 
 	    opts = cloneDeep(opts || {});
 
@@ -52976,14 +52934,14 @@
 	    return new AlgoliaSearchBrowser(applicationID, apiKey, opts);
 	  }
 
-	  algoliasearch.version = __webpack_require__(557);
+	  algoliasearch.version = __webpack_require__(556);
 	  algoliasearch.ua = 'Algolia for vanilla JavaScript ' + uaSuffix + algoliasearch.version;
 	  algoliasearch.initPlaces = places(algoliasearch);
 
 	  // we expose into window no matter how we are used, this will allow
 	  // us to easily debug any website running algolia
 	  global.__algolia = {
-	    debug: __webpack_require__(544),
+	    debug: __webpack_require__(543),
 	    algoliasearch: algoliasearch
 	  };
 
@@ -53163,7 +53121,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 548 */
+/* 547 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {if (typeof window !== "undefined") {
@@ -53179,10 +53137,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 549 */
+/* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
@@ -53312,7 +53270,7 @@
 	    function lib$es6$promise$asap$$attemptVertx() {
 	      try {
 	        var r = require;
-	        var vertx = __webpack_require__(550);
+	        var vertx = __webpack_require__(549);
 	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	        return lib$es6$promise$asap$$useVertxTimer();
 	      } catch(e) {
@@ -54130,7 +54088,7 @@
 	    };
 
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(551)['amd']) {
+	    if ("function" === 'function' && __webpack_require__(550)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
@@ -54145,27 +54103,27 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), (function() { return this; }()), __webpack_require__(295)(module)))
 
 /***/ },
-/* 550 */
+/* 549 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 551 */
+/* 550 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 552 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = inlineHeaders;
 
-	var encode = __webpack_require__(553);
+	var encode = __webpack_require__(552);
 
 	function inlineHeaders(url, headers) {
 	  if (/\?/.test(url)) {
@@ -54179,7 +54137,7 @@
 
 
 /***/ },
-/* 553 */
+/* 552 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -54270,14 +54228,14 @@
 
 
 /***/ },
-/* 554 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = jsonpRequest;
 
-	var errors = __webpack_require__(532);
+	var errors = __webpack_require__(531);
 
 	var JSONPCounter = 0;
 
@@ -54401,16 +54359,16 @@
 
 
 /***/ },
-/* 555 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = createPlacesClient;
 
-	var buildSearchMethod = __webpack_require__(531);
+	var buildSearchMethod = __webpack_require__(530);
 
 	function createPlacesClient(algoliasearch) {
 	  return function places(appID, apiKey, opts) {
-	    var cloneDeep = __webpack_require__(540);
+	    var cloneDeep = __webpack_require__(539);
 
 	    opts = opts && cloneDeep(opts) || {};
 	    opts.hosts = opts.hosts || [
@@ -54436,7 +54394,7 @@
 
 
 /***/ },
-/* 556 */
+/* 555 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -54456,7 +54414,7 @@
 
 
 /***/ },
-/* 557 */
+/* 556 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -54465,16 +54423,16 @@
 
 
 /***/ },
-/* 558 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseToString = __webpack_require__(456),
-	    castSlice = __webpack_require__(559),
+	    castSlice = __webpack_require__(558),
 	    isObject = __webpack_require__(223),
-	    isRegExp = __webpack_require__(561),
-	    reHasComplexSymbol = __webpack_require__(562),
-	    stringSize = __webpack_require__(563),
-	    stringToArray = __webpack_require__(564),
+	    isRegExp = __webpack_require__(560),
+	    reHasComplexSymbol = __webpack_require__(561),
+	    stringSize = __webpack_require__(562),
+	    stringToArray = __webpack_require__(563),
 	    toInteger = __webpack_require__(307),
 	    toString = __webpack_require__(455);
 
@@ -54582,10 +54540,10 @@
 
 
 /***/ },
-/* 559 */
+/* 558 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseSlice = __webpack_require__(560);
+	var baseSlice = __webpack_require__(559);
 
 	/**
 	 * Casts `array` to a slice if it's needed.
@@ -54606,7 +54564,7 @@
 
 
 /***/ },
-/* 560 */
+/* 559 */
 /***/ function(module, exports) {
 
 	/**
@@ -54643,7 +54601,7 @@
 
 
 /***/ },
-/* 561 */
+/* 560 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(223);
@@ -54687,7 +54645,7 @@
 
 
 /***/ },
-/* 562 */
+/* 561 */
 /***/ function(module, exports) {
 
 	/** Used to compose unicode character classes. */
@@ -54706,10 +54664,10 @@
 
 
 /***/ },
-/* 563 */
+/* 562 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var reHasComplexSymbol = __webpack_require__(562);
+	var reHasComplexSymbol = __webpack_require__(561);
 
 	/** Used to compose unicode character classes. */
 	var rsAstralRange = '\\ud800-\\udfff',
@@ -54759,7 +54717,7 @@
 
 
 /***/ },
-/* 564 */
+/* 563 */
 /***/ function(module, exports) {
 
 	/** Used to compose unicode character classes. */
@@ -54801,6 +54759,43 @@
 
 	module.exports = stringToArray;
 
+
+/***/ },
+/* 564 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(393);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(401);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ContentContentCopy = function ContentContentCopy(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z' })
+	  );
+	};
+	ContentContentCopy = (0, _pure2.default)(ContentContentCopy);
+	ContentContentCopy.displayName = 'ContentContentCopy';
+	ContentContentCopy.muiName = 'SvgIcon';
+
+	exports.default = ContentContentCopy;
 
 /***/ },
 /* 565 */
