@@ -49,6 +49,7 @@ function importCards(course, data) {
               originUrl: item.origin ? item.origin.url : '',
             })
             card.tags = await findOrCreateTags([data.query])
+            await card.saveAll()
           }
 
           const cardCourses = await Card_Course.filter({ courseId: course.id, cardId: card.id })

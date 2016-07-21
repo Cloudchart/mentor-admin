@@ -119,6 +119,11 @@ export const SurveyAnswer = Thinky.createModel('SurveyAnswer',
   }).removeExtra()
 )
 
+// indexes
+//
+Card.ensureIndex('text')
+Tag.ensureIndex('name')
+
 // relations
 //
 Scenario.hasMany(ScenarioAction, 'actions', 'id', 'scenarioId')
