@@ -26,19 +26,28 @@ function catchUpdateItemError(modelName, id, error) {
   }
 }
 
-function updateItem(modelName, options, id, form) {
+function updateItem(modelName, options, id, data) {
   return function (dispatch) {
     let path = `/${modelName}s/${id}`
     if (options.parentModelName) {
       path = `/${options.parentModelName}_${modelName}s/${id}`
     }
 
+    let headers = {}
+    if (data.tagName === 'FORM') {
+      data = new FormData(data)
+    } else {
+      data = JSON.stringify(data)
+      headers['Content-Type'] = 'application/json'
+    }
+
     dispatch(requestUpdateItem(modelName, id))
 
     return fetch(path, {
       method: 'PUT',
-      body: new FormData(form),
+      body: data,
       credentials: 'same-origin',
+      headers: headers,
     }).then(response => response.json()).then(json => {
       if (json.error) {
         return dispatch(catchUpdateItemError(modelName, id, json.error))
@@ -53,5 +62,5 @@ function updateItem(modelName, options, id, form) {
 
 
 export default function update(modelName, options={}) {
-  return (id, form) => updateItem(modelName, options, id, form)
+  return (id, data) => updateItem(modelName, options, id, data)
 }

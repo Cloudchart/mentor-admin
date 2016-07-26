@@ -21,6 +21,11 @@ export default function (state = [], action) {
       )
     case 'DELETE_COURSE_RECEIVE':
       return state.filter(item => item.id !== action.id)
+    case 'CREATE_CARD_RECEIVE':
+      return state.map(item => item.id === action.parentId ?
+        Object.assign(item, { insights: item.insights.concat({ id: action.item.id }) }) :
+        item
+      )
     default:
       return state
   }

@@ -12,34 +12,31 @@ class CardsList extends Component {
   // lifecycle
   //
   componentDidMount() {
-    this.props.actions.getCards(this.props.courseId)
+    this.props.actions.getCards(this.props.course.id)
   }
 
   // handlers
   //
   handleCreate(event) {
-    this.props.actions.createCard(this.props.courseId)
+    this.props.actions.createCard(this.props.course.id)
   }
 
   // renderers
   //
   renderItems() {
-    return this.props.cards
-      .filter(item => item.courseId === this.props.courseId)
-      .sort((a, b) => a.position - b.position)
-      .map(this.renderItem.bind(this))
+    if (this.props.cards.length === 0) return null
+    return this.props.course.insights.map(this.renderItem.bind(this))
   }
 
-  renderItem(item) {
-    const { cards, tags, actions } = this.props
-
+  renderItem(insight) {
+    const item = this.props.cards.find(item => item.id === insight.id)
     return (
       <CardEdit
         key={ item.id }
-        cardId={ item.id }
-        cards={ cards }
-        tags={ tags }
-        actions={ actions }
+        item={ item }
+        course={ this.props.course }
+        tags={ this.props.tags }
+        actions={ this.props.actions }
       />
     )
   }
@@ -47,6 +44,10 @@ class CardsList extends Component {
   render() {
     return (
       <div>
+        <div className="cards">
+          { this.renderItems() }
+        </div>
+
         <FlatButton
           label="Add card"
           labelPosition="before"
@@ -56,13 +57,9 @@ class CardsList extends Component {
         />
 
         <CardsImport
-          courseId={ this.props.courseId }
+          courseId={ this.props.course.id }
           actions={ this.props.actions }
         />
-
-        <ul className="cards">
-          { this.renderItems() }
-        </ul>
       </div>
     )
   }
@@ -70,7 +67,7 @@ class CardsList extends Component {
 }
 
 CardsList.propTypes = {
-  courseId: PropTypes.string.isRequired,
+  course: PropTypes.object.isRequired,
   cards: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,

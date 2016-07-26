@@ -9,6 +9,8 @@ import Chip from 'material-ui/Chip'
 import AutoComplete from 'material-ui/AutoComplete'
 
 import ContentClearIcon from 'material-ui/svg-icons/content/clear'
+import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less'
+import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 
 import BlocksList from './BlocksList'
 
@@ -17,30 +19,16 @@ class CardEdit extends Component {
 
   constructor(props) {
     super(props)
-    const item = this.getItem(props)
-    const selectedTags = item.card.tags ? item.card.tags.map(tag => tag.name) : []
-
     this.state = {
-      item: item,
       tagSearchText: '',
-      selectedTags: selectedTags,
+      selectedTags: props.item.tags,
     }
-  }
-
-  // lifecycle
-  //
-  componentWillReceiveProps(nextProps) {
-    this.setState({ item: this.getItem(nextProps) })
   }
 
   // helpers
   //
-  getItem(props) {
-    return props.cards.find(card => card.id === props.cardId)
-  }
-
-  getTagNames() {
-    return this.props.tags.map(tag => tag.name)
+  getSelectedIndex() {
+    return this.props.course.insights.findIndex(i => i.id === this.props.item.id)
   }
 
   // handlers
@@ -50,11 +38,15 @@ class CardEdit extends Component {
   }
 
   handleUpdate(event) {
-    this.props.actions.updateCard(this.state.item.id, this.refs.form)
+    this.props.actions.updateCard(this.props.item.id, this.refs.form)
   }
 
   handleDelete(event) {
-    if (window.confirm('Are you sure?')) this.props.actions.deleteCard(this.state.item.id)
+    if (window.confirm('Are you sure?')) {
+      const { item, course, actions } = this.props
+      const insights = course.insights.filter(insight => insight.id !== item.id)
+      actions.updateCourse(course.id, { insights: insights })
+    }
   }
 
   handleTagsInputUpdate(value) {
@@ -73,13 +65,71 @@ class CardEdit extends Component {
     setTimeout(() => { this.handleUpdate() }, 200)
   }
 
+  handleMove(direction, event) {
+    const { item, course, actions } = this.props
+
+    let insights = course.insights
+    const selectedIndex = this.getSelectedIndex()
+    const indexToBeReplaced = selectedIndex + direction
+
+    insights = insights.map((insight, index) => {
+      if (index === selectedIndex) {
+        return insights[indexToBeReplaced]
+      } else if (index === indexToBeReplaced) {
+        return insights[selectedIndex]
+      } else {
+        return insight
+      }
+    })
+
+    actions.updateCourse(course.id, { insights: insights })
+  }
+
   // renderers
   //
+  renderMoveUpButton() {
+    if (this.getSelectedIndex() === this.props.course.insights.length - 1) return null
+
+    return (
+      <IconButton
+        style={{ float: 'right' }}
+        onTouchTap={ this.handleMove.bind(this, 1) }
+      >
+        <ExpandMoreIcon />
+      </IconButton>
+    )
+  }
+
+  renderMoveDownButton() {
+    if (this.getSelectedIndex() === 0) return null
+
+    return (
+      <IconButton
+        style={{ float: 'right' }}
+        onTouchTap={ this.handleMove.bind(this, -1) }
+      >
+        <ExpandLessIcon />
+      </IconButton>
+    )
+  }
+
+  renderDeleteButton() {
+    return (
+      <IconButton
+        iconStyle={{ width: '20px', height: '20px' }}
+        style={{ float: 'right' }}
+        onTouchTap={ this.handleDelete.bind(this) }
+      >
+        <ContentClearIcon />
+      </IconButton>
+    )
+  }
+
   renderTag(tag, index) {
     return (
       <Chip key={ index } style={{ margin: 4 }} onRequestDelete={ this.handleTagDelete.bind(this, tag) }>
         <span>{ tag }</span>
-        <input type="hidden" name="card[tags][]" value={ tag }/>
+        <input type="hidden" name="tags[]" value={ tag }/>
       </Chip>
     )
   }
@@ -93,86 +143,53 @@ class CardEdit extends Component {
   }
 
   render() {
-    const { item } = this.state
-    const { tags, actions } = this.props
+    const { item, tags, actions } = this.props
 
     return (
-      <li style={{ width: '600px', margin: '20px 0' }}>
-        <Paper style={{ padding: '20px' }}>
-          <IconButton
-            iconStyle={{ width: '20px', height: '20px' }}
-            style={{ float: 'right' }}
-            onTouchTap={ this.handleDelete.bind(this) }
-          >
-            <ContentClearIcon />
-          </IconButton>
+      <Paper style={{ width: '600px', margin: '20px 0', padding: '20px' }}>
+        { this.renderDeleteButton() }
+        { this.renderMoveUpButton() }
+        { this.renderMoveDownButton() }
 
-          <form ref="form" style={{ marginBottom: '40px' }} onSubmit={ this.handleSubmit }>
-            <TextField
-              name="card[text]"
-              defaultValue={ item.card.text }
-              multiLine={ true }
-              floatingLabelText="Text"
-              hintText="Enter card text"
-              onBlur={ this.handleUpdate.bind(this) }
-            />
-            <br/>
-
-            <TextField
-              name="position"
-              type="number"
-              defaultValue={ item.position }
-              floatingLabelText="Position"
-              hintText="Enter card position"
-              onBlur={ this.handleUpdate.bind(this) }
-            />
-            <br/>
-
-            <TextField
-              name="card[author]"
-              defaultValue={ item.card.author }
-              floatingLabelText="Author"
-              hintText="Enter card author"
-              onBlur={ this.handleUpdate.bind(this) }
-            />
-
-            <TextField
-              name="card[originUrl]"
-              defaultValue={ item.card.originUrl }
-              floatingLabelText="Origin URL"
-              hintText="Enter card origin URL"
-              onBlur={ this.handleUpdate.bind(this) }
-            />
-
-            <AutoComplete
-              floatingLabelText="Tags"
-              hintText="Type anything"
-              dataSource={ this.getTagNames() }
-              searchText={ this.state.tagSearchText }
-              onNewRequest={ this.handleTagsInputSelect.bind(this) }
-              onUpdateInput={ this.handleTagsInputUpdate.bind(this) }
-            />
-            { this.renderTags() }
-
-          </form>
-
-          <h3>Blocks</h3>
-
-          <BlocksList
-            items={ item.card.blocks || [] }
-            cardCourseId={ item.id }
-            actions={ actions }
+        <form ref="form" style={{ marginBottom: '40px' }} onSubmit={ this.handleSubmit }>
+          <TextField
+            name="content"
+            defaultValue={ item.content }
+            multiLine={ true }
+            floatingLabelText="Content"
+            hintText="Enter card content"
+            onBlur={ this.handleUpdate.bind(this) }
           />
-        </Paper>
-      </li>
+          <br/>
+
+          <TextField
+            name="author"
+            defaultValue={ item.author }
+            floatingLabelText="Author"
+            hintText="Enter card author"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+          <br/>
+
+          <AutoComplete
+            floatingLabelText="Tags"
+            hintText="Type anything"
+            dataSource={ this.props.tags }
+            searchText={ this.state.tagSearchText }
+            onNewRequest={ this.handleTagsInputSelect.bind(this) }
+            onUpdateInput={ this.handleTagsInputUpdate.bind(this) }
+          />
+          { this.renderTags() }
+        </form>
+      </Paper>
     )
   }
 
 }
 
 CardEdit.propTypes = {
-  cardId: PropTypes.string.isRequired,
-  cards: PropTypes.array.isRequired,
+  item: PropTypes.object.isRequired,
+  course: PropTypes.object.isRequired,
   tags: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }

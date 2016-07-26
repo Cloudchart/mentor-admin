@@ -29450,7 +29450,6 @@
 	var deleteCourse = (0, _delete2.default)('course');
 	var createCard = (0, _create2.default)('card', { parentModelName: 'course' });
 	var updateCard = (0, _update2.default)('card', { parentModelName: 'course' });
-	var deleteCard = (0, _delete2.default)('card', { parentModelName: 'course' });
 	var getCards = (0, _getMany2.default)('card', { parentModelName: 'course' });
 	var createBlock = (0, _create2.default)('block', { parentModelName: 'card' });
 	var updateBlock = (0, _update2.default)('block', { parentModelName: 'card' });
@@ -29474,7 +29473,6 @@
 	  getCards: getCards,
 	  createCard: createCard,
 	  updateCard: updateCard,
-	  deleteCard: deleteCard,
 	  importCards: _import2.default,
 	  createBlock: createBlock,
 	  updateBlock: updateBlock,
@@ -30039,10 +30037,11 @@
 	  };
 	}
 
-	function receiveCreateItem(modelName, item) {
+	function receiveCreateItem(modelName, parentId, item) {
 	  return {
 	    type: 'CREATE_' + modelName.toUpperCase() + '_RECEIVE',
 	    item: item,
+	    parentId: parentId,
 	    receivedAt: Date.now()
 	  };
 	}
@@ -30073,7 +30072,7 @@
 	      if (json.error) {
 	        return dispatch(catchCreateItemError(modelName, json.error));
 	      } else {
-	        return dispatch(receiveCreateItem(modelName, json));
+	        return dispatch(receiveCreateItem(modelName, parentId, json));
 	      }
 	    }).catch(function (error) {
 	      return dispatch(catchCreateItemError(modelName, error));
@@ -30132,19 +30131,28 @@
 	  };
 	}
 
-	function updateItem(modelName, options, id, form) {
+	function updateItem(modelName, options, id, data) {
 	  return function (dispatch) {
 	    var path = '/' + modelName + 's/' + id;
 	    if (options.parentModelName) {
 	      path = '/' + options.parentModelName + '_' + modelName + 's/' + id;
 	    }
 
+	    var headers = {};
+	    if (data.tagName === 'FORM') {
+	      data = new FormData(data);
+	    } else {
+	      data = JSON.stringify(data);
+	      headers['Content-Type'] = 'application/json';
+	    }
+
 	    dispatch(requestUpdateItem(modelName, id));
 
 	    return (0, _isomorphicFetch2.default)(path, {
 	      method: 'PUT',
-	      body: new FormData(form),
-	      credentials: 'same-origin'
+	      body: data,
+	      credentials: 'same-origin',
+	      headers: headers
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
@@ -30162,8 +30170,8 @@
 	function update(modelName) {
 	  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-	  return function (id, form) {
-	    return updateItem(modelName, options, id, form);
+	  return function (id, data) {
+	    return updateItem(modelName, options, id, data);
 	  };
 	}
 
@@ -46534,10 +46542,8 @@
 	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
-	      var bots = _props.bots;
 	      var courses = _props.courses;
 	      var cards = _props.cards;
-	      var scenarios = _props.scenarios;
 	      var tags = _props.tags;
 	      var actions = _props.actions;
 
@@ -46550,10 +46556,8 @@
 	          'div',
 	          { className: 'content' },
 	          _react2.default.createElement(_CoursesList2.default, {
-	            bots: bots,
 	            cards: cards,
 	            courses: courses,
-	            scenarios: scenarios,
 	            tags: tags,
 	            actions: actions
 	          })
@@ -46566,19 +46570,15 @@
 	}(_react.Component);
 
 	CoursesApp.propTypes = {
-	  bots: _react.PropTypes.array.isRequired,
 	  courses: _react.PropTypes.array.isRequired,
-	  scenarios: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
 	function mapStateToProps(state) {
 	  return {
-	    bots: state.bots,
 	    cards: state.cards,
 	    courses: state.courses,
-	    scenarios: state.scenarios,
 	    tags: state.tags
 	  };
 	}
@@ -46696,7 +46696,7 @@
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
 	          null,
-	          item.isActive ? 'Active' : 'Inactive'
+	          item.author
 	        ),
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
@@ -46721,10 +46721,8 @@
 	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
-	      var bots = _props.bots;
 	      var courses = _props.courses;
 	      var cards = _props.cards;
-	      var scenarios = _props.scenarios;
 	      var tags = _props.tags;
 	      var actions = _props.actions;
 	      var selectedItemId = this.state.selectedItemId;
@@ -46734,9 +46732,7 @@
 	        return _react2.default.createElement(_CourseEdit2.default, {
 	          courseId: selectedItemId,
 	          courses: courses,
-	          bots: bots,
 	          cards: cards,
-	          scenarios: scenarios,
 	          tags: tags,
 	          onChange: this.handleEditClose.bind(this),
 	          actions: actions
@@ -46767,7 +46763,7 @@
 	                _react2.default.createElement(
 	                  _Table.TableHeaderColumn,
 	                  null,
-	                  'Active'
+	                  'Author'
 	                ),
 	                _react2.default.createElement(
 	                  _Table.TableHeaderColumn,
@@ -46799,10 +46795,8 @@
 	}(_react.Component);
 
 	CoursesList.propTypes = {
-	  bots: _react.PropTypes.array.isRequired,
 	  courses: _react.PropTypes.array.isRequired,
 	  cards: _react.PropTypes.array.isRequired,
-	  scenarios: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -46939,9 +46933,7 @@
 	    value: function render() {
 	      var item = this.state.item;
 	      var _props = this.props;
-	      var bots = _props.bots;
 	      var cards = _props.cards;
-	      var scenarios = _props.scenarios;
 	      var tags = _props.tags;
 	      var actions = _props.actions;
 
@@ -46976,51 +46968,13 @@
 	            name: 'name',
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
-	          _react2.default.createElement(_Toggle2.default, {
-	            label: 'Is active',
-	            labelPosition: 'right',
-	            name: 'isActive',
-	            defaultToggled: item.isActive,
+	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: item.author,
+	            floatingLabelText: 'Author',
+	            hintText: 'Enter course author',
+	            name: 'author',
 	            onBlur: this.handleUpdate.bind(this)
-	          }),
-	          _react2.default.createElement(
-	            'label',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              'Bot'
-	            ),
-	            _react2.default.createElement(
-	              'select',
-	              {
-	                name: 'botId',
-	                defaultValue: item.botId,
-	                onBlur: this.handleUpdate.bind(this)
-	              },
-	              _react2.default.createElement('option', null),
-	              (0, _sortBy2.default)(bots, 'name').map(this.renderOptionsForSelect.bind(this))
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'label',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              'Scenario'
-	            ),
-	            _react2.default.createElement(
-	              'select',
-	              {
-	                name: 'scenarioId',
-	                defaultValue: item.scenarioId,
-	                onBlur: this.handleUpdate.bind(this)
-	              },
-	              _react2.default.createElement('option', null),
-	              (0, _sortBy2.default)(scenarios, 'name').map(this.renderOptionsForSelect.bind(this))
-	            )
-	          )
+	          })
 	        ),
 	        _react2.default.createElement(
 	          'h3',
@@ -47028,7 +46982,7 @@
 	          'Cards'
 	        ),
 	        _react2.default.createElement(_CardsList2.default, {
-	          courseId: item.id,
+	          course: item,
 	          cards: cards,
 	          tags: tags,
 	          actions: actions
@@ -47043,9 +46997,7 @@
 	CourseEdit.propTypes = {
 	  courseId: _react.PropTypes.string.isRequired,
 	  courses: _react.PropTypes.array.isRequired,
-	  bots: _react.PropTypes.array.isRequired,
 	  cards: _react.PropTypes.array.isRequired,
-	  scenarios: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  onChange: _react.PropTypes.func,
 	  actions: _react.PropTypes.object.isRequired
@@ -47109,7 +47061,7 @@
 	    // lifecycle
 	    //
 	    value: function componentDidMount() {
-	      this.props.actions.getCards(this.props.courseId);
+	      this.props.actions.getCards(this.props.course.id);
 	    }
 
 	    // handlers
@@ -47118,7 +47070,7 @@
 	  }, {
 	    key: 'handleCreate',
 	    value: function handleCreate(event) {
-	      this.props.actions.createCard(this.props.courseId);
+	      this.props.actions.createCard(this.props.course.id);
 	    }
 
 	    // renderers
@@ -47127,29 +47079,21 @@
 	  }, {
 	    key: 'renderItems',
 	    value: function renderItems() {
-	      var _this2 = this;
-
-	      return this.props.cards.filter(function (item) {
-	        return item.courseId === _this2.props.courseId;
-	      }).sort(function (a, b) {
-	        return a.position - b.position;
-	      }).map(this.renderItem.bind(this));
+	      if (this.props.cards.length === 0) return null;
+	      return this.props.course.insights.map(this.renderItem.bind(this));
 	    }
 	  }, {
 	    key: 'renderItem',
-	    value: function renderItem(item) {
-	      var _props = this.props;
-	      var cards = _props.cards;
-	      var tags = _props.tags;
-	      var actions = _props.actions;
-
-
+	    value: function renderItem(insight) {
+	      var item = this.props.cards.find(function (item) {
+	        return item.id === insight.id;
+	      });
 	      return _react2.default.createElement(_CardEdit2.default, {
 	        key: item.id,
-	        cardId: item.id,
-	        cards: cards,
-	        tags: tags,
-	        actions: actions
+	        item: item,
+	        course: this.props.course,
+	        tags: this.props.tags,
+	        actions: this.props.actions
 	      });
 	    }
 	  }, {
@@ -47158,6 +47102,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'cards' },
+	          this.renderItems()
+	        ),
 	        _react2.default.createElement(_FlatButton2.default, {
 	          label: 'Add card',
 	          labelPosition: 'before',
@@ -47166,14 +47115,9 @@
 	          onTouchTap: this.handleCreate.bind(this)
 	        }),
 	        _react2.default.createElement(_CardsImport2.default, {
-	          courseId: this.props.courseId,
+	          courseId: this.props.course.id,
 	          actions: this.props.actions
-	        }),
-	        _react2.default.createElement(
-	          'ul',
-	          { className: 'cards' },
-	          this.renderItems()
-	        )
+	        })
 	      );
 	    }
 	  }]);
@@ -47182,7 +47126,7 @@
 	}(_react.Component);
 
 	CardsList.propTypes = {
-	  courseId: _react.PropTypes.string.isRequired,
+	  course: _react.PropTypes.object.isRequired,
 	  cards: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
@@ -47267,6 +47211,14 @@
 
 	var _clear2 = _interopRequireDefault(_clear);
 
+	var _expandLess = __webpack_require__(424);
+
+	var _expandLess2 = _interopRequireDefault(_expandLess);
+
+	var _expandMore = __webpack_require__(425);
+
+	var _expandMore2 = _interopRequireDefault(_expandMore);
+
 	var _BlocksList = __webpack_require__(522);
 
 	var _BlocksList2 = _interopRequireDefault(_BlocksList);
@@ -47292,44 +47244,24 @@
 
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CardEdit).call(this, props));
 
-	    var item = _this.getItem(props);
-	    var selectedTags = item.card.tags ? item.card.tags.map(function (tag) {
-	      return tag.name;
-	    }) : [];
-
 	    _this.state = {
-	      item: item,
 	      tagSearchText: '',
-	      selectedTags: selectedTags
+	      selectedTags: props.item.tags
 	    };
 	    return _this;
 	  }
 
-	  // lifecycle
+	  // helpers
 	  //
 
 
 	  _createClass(CardEdit, [{
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(nextProps) {
-	      this.setState({ item: this.getItem(nextProps) });
-	    }
+	    key: 'getSelectedIndex',
+	    value: function getSelectedIndex() {
+	      var _this2 = this;
 
-	    // helpers
-	    //
-
-	  }, {
-	    key: 'getItem',
-	    value: function getItem(props) {
-	      return props.cards.find(function (card) {
-	        return card.id === props.cardId;
-	      });
-	    }
-	  }, {
-	    key: 'getTagNames',
-	    value: function getTagNames() {
-	      return this.props.tags.map(function (tag) {
-	        return tag.name;
+	      return this.props.course.insights.findIndex(function (i) {
+	        return i.id === _this2.props.item.id;
 	      });
 	    }
 
@@ -47344,12 +47276,26 @@
 	  }, {
 	    key: 'handleUpdate',
 	    value: function handleUpdate(event) {
-	      this.props.actions.updateCard(this.state.item.id, this.refs.form);
+	      this.props.actions.updateCard(this.props.item.id, this.refs.form);
 	    }
 	  }, {
 	    key: 'handleDelete',
 	    value: function handleDelete(event) {
-	      if (window.confirm('Are you sure?')) this.props.actions.deleteCard(this.state.item.id);
+	      var _this3 = this;
+
+	      if (window.confirm('Are you sure?')) {
+	        (function () {
+	          var _props = _this3.props;
+	          var item = _props.item;
+	          var course = _props.course;
+	          var actions = _props.actions;
+
+	          var insights = course.insights.filter(function (insight) {
+	            return insight.id !== item.id;
+	          });
+	          actions.updateCourse(course.id, { insights: insights });
+	        })();
+	      }
 	    }
 	  }, {
 	    key: 'handleTagsInputUpdate',
@@ -47359,31 +47305,97 @@
 	  }, {
 	    key: 'handleTagsInputSelect',
 	    value: function handleTagsInputSelect(value) {
-	      var _this2 = this;
+	      var _this4 = this;
 
 	      var selectedTags = [].concat(_toConsumableArray(new Set(this.state.selectedTags.concat(value))));
 	      this.setState({ tagSearchText: '', selectedTags: selectedTags });
 	      setTimeout(function () {
-	        _this2.handleUpdate();
+	        _this4.handleUpdate();
 	      }, 200);
 	    }
 	  }, {
 	    key: 'handleTagDelete',
 	    value: function handleTagDelete(value) {
-	      var _this3 = this;
+	      var _this5 = this;
 
 	      var selectedTags = this.state.selectedTags.filter(function (tag) {
 	        return tag !== value;
 	      });
 	      this.setState({ selectedTags: selectedTags });
 	      setTimeout(function () {
-	        _this3.handleUpdate();
+	        _this5.handleUpdate();
 	      }, 200);
+	    }
+	  }, {
+	    key: 'handleMove',
+	    value: function handleMove(direction, event) {
+	      var _props2 = this.props;
+	      var item = _props2.item;
+	      var course = _props2.course;
+	      var actions = _props2.actions;
+
+
+	      var insights = course.insights;
+	      var selectedIndex = this.getSelectedIndex();
+	      var indexToBeReplaced = selectedIndex + direction;
+
+	      insights = insights.map(function (insight, index) {
+	        if (index === selectedIndex) {
+	          return insights[indexToBeReplaced];
+	        } else if (index === indexToBeReplaced) {
+	          return insights[selectedIndex];
+	        } else {
+	          return insight;
+	        }
+	      });
+
+	      actions.updateCourse(course.id, { insights: insights });
 	    }
 
 	    // renderers
 	    //
 
+	  }, {
+	    key: 'renderMoveUpButton',
+	    value: function renderMoveUpButton() {
+	      if (this.getSelectedIndex() === this.props.course.insights.length - 1) return null;
+
+	      return _react2.default.createElement(
+	        _IconButton2.default,
+	        {
+	          style: { float: 'right' },
+	          onTouchTap: this.handleMove.bind(this, 1)
+	        },
+	        _react2.default.createElement(_expandMore2.default, null)
+	      );
+	    }
+	  }, {
+	    key: 'renderMoveDownButton',
+	    value: function renderMoveDownButton() {
+	      if (this.getSelectedIndex() === 0) return null;
+
+	      return _react2.default.createElement(
+	        _IconButton2.default,
+	        {
+	          style: { float: 'right' },
+	          onTouchTap: this.handleMove.bind(this, -1)
+	        },
+	        _react2.default.createElement(_expandLess2.default, null)
+	      );
+	    }
+	  }, {
+	    key: 'renderDeleteButton',
+	    value: function renderDeleteButton() {
+	      return _react2.default.createElement(
+	        _IconButton2.default,
+	        {
+	          iconStyle: { width: '20px', height: '20px' },
+	          style: { float: 'right' },
+	          onTouchTap: this.handleDelete.bind(this)
+	        },
+	        _react2.default.createElement(_clear2.default, null)
+	      );
+	    }
 	  }, {
 	    key: 'renderTag',
 	    value: function renderTag(tag, index) {
@@ -47395,7 +47407,7 @@
 	          null,
 	          tag
 	        ),
-	        _react2.default.createElement('input', { type: 'hidden', name: 'card[tags][]', value: tag })
+	        _react2.default.createElement('input', { type: 'hidden', name: 'tags[]', value: tag })
 	      );
 	    }
 	  }, {
@@ -47410,82 +47422,47 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var item = this.state.item;
-	      var _props = this.props;
-	      var tags = _props.tags;
-	      var actions = _props.actions;
+	      var _props3 = this.props;
+	      var item = _props3.item;
+	      var tags = _props3.tags;
+	      var actions = _props3.actions;
 
 
 	      return _react2.default.createElement(
-	        'li',
-	        { style: { width: '600px', margin: '20px 0' } },
+	        _Paper2.default,
+	        { style: { width: '600px', margin: '20px 0', padding: '20px' } },
+	        this.renderDeleteButton(),
+	        this.renderMoveUpButton(),
+	        this.renderMoveDownButton(),
 	        _react2.default.createElement(
-	          _Paper2.default,
-	          { style: { padding: '20px' } },
-	          _react2.default.createElement(
-	            _IconButton2.default,
-	            {
-	              iconStyle: { width: '20px', height: '20px' },
-	              style: { float: 'right' },
-	              onTouchTap: this.handleDelete.bind(this)
-	            },
-	            _react2.default.createElement(_clear2.default, null)
-	          ),
-	          _react2.default.createElement(
-	            'form',
-	            { ref: 'form', style: { marginBottom: '40px' }, onSubmit: this.handleSubmit },
-	            _react2.default.createElement(_TextField2.default, {
-	              name: 'card[text]',
-	              defaultValue: item.card.text,
-	              multiLine: true,
-	              floatingLabelText: 'Text',
-	              hintText: 'Enter card text',
-	              onBlur: this.handleUpdate.bind(this)
-	            }),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement(_TextField2.default, {
-	              name: 'position',
-	              type: 'number',
-	              defaultValue: item.position,
-	              floatingLabelText: 'Position',
-	              hintText: 'Enter card position',
-	              onBlur: this.handleUpdate.bind(this)
-	            }),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement(_TextField2.default, {
-	              name: 'card[author]',
-	              defaultValue: item.card.author,
-	              floatingLabelText: 'Author',
-	              hintText: 'Enter card author',
-	              onBlur: this.handleUpdate.bind(this)
-	            }),
-	            _react2.default.createElement(_TextField2.default, {
-	              name: 'card[originUrl]',
-	              defaultValue: item.card.originUrl,
-	              floatingLabelText: 'Origin URL',
-	              hintText: 'Enter card origin URL',
-	              onBlur: this.handleUpdate.bind(this)
-	            }),
-	            _react2.default.createElement(_AutoComplete2.default, {
-	              floatingLabelText: 'Tags',
-	              hintText: 'Type anything',
-	              dataSource: this.getTagNames(),
-	              searchText: this.state.tagSearchText,
-	              onNewRequest: this.handleTagsInputSelect.bind(this),
-	              onUpdateInput: this.handleTagsInputUpdate.bind(this)
-	            }),
-	            this.renderTags()
-	          ),
-	          _react2.default.createElement(
-	            'h3',
-	            null,
-	            'Blocks'
-	          ),
-	          _react2.default.createElement(_BlocksList2.default, {
-	            items: item.card.blocks || [],
-	            cardCourseId: item.id,
-	            actions: actions
-	          })
+	          'form',
+	          { ref: 'form', style: { marginBottom: '40px' }, onSubmit: this.handleSubmit },
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'content',
+	            defaultValue: item.content,
+	            multiLine: true,
+	            floatingLabelText: 'Content',
+	            hintText: 'Enter card content',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'author',
+	            defaultValue: item.author,
+	            floatingLabelText: 'Author',
+	            hintText: 'Enter card author',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_AutoComplete2.default, {
+	            floatingLabelText: 'Tags',
+	            hintText: 'Type anything',
+	            dataSource: this.props.tags,
+	            searchText: this.state.tagSearchText,
+	            onNewRequest: this.handleTagsInputSelect.bind(this),
+	            onUpdateInput: this.handleTagsInputUpdate.bind(this)
+	          }),
+	          this.renderTags()
 	        )
 	      );
 	    }
@@ -47495,8 +47472,8 @@
 	}(_react.Component);
 
 	CardEdit.propTypes = {
-	  cardId: _react.PropTypes.string.isRequired,
-	  cards: _react.PropTypes.array.isRequired,
+	  item: _react.PropTypes.object.isRequired,
+	  course: _react.PropTypes.object.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -53140,7 +53117,7 @@
 /* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
@@ -56438,10 +56415,6 @@
 
 	var _redux = __webpack_require__(168);
 
-	var _bots = __webpack_require__(576);
-
-	var _bots2 = _interopRequireDefault(_bots);
-
 	var _cards = __webpack_require__(588);
 
 	var _cards2 = _interopRequireDefault(_cards);
@@ -56450,10 +56423,6 @@
 
 	var _courses2 = _interopRequireDefault(_courses);
 
-	var _scenarios = __webpack_require__(586);
-
-	var _scenarios2 = _interopRequireDefault(_scenarios);
-
 	var _tags = __webpack_require__(590);
 
 	var _tags2 = _interopRequireDefault(_tags);
@@ -56461,10 +56430,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
-	  bots: _bots2.default,
 	  cards: _cards2.default,
 	  courses: _courses2.default,
-	  scenarios: _scenarios2.default,
 	  tags: _tags2.default
 	});
 
@@ -56569,6 +56536,10 @@
 	      return state.filter(function (item) {
 	        return item.id !== action.id;
 	      });
+	    case 'CREATE_CARD_RECEIVE':
+	      return state.map(function (item) {
+	        return item.id === action.parentId ? Object.assign(item, { insights: item.insights.concat({ id: action.item.id }) }) : item;
+	      });
 	    default:
 	      return state;
 	  }
@@ -56595,26 +56566,8 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
-	    case 'CREATE_TAG_RECEIVE':
-	      return (0, _uniqBy2.default)(state.concat(action.item), 'id');
-	    case 'UPDATE_TAG_REQUEST':
-	      return state.map(function (item) {
-	        return item.id === action.id ? Object.assign(item, { isFetching: true }) : item;
-	      });
-	    case 'UPDATE_TAG_RECEIVE':
-	      return state.map(function (item) {
-	        return item.id === action.id ? Object.assign(action.item, { isFetching: false }) : item;
-	      });
-	    case 'UPDATE_TAG_ERROR':
-	      return state.map(function (item) {
-	        return item.id === action.id ? Object.assign(item, { isFetching: false, error: action.error }) : item;
-	      });
-	    case 'DELETE_TAG_RECEIVE':
-	      return state.filter(function (item) {
-	        return item.id !== action.id;
-	      });
 	    case 'UPDATE_CARD_RECEIVE':
-	      return (0, _uniqBy2.default)(state.concat(action.item.card.tags), 'id');
+	      return (0, _uniqBy2.default)(state.concat(action.item.tags), 'id');
 	    default:
 	      return state;
 	  }

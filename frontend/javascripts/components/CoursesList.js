@@ -54,7 +54,7 @@ class CoursesList extends Component {
       <TableRow key={ item.id }>
         <TableRowColumn>{ item.id }</TableRowColumn>
         <TableRowColumn>{ item.name }</TableRowColumn>
-        <TableRowColumn>{ item.isActive ? 'Active' : 'Inactive' }</TableRowColumn>
+        <TableRowColumn>{ item.author }</TableRowColumn>
         <TableRowColumn>
           {[
             <a key={1} href="" onClick={ this.handleEdit.bind(this, item) }>Edit</a>,
@@ -67,7 +67,7 @@ class CoursesList extends Component {
   }
 
   render() {
-    const { bots, courses, cards, scenarios, tags, actions } = this.props
+    const { courses, cards, tags, actions } = this.props
     const { selectedItemId } = this.state
 
     if (selectedItemId) {
@@ -75,9 +75,7 @@ class CoursesList extends Component {
         <CourseEdit
           courseId={ selectedItemId }
           courses={ courses }
-          bots={ bots }
           cards={ cards }
-          scenarios={ scenarios }
           tags={ tags }
           onChange={ this.handleEditClose.bind(this) }
           actions={ actions }
@@ -91,7 +89,7 @@ class CoursesList extends Component {
               <TableRow>
                 <TableHeaderColumn>ID</TableHeaderColumn>
                 <TableHeaderColumn>Name</TableHeaderColumn>
-                <TableHeaderColumn>Active</TableHeaderColumn>
+                <TableHeaderColumn>Author</TableHeaderColumn>
                 <TableHeaderColumn>Actions</TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -113,10 +111,8 @@ class CoursesList extends Component {
 }
 
 CoursesList.propTypes = {
-  bots: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   cards: PropTypes.array.isRequired,
-  scenarios: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }

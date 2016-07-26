@@ -7,10 +7,11 @@ function requestCreateItem(modelName) {
   }
 }
 
-function receiveCreateItem(modelName, item) {
+function receiveCreateItem(modelName, parentId, item) {
   return {
     type: `CREATE_${modelName.toUpperCase()}_RECEIVE`,
     item,
+    parentId,
     receivedAt: Date.now()
   }
 }
@@ -39,7 +40,7 @@ function createItem(modelName, options, parentId) {
       if (json.error) {
         return dispatch(catchCreateItemError(modelName, json.error))
       } else {
-        return dispatch(receiveCreateItem(modelName, json))
+        return dispatch(receiveCreateItem(modelName, parentId, json))
       }
     }).catch(error => {
       return dispatch(catchCreateItemError(modelName, error))

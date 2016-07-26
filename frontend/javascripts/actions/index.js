@@ -18,7 +18,6 @@ const updateCourse = update('course')
 const deleteCourse = destroy('course')
 const createCard = create('card', { parentModelName: 'course' })
 const updateCard = update('card', { parentModelName: 'course' })
-const deleteCard = destroy('card', { parentModelName: 'course' })
 const getCards = getMany('card', { parentModelName: 'course' })
 const createBlock = create('block', { parentModelName: 'card' })
 const updateBlock = update('block', { parentModelName: 'card' })
@@ -43,7 +42,6 @@ export const coursesActions = {
   getCards,
   createCard,
   updateCard,
-  deleteCard,
   importCards,
   createBlock,
   updateBlock,

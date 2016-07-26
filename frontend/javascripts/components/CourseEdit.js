@@ -68,7 +68,7 @@ class CourseEdit extends Component {
 
   render() {
     const { item } = this.state
-    const { bots, cards, scenarios, tags, actions } = this.props
+    const { cards, tags, actions } = this.props
 
     return (
       <div>
@@ -97,43 +97,19 @@ class CourseEdit extends Component {
             onBlur={ this.handleUpdate.bind(this) }
           />
 
-          <Toggle
-            label="Is active"
-            labelPosition="right"
-            name="isActive"
-            defaultToggled={ item.isActive }
+          <TextField
+            defaultValue={ item.author }
+            floatingLabelText="Author"
+            hintText="Enter course author"
+            name="author"
             onBlur={ this.handleUpdate.bind(this) }
           />
-
-          <label>
-            <span>Bot</span>
-            <select
-              name="botId"
-              defaultValue={ item.botId }
-              onBlur={ this.handleUpdate.bind(this) }
-            >
-              <option></option>
-              { sortBy(bots, 'name').map(this.renderOptionsForSelect.bind(this)) }
-            </select>
-          </label>
-
-          <label>
-            <span>Scenario</span>
-            <select
-              name="scenarioId"
-              defaultValue={ item.scenarioId }
-              onBlur={ this.handleUpdate.bind(this) }
-            >
-              <option></option>
-              { sortBy(scenarios, 'name').map(this.renderOptionsForSelect.bind(this)) }
-            </select>
-          </label>
         </form>
 
         <h3>Cards</h3>
 
         <CardsList
-          courseId={ item.id }
+          course={ item }
           cards={ cards }
           tags={ tags }
           actions={ actions }
@@ -147,9 +123,7 @@ class CourseEdit extends Component {
 CourseEdit.propTypes = {
   courseId: PropTypes.string.isRequired,
   courses: PropTypes.array.isRequired,
-  bots: PropTypes.array.isRequired,
   cards: PropTypes.array.isRequired,
-  scenarios: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,

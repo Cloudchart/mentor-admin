@@ -3,30 +3,18 @@ import { Router } from 'express'
 
 import { getFilteredAttrs, _handleThinkyError } from './helpers'
 import { appName } from '../lib'
-import { Bot, Course, Scenario, Tag } from '../models'
+import { Bot, Course, Scenario, Card } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['name', 'isActive', 'botId', 'scenarioId']
-
-
-// helpers
-//
-function getAttrs(body) {
-  let attrs = getFilteredAttrs(body, permittedAttrs)
-  attrs.name = body.name || null
-  attrs.isActive = !!body.isActive
-  return attrs
-}
+const permittedAttrs = ['name', 'author', 'insights']
 
 // actions
 //
 router.get('/', async (req, res, next) => {
   try {
     const courses = await Course.run()
-    const bots = await Bot.filter(item => item.hasFields('name'))
-    const scenarios = await Scenario.filter(item => item.hasFields('name'))
-    const tags = await Tag.filter(item => item.hasFields('name'))
+    const tags = await Card.concatMap(card => card('tags')).distinct().execute()
 
     res.render('courses', { title: `${appName} – Courses`,
       courses: courses,
@@ -57,8 +45,10 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', upload.array(), async (req, res, next) => {
   try {
-    const item = await Course.get(req.params.id).update(getAttrs(req.body)).run()
-    res.json(item)
+    const item = await Course.get(req.params.id)
+    const attrs = getFilteredAttrs(req.body, permittedAttrs)
+    const result = await item.merge(attrs).save()
+    res.json(result)
   } catch (err) {
     _handleThinkyError(err, res)
   }
@@ -66,7 +56,8 @@ router.put('/:id', upload.array(), async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    const item = await Course.get(req.params.id).delete().run()
+    const item = await Course.get(req.params.id)
+    await item.delete()
     res.json({ message: 'ok' })
   } catch (err) {
     _handleThinkyError(err, res)
