@@ -4,11 +4,6 @@ export default function (state = [], action) {
   switch (action.type) {
     case 'CREATE_COURSE_RECEIVE':
       return uniqBy(state.concat(action.item), 'id')
-    case 'UPDATE_COURSE_REQUEST':
-      return state.map(item => item.id === action.id ?
-        Object.assign(item, { isFetching: true }) :
-        item
-      )
     case 'UPDATE_COURSE_RECEIVE':
       return state.map(item => item.id === action.id ?
         Object.assign(action.item, { isFetching: false }) :

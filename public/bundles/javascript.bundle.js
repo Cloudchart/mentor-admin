@@ -47219,10 +47219,6 @@
 
 	var _expandMore2 = _interopRequireDefault(_expandMore);
 
-	var _BlocksList = __webpack_require__(522);
-
-	var _BlocksList2 = _interopRequireDefault(_BlocksList);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -47235,6 +47231,8 @@
 
 	// https://github.com/callemall/material-ui/issues/2615
 
+
+	// import BlocksList from './BlocksList'
 
 	var CardEdit = function (_Component) {
 	  _inherits(CardEdit, _Component);
@@ -48703,267 +48701,8 @@
 	exports.default = ContentClear;
 
 /***/ },
-/* 522 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _sortBy = __webpack_require__(429);
-
-	var _sortBy2 = _interopRequireDefault(_sortBy);
-
-	var _FlatButton = __webpack_require__(478);
-
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-	var _add = __webpack_require__(511);
-
-	var _add2 = _interopRequireDefault(_add);
-
-	var _BlockEdit = __webpack_require__(523);
-
-	var _BlockEdit2 = _interopRequireDefault(_BlockEdit);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var BlocksList = function (_Component) {
-	  _inherits(BlocksList, _Component);
-
-	  function BlocksList() {
-	    _classCallCheck(this, BlocksList);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(BlocksList).apply(this, arguments));
-	  }
-
-	  _createClass(BlocksList, [{
-	    key: 'handleCreate',
-
-
-	    // handlers
-	    //
-	    value: function handleCreate(event) {
-	      this.props.actions.createBlock(this.props.cardCourseId);
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'renderItem',
-	    value: function renderItem(item) {
-	      return _react2.default.createElement(_BlockEdit2.default, { key: item.id, item: item, actions: this.props.actions });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(_FlatButton2.default, {
-	          label: 'Add block',
-	          labelPosition: 'before',
-	          primary: true,
-	          icon: _react2.default.createElement(_add2.default, null),
-	          onTouchTap: this.handleCreate.bind(this)
-	        }),
-	        _react2.default.createElement(
-	          'ul',
-	          { className: 'blocks' },
-	          (0, _sortBy2.default)(this.props.items, 'position').map(this.renderItem.bind(this))
-	        )
-	      );
-	    }
-	  }]);
-
-	  return BlocksList;
-	}(_react.Component);
-
-	BlocksList.propTypes = {
-	  cardCourseId: _react.PropTypes.string.isRequired,
-	  items: _react.PropTypes.array.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = BlocksList;
-
-/***/ },
-/* 523 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _Paper = __webpack_require__(403);
-
-	var _Paper2 = _interopRequireDefault(_Paper);
-
-	var _TextField = __webpack_require__(501);
-
-	var _TextField2 = _interopRequireDefault(_TextField);
-
-	var _IconButton = __webpack_require__(368);
-
-	var _IconButton2 = _interopRequireDefault(_IconButton);
-
-	var _clear = __webpack_require__(521);
-
-	var _clear2 = _interopRequireDefault(_clear);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var BlockEdit = function (_Component) {
-	  _inherits(BlockEdit, _Component);
-
-	  function BlockEdit() {
-	    _classCallCheck(this, BlockEdit);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(BlockEdit).apply(this, arguments));
-	  }
-
-	  _createClass(BlockEdit, [{
-	    key: 'handleSubmit',
-
-
-	    // handlers
-	    //
-	    value: function handleSubmit(event) {
-	      event.preventDefault();
-	    }
-	  }, {
-	    key: 'handleUpdate',
-	    value: function handleUpdate(event) {
-	      this.props.actions.updateBlock(this.props.item.id, this.refs.form);
-	    }
-	  }, {
-	    key: 'handleDelete',
-	    value: function handleDelete(event) {
-	      this.props.actions.deleteBlock(this.props.item.id);
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var item = this.props.item;
-
-
-	      return _react2.default.createElement(
-	        'li',
-	        { style: { width: '400px', margin: '20px 0' } },
-	        _react2.default.createElement(
-	          _Paper2.default,
-	          { style: { padding: '20px' } },
-	          _react2.default.createElement(
-	            _IconButton2.default,
-	            {
-	              iconStyle: { width: '20px', height: '20px' },
-	              style: { float: 'right' },
-	              onTouchTap: this.handleDelete.bind(this)
-	            },
-	            _react2.default.createElement(_clear2.default, null)
-	          ),
-	          _react2.default.createElement(
-	            'form',
-	            { ref: 'form', onSubmit: this.handleSubmit },
-	            _react2.default.createElement(
-	              'label',
-	              null,
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                'Type'
-	              ),
-	              _react2.default.createElement(
-	                'select',
-	                {
-	                  name: 'type',
-	                  defaultValue: item.type,
-	                  onBlur: this.handleUpdate.bind(this)
-	                },
-	                _react2.default.createElement(
-	                  'option',
-	                  { value: 'text' },
-	                  'text'
-	                ),
-	                _react2.default.createElement(
-	                  'option',
-	                  { value: 'image' },
-	                  'image'
-	                ),
-	                _react2.default.createElement(
-	                  'option',
-	                  { value: 'video' },
-	                  'video'
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(_TextField2.default, {
-	              name: 'position',
-	              type: 'number',
-	              defaultValue: item.position,
-	              floatingLabelText: 'Position',
-	              hintText: 'Enter block position',
-	              onBlur: this.handleUpdate.bind(this)
-	            }),
-	            _react2.default.createElement('br', null),
-	            _react2.default.createElement(_TextField2.default, {
-	              name: 'content',
-	              defaultValue: item.content,
-	              multiLine: true,
-	              floatingLabelText: 'Content',
-	              hintText: 'Enter block content',
-	              onBlur: this.handleUpdate.bind(this)
-	            })
-	          )
-	        )
-	      );
-	    }
-	  }]);
-
-	  return BlockEdit;
-	}(_react.Component);
-
-	BlockEdit.propTypes = {
-	  item: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = BlockEdit;
-
-/***/ },
+/* 522 */,
+/* 523 */,
 /* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -56520,10 +56259,6 @@
 	  switch (action.type) {
 	    case 'CREATE_COURSE_RECEIVE':
 	      return (0, _uniqBy2.default)(state.concat(action.item), 'id');
-	    case 'UPDATE_COURSE_REQUEST':
-	      return state.map(function (item) {
-	        return item.id === action.id ? Object.assign(item, { isFetching: true }) : item;
-	      });
 	    case 'UPDATE_COURSE_RECEIVE':
 	      return state.map(function (item) {
 	        return item.id === action.id ? Object.assign(action.item, { isFetching: false }) : item;

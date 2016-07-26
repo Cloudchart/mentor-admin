@@ -18,8 +18,6 @@ router.get('/', async (req, res, next) => {
 
     res.render('courses', { title: `${appName} – Courses`,
       courses: courses,
-      bots: bots,
-      scenarios: scenarios,
       tags: tags,
     })
   } catch (err) {
