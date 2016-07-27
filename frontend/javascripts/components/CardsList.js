@@ -30,6 +30,8 @@ class CardsList extends Component {
 
   renderItem(insight) {
     const item = this.props.cards.find(item => item.id === insight.id)
+    if (!item) return null
+
     return (
       <CardEdit
         key={ item.id }

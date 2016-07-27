@@ -24,55 +24,73 @@ class BlockEdit extends Component {
 
   // renderers
   //
+  renderText(item) {
+    if (item.type === 'image') return null
+    return (
+      <TextField
+        name="text"
+        defaultValue={ item.text }
+        multiLine={ true }
+        floatingLabelText="Text"
+        hintText="Enter text"
+        onBlur={ this.handleUpdate.bind(this) }
+      />
+    )
+  }
+
+  renderUrl(item) {
+    if (item.type === 'text') return null
+    return (
+      <TextField
+        name="url"
+        defaultValue={ item.url }
+        floatingLabelText="URL"
+        hintText="Enter url"
+        onBlur={ this.handleUpdate.bind(this) }
+      />
+    )
+  }
+
   render() {
     const { item } = this.props
 
     return (
-      <li style={{ width: '400px', margin: '20px 0' }}>
-        <Paper style={{ padding: '20px' }}>
-          <IconButton
-            iconStyle={{ width: '20px', height: '20px' }}
-            style={{ float: 'right' }}
-            onTouchTap={ this.handleDelete.bind(this) }
-          >
-            <ContentClearIcon />
-          </IconButton>
+      <Paper style={{ padding: '20px', width: '400px', margin: '20px 0' }}>
+        <IconButton
+          iconStyle={{ width: '20px', height: '20px' }}
+          style={{ float: 'right' }}
+          onTouchTap={ this.handleDelete.bind(this) }
+        >
+          <ContentClearIcon />
+        </IconButton>
 
-          <form ref="form" onSubmit={ this.handleSubmit }>
-            <label>
-              <span>Type</span>
-              <select
-                name="type"
-                defaultValue={ item.type }
-                onBlur={ this.handleUpdate.bind(this) }
-              >
-                <option value="text">text</option>
-                <option value="image">image</option>
-                <option value="video">video</option>
-              </select>
-            </label>
-
-            <TextField
-              name="position"
-              type="number"
-              defaultValue={ item.position }
-              floatingLabelText="Position"
-              hintText="Enter block position"
+        <form ref="form" onSubmit={ this.handleSubmit }>
+          <label>
+            <span>Type</span>
+            <select
+              name="type"
+              defaultValue={ item.type }
               onBlur={ this.handleUpdate.bind(this) }
-            />
-            <br/>
+            >
+              <option value="text">text</option>
+              <option value="image">image</option>
+            </select>
+          </label>
 
-            <TextField
-              name="content"
-              defaultValue={ item.content }
-              multiLine={ true }
-              floatingLabelText="Content"
-              hintText="Enter block content"
-              onBlur={ this.handleUpdate.bind(this) }
-            />
-          </form>
-        </Paper>
-      </li>
+          <TextField
+            name="position"
+            type="number"
+            defaultValue={ item.position }
+            floatingLabelText="Position"
+            hintText="Enter block position"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+          <br/>
+
+          { this.renderText(item) }
+          { this.renderUrl(item) }
+        </form>
+      </Paper>
     )
   }
 }

@@ -70,31 +70,16 @@ export const Card = Thinky.createModel('insights',
   }).removeExtra()
 )
 
-// export const Card_Course = Thinky.createModel('Card_Course',
-//   type.object().schema({
-//     id: type.string(),
-//     cardId: type.string().required(),
-//     courseId: type.string().required(),
-//     position: type.number().integer().default(0),
-//   }).removeExtra()
-// )
-
 export const Block = Thinky.createModel('blocks',
   type.object().schema({
     id: type.string(),
     cardId: type.string(),
-    type: type.string().enum(['text', 'image', 'video']).default('text'),
     position: type.number().integer().default(0),
-    content: type.string(),
+    type: type.string().enum(['text', 'image']).default('text'),
+    url: type.string(),
+    text: type.string(),
   }).removeExtra()
 )
-
-// export const Tag = Thinky.createModel('Tag',
-//   type.object().schema({
-//     id: type.string(),
-//     name: type.string(),
-//   }).removeExtra()
-// )
 
 export const Survey = Thinky.createModel('surveys',
   type.object().schema({
@@ -136,10 +121,14 @@ Card.docOn('saving', doc => {
   doc.updated_at = new Date()
 })
 
+Block.docOn('saving', doc => {
+  if (doc.type === 'text') doc.url = undefined
+  if (doc.type === 'image') doc.text = undefined
+})
+
 // indexes
 //
 Card.ensureIndex('content')
-// Tag.ensureIndex('name')
 
 // relations
 //
@@ -150,22 +139,9 @@ Action.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
 Bot.hasMany(Course, 'courses', 'id', 'botId')
 Bot.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
 
-// Course.hasMany(Card_Course, 'cards', 'id', 'courseId')
-// Course.hasMany(Card, 'insights', 'id', 'courseId')
-// Course.belongsTo(Bot, 'bot', 'botId', 'id')
-// Course.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
-
-// Card.hasAndBelongsToMany(Tag, 'tags', 'id', 'id')
 // Card.hasMany(Block, 'blocks', 'id', 'cardId')
-// Card.hasMany(Card_Course, 'courses', 'id', 'cardId')
-// Card.belongsTo(Course, 'course', 'courseId', 'id')
 
-// Card_Course.belongsTo(Course, 'course', 'courseId', 'id')
-// Card_Course.belongsTo(Card, 'card', 'cardId', 'id')
-
-// Block.belongsTo(Card, 'card', 'cardId', 'id')
-
-// Tag.hasAndBelongsToMany(Card, 'cards', 'id', 'id')
+Block.belongsTo(Card, 'card', 'cardId', 'id')
 
 Survey.hasMany(SurveyQuestion, 'questions', 'id', 'surveyId')
 Survey.belongsTo(Course, 'course', 'courseId', 'id')

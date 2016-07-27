@@ -12,7 +12,7 @@ import ContentClearIcon from 'material-ui/svg-icons/content/clear'
 import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less'
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 
-// import BlocksList from './BlocksList'
+import BlocksList from './BlocksList'
 
 
 class CardEdit extends Component {
@@ -181,6 +181,13 @@ class CardEdit extends Component {
           />
           { this.renderTags() }
         </form>
+
+        <h3>Blocks</h3>
+        <BlocksList
+          cardId={ item.id }
+          items={ item.blocks }
+          actions={ actions }
+        />
       </Paper>
     )
   }

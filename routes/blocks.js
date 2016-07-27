@@ -2,19 +2,23 @@ import multer from 'multer'
 import { Router } from 'express'
 
 import { _handleThinkyError, getFilteredAttrs } from './helpers'
-import { Card_Course, Block } from '../models'
+import { Card, Block } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['position', 'type', 'content']
+const permittedAttrs = ['position', 'type', 'url', 'text']
 
 
-router.post('/cards/:cardCourseId/blocks', async (req, res, next) => {
+router.post('/cards/:cardId/blocks', async (req, res, next) => {
   try {
-    const cardCourse = await Card_Course.get(req.params.cardCourseId)
-    const block = new Block({ cardId: cardCourse.cardId })
+    const card = await Card.get(req.params.cardId)
+    const block = new Block({ cardId: card.id })
     const result = await block.save()
-    res.json(result)
+
+    card.blocks = card.blocks.concat(block)
+    card.save()
+
+    res.json(block)
   } catch (err) {
     _handleThinkyError(err, res)
   }
@@ -22,8 +26,14 @@ router.post('/cards/:cardCourseId/blocks', async (req, res, next) => {
 
 router.put('/card_blocks/:id', upload.array(), async (req, res, next) => {
   try {
-    let attrs = getFilteredAttrs(req.body, permittedAttrs)
-    const result = await Block.get(req.params.id).update(attrs)
+    const block = await Block.get(req.params.id)
+    const attrs = getFilteredAttrs(req.body, permittedAttrs)
+    const result = await block.merge(attrs).save()
+
+    const card = await Card.get(result.cardId)
+    card.blocks = card.blocks.map(block => block.id === result.id ? result : block)
+    card.save()
+
     res.json(result)
   } catch (err) {
     _handleThinkyError(err, res)
@@ -32,9 +42,14 @@ router.put('/card_blocks/:id', upload.array(), async (req, res, next) => {
 
 router.delete('/card_blocks/:id', async (req, res, next) => {
   try {
-    const block = await Block.get(req.params.id)
-    await block.delete()
-    res.json(block)
+    const result = await Block.get(req.params.id)
+    await result.delete()
+
+    const card = await Card.get(result.cardId)
+    card.blocks = card.blocks.filter(block => block.id !== result.id)
+    card.save()
+
+    res.json(result)
   } catch (err) {
     _handleThinkyError(err, res)
   }

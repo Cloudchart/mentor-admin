@@ -12,7 +12,7 @@ class BlocksList extends Component {
   // handlers
   //
   handleCreate(event) {
-    this.props.actions.createBlock(this.props.cardCourseId)
+    this.props.actions.createBlock(this.props.cardId)
   }
 
   // renderers
@@ -42,7 +42,7 @@ class BlocksList extends Component {
 }
 
 BlocksList.propTypes = {
-  cardCourseId: PropTypes.string.isRequired,
+  cardId: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }

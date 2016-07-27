@@ -1,17 +1,13 @@
 function createBlock(item, action) {
-  return Object.assign(item.card, { blocks: item.card.blocks.concat(action.item) })
+  return { blocks: item.blocks.concat(action.item) }
 }
 
 function updateBlock(item, action) {
-  return Object.assign(item.card, {
-    blocks: item.card.blocks.map(block => block.id === action.id ? action.item : block)
-  })
+  return { blocks: item.blocks.map(block => block.id === action.id ? action.item : block) }
 }
 
 function deleteBlock(item, action) {
-  return Object.assign(item.card, {
-    blocks: item.card.blocks.filter(block => block.id !== action.id)
-  })
+  return { blocks: item.blocks.filter(block => block.id !== action.id) }
 }
 
 
@@ -34,18 +30,18 @@ export default function (state = [], action) {
         item
       )
     case 'CREATE_BLOCK_RECEIVE':
-      return state.map(item => item.card.id === action.item.cardId ?
-        Object.assign(item, { card: createBlock(item, action) }) :
+      return state.map(item => item.id === action.item.cardId ?
+        Object.assign(item, createBlock(item, action)) :
         item
       )
     case 'UPDATE_BLOCK_RECEIVE':
-      return state.map(item => item.card.id === action.item.cardId ?
-        Object.assign(item, { card: updateBlock(item, action) }) :
+      return state.map(item => item.id === action.item.cardId ?
+        Object.assign(item, updateBlock(item, action)) :
         item
       )
     case 'DELETE_BLOCK_RECEIVE':
-      return state.map(item => item.card.id === action.item.cardId ?
-        Object.assign(item, { card: deleteBlock(item, action) }) :
+      return state.map(item => item.id === action.item.cardId ?
+        Object.assign(item, deleteBlock(item, action)) :
         item
       )
     default:

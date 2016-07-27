@@ -11,26 +11,6 @@ const permittedAttrs = ['author', 'content', 'origin', 'tags']
 
 // helpers
 //
-// function findOrCreateTags(names) {
-//   return new Promise((resolve, reject) => {
-//     let result = []
-//     if (!names) return resolve(result)
-
-//     const requests = names.reduce((promiseChain, name) => {
-//       return promiseChain.then(async () => {
-//         const tags = await Tag.filter({ name: name })
-//         if (tags.length > 0) {
-//           result.push(tags[0])
-//         } else {
-//           result.push(new Tag({ name: name }))
-//         }
-//       })
-//     }, Promise.resolve())
-
-//     requests.then(() => resolve(result))
-//   })
-// }
-
 // function importCards(course, data) {
 //   return new Promise((resolve, reject) => {
 //     const requests = data.hits.reduce((promiseChain, item) => {
@@ -80,10 +60,10 @@ router.get('/courses/:courseId/cards', async (req, res, next) => {
 
 router.post('/courses/:courseId/cards', async (req, res, next) => {
   try {
+    const course = await Course.get(req.params.courseId)
     const card = new Card({})
     const result = await card.save()
 
-    const course = await Course.get(req.params.courseId)
     course.insights = course.insights.concat({ id: result.id })
     course.save()
 
