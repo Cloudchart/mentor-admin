@@ -2,7 +2,7 @@ import multer from 'multer'
 import { Router } from 'express'
 
 import { _handleThinkyError, getFilteredAttrs } from './helpers'
-import { Card, r } from '../models'
+import { r } from '../models'
 
 const router = Router({ mergeParams: true })
 const upload = multer()

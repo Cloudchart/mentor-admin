@@ -71,8 +71,6 @@ class CardsImport extends Component {
       this.props.actions.importCards(this.props.courseId, {
         query: this.state.query,
         hits: this.state.hits,
-      }).then(() => {
-        this.props.actions.getCards(this.props.courseId)
       })
 
       this.setState({ open: false })

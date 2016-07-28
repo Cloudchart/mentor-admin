@@ -11,40 +11,38 @@ const permittedAttrs = ['author', 'content', 'origin', 'tags']
 
 // helpers
 //
-// function importCards(course, data) {
-//   return new Promise((resolve, reject) => {
-//     const requests = data.hits.reduce((promiseChain, item) => {
-//       return promiseChain.then(async () => {
-//         try {
-//           const cards = await Card.filter({ text: item.content })
-//           let card
+function getCardsForImport(course, data) {
+  return new Promise((resolve, reject) => {
+    let result = []
+    const requests = data.hits.reduce((promiseChain, item) => {
+      return promiseChain.then(async () => {
+        try {
+          const cards = await Card.filter({ content: item.content })
+          let card
 
-//           if (cards.length > 0) {
-//             card = cards[0]
-//           } else {
-//             card = new Card({
-//               text: item.content,
-//               author: item.user ? item.user.name : '',
-//               originUrl: item.origin ? item.origin.url : '',
-//             })
-//             card.tags = await findOrCreateTags([data.query])
-//             await card.saveAll()
-//           }
+          if (cards.length > 0) {
+            card = cards[0]
+          } else {
+            card = new Card({
+              content: item.content,
+              author: item.user ? item.user.name : '',
+              origin: item.origin,
+              tags: [data.query],
+            })
+            await card.save()
+          }
 
-//           const cardCourses = await Card_Course.filter({ courseId: course.id, cardId: card.id })
-//           if (cardCourses.length === 0) {
-//             const cardCourse = new Card_Course({ course: course, card: card })
-//             await cardCourse.saveAll()
-//           }
-//         } catch (err) {
-//           console.log('!!!', err)
-//         }
-//       })
-//     }, Promise.resolve())
+          const insight = course.insights.find(insight => insight.id === card.id)
+          if (!insight) result.push(card)
+        } catch (err) {
+          console.log('Error:', err)
+        }
+      })
+    }, Promise.resolve())
 
-//     requests.then(() => resolve())
-//   })
-// }
+    requests.then(() => resolve(result))
+  })
+}
 
 // actions
 //
@@ -76,8 +74,12 @@ router.post('/courses/:courseId/cards', async (req, res, next) => {
 router.post('/courses/:courseId/cards/import', async (req, res, next) => {
   try {
     const course = await Course.get(req.params.courseId)
-    // await importCards(course, req.body)
-    res.json({ message: 'ok' })
+    const cards = await getCardsForImport(course, req.body)
+
+    course.insights = course.insights.concat(cards.map(card => { return { id: card.id } }))
+    await course.save()
+
+    res.json(cards)
   } catch (err) {
     _handleThinkyError(err, res)
   }

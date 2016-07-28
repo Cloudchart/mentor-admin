@@ -7,9 +7,10 @@ function requestGetItems(modelName) {
   }
 }
 
-function receiveGetItems(modelName, items) {
+function receiveGetItems(modelName, parentId, items) {
   return {
     type: `GET_${modelName.toUpperCase()}S_RECEIVE`,
+    parentId,
     items,
     receivedAt: Date.now()
   }
@@ -39,7 +40,7 @@ function getItems(modelName, options, parentId) {
       if (json.error) {
         return dispatch(catchGetItemsErrors(modelName, json.error))
       } else {
-        return dispatch(receiveGetItems(modelName, json))
+        return dispatch(receiveGetItems(modelName, parentId, json))
       }
     }).catch(error => {
       return dispatch(catchGetItemsErrors(modelName, error))

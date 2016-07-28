@@ -11,7 +11,7 @@ function receiveImportCards(courseId, items) {
   return {
     type: 'IMPORT_CARDS_RECEIVE',
     courseId,
-    items: items,
+    items,
     receivedAt: Date.now()
   }
 }

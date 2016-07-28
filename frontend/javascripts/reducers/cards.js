@@ -23,6 +23,8 @@ export default function (state = [], action) {
         Object.assign(action.item, { isFetching: false }) :
         item
       )
+    case 'IMPORT_CARDS_RECEIVE':
+      return state.concat(action.items)
     default:
       return state
   }

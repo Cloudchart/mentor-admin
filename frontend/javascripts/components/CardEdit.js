@@ -174,7 +174,7 @@ class CardEdit extends Component {
           <AutoComplete
             floatingLabelText="Tags"
             hintText="Type anything"
-            dataSource={ this.props.tags }
+            dataSource={ tags }
             searchText={ this.state.tagSearchText }
             onNewRequest={ this.handleTagsInputSelect.bind(this) }
             onUpdateInput={ this.handleTagsInputUpdate.bind(this) }

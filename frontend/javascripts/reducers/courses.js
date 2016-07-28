@@ -1,5 +1,9 @@
 import uniqBy from 'lodash/uniqBy'
 
+function importCards(item, action) {
+  return { insights: item.insights.concat(action.items.map(i => { return { id: i.id } })) }
+}
+
 export default function (state = [], action) {
   switch (action.type) {
     case 'CREATE_COURSE_RECEIVE':
@@ -19,6 +23,11 @@ export default function (state = [], action) {
     case 'CREATE_CARD_RECEIVE':
       return state.map(item => item.id === action.parentId ?
         Object.assign(item, { insights: item.insights.concat({ id: action.item.id }) }) :
+        item
+      )
+    case 'IMPORT_CARDS_RECEIVE':
+      return state.map(item => item.id === action.courseId ?
+        Object.assign(item, importCards(item, action)) :
         item
       )
     default:

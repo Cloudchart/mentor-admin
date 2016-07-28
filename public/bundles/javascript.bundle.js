@@ -29512,9 +29512,10 @@
 	  };
 	}
 
-	function receiveGetItems(modelName, items) {
+	function receiveGetItems(modelName, parentId, items) {
 	  return {
 	    type: 'GET_' + modelName.toUpperCase() + 'S_RECEIVE',
+	    parentId: parentId,
 	    items: items,
 	    receivedAt: Date.now()
 	  };
@@ -29546,7 +29547,7 @@
 	      if (json.error) {
 	        return dispatch(catchGetItemsErrors(modelName, json.error));
 	      } else {
-	        return dispatch(receiveGetItems(modelName, json));
+	        return dispatch(receiveGetItems(modelName, parentId, json));
 	      }
 	    }).catch(function (error) {
 	      return dispatch(catchGetItemsErrors(modelName, error));
@@ -47465,7 +47466,7 @@
 	          _react2.default.createElement(_AutoComplete2.default, {
 	            floatingLabelText: 'Tags',
 	            hintText: 'Type anything',
-	            dataSource: this.props.tags,
+	            dataSource: tags,
 	            searchText: this.state.tagSearchText,
 	            onNewRequest: this.handleTagsInputSelect.bind(this),
 	            onUpdateInput: this.handleTagsInputUpdate.bind(this)
@@ -49120,14 +49121,10 @@
 	  }, {
 	    key: 'handleImportCards',
 	    value: function handleImportCards(event) {
-	      var _this2 = this;
-
 	      if (window.confirm('You are about to import ' + this.state.hits.length + ' cards, right?')) {
 	        this.props.actions.importCards(this.props.courseId, {
 	          query: this.state.query,
 	          hits: this.state.hits
-	        }).then(function () {
-	          _this2.props.actions.getCards(_this2.props.courseId);
 	        });
 
 	        this.setState({ open: false });
@@ -49136,7 +49133,7 @@
 	  }, {
 	    key: 'handleSearch',
 	    value: function handleSearch(event) {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      event.preventDefault();
 	      if (this.state.query.length < 2) return;
@@ -49146,7 +49143,7 @@
 	        var hits = content.hits.filter(function (hit) {
 	          return hit.pinboard_tags.includes(content.query);
 	        });
-	        _this3.setState({ hits: hits, isFetching: false });
+	        _this2.setState({ hits: hits, isFetching: false });
 	      });
 	    }
 	  }, {
@@ -56506,6 +56503,8 @@
 	      return state.map(function (item) {
 	        return item.id === action.item.id ? Object.assign(action.item, { isFetching: false }) : item;
 	      });
+	    case 'IMPORT_CARDS_RECEIVE':
+	      return state.concat(action.items);
 	    default:
 	      return state;
 	  }
@@ -56544,6 +56543,10 @@
 	      return state.map(function (item) {
 	        return item.id === action.parentId ? Object.assign(item, { insights: item.insights.concat({ id: action.item.id }) }) : item;
 	      });
+	    case 'IMPORT_CARDS_RECEIVE':
+	      return state.map(function (item) {
+	        return item.id === action.courseId ? Object.assign(item, importCards(item, action)) : item;
+	      });
 	    default:
 	      return state;
 	  }
@@ -56554,6 +56557,12 @@
 	var _uniqBy2 = _interopRequireDefault(_uniqBy);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function importCards(item, action) {
+	  return { insights: item.insights.concat(action.items.map(function (i) {
+	      return { id: i.id };
+	    })) };
+	}
 
 /***/ },
 /* 590 */
