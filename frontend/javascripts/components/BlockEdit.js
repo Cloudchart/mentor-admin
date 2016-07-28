@@ -70,7 +70,7 @@ class BlockEdit extends Component {
             <select
               name="type"
               defaultValue={ item.type }
-              onBlur={ this.handleUpdate.bind(this) }
+              onChange={ this.handleUpdate.bind(this) }
             >
               <option value="text">text</option>
               <option value="image">image</option>
