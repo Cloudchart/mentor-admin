@@ -18,7 +18,14 @@ class BlocksList extends Component {
   // renderers
   //
   renderItem(item) {
-    return <BlockEdit key={ item.id } item={ item } actions={ this.props.actions } />
+    return (
+      <BlockEdit
+        key={ item.id }
+        cardId={ this.props.cardId }
+        item={ item }
+        actions={ this.props.actions }
+      />
+    )
   }
 
   render() {

@@ -26,10 +26,12 @@ function catchDeleteItemError(modelName, id, error) {
   }
 }
 
-function deleteItem(modelName, options, id) {
+function deleteItem(modelName, options, id, parentId) {
   return function (dispatch) {
     let path = `/${modelName}s/${id}`
-    if (options.parentModelName) {
+    if (options.parentModelName && parentId) {
+      path = `/${options.parentModelName}s/${parentId}/${modelName}s/${id}`
+    } else if (options.parentModelName) {
       path = `/${options.parentModelName}_${modelName}s/${id}`
     }
 
@@ -52,5 +54,5 @@ function deleteItem(modelName, options, id) {
 
 
 export default function (modelName, options={}) {
-  return (id) => deleteItem(modelName, options, id)
+  return (id, parentId=null) => deleteItem(modelName, options, id, parentId)
 }

@@ -1,16 +1,3 @@
-function createBlock(item, action) {
-  return { blocks: item.blocks.concat(action.item) }
-}
-
-function updateBlock(item, action) {
-  return { blocks: item.blocks.map(block => block.id === action.id ? action.item : block) }
-}
-
-function deleteBlock(item, action) {
-  return { blocks: item.blocks.filter(block => block.id !== action.id) }
-}
-
-
 export default function (state = [], action) {
   switch (action.type) {
     case 'GET_CARDS_RECEIVE':
@@ -30,18 +17,10 @@ export default function (state = [], action) {
         item
       )
     case 'CREATE_BLOCK_RECEIVE':
-      return state.map(item => item.id === action.item.cardId ?
-        Object.assign(item, createBlock(item, action)) :
-        item
-      )
     case 'UPDATE_BLOCK_RECEIVE':
-      return state.map(item => item.id === action.item.cardId ?
-        Object.assign(item, updateBlock(item, action)) :
-        item
-      )
     case 'DELETE_BLOCK_RECEIVE':
-      return state.map(item => item.id === action.item.cardId ?
-        Object.assign(item, deleteBlock(item, action)) :
+      return state.map(item => item.id === action.item.id ?
+        Object.assign(action.item, { isFetching: false }) :
         item
       )
     default:

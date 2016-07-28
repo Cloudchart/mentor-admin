@@ -26,10 +26,12 @@ function catchUpdateItemError(modelName, id, error) {
   }
 }
 
-function updateItem(modelName, options, id, data) {
+function updateItem(modelName, options, id, data, parentId) {
   return function (dispatch) {
     let path = `/${modelName}s/${id}`
-    if (options.parentModelName) {
+    if (options.parentModelName && parentId) {
+      path = `/${options.parentModelName}s/${parentId}/${modelName}s/${id}`
+    } else if (options.parentModelName) {
       path = `/${options.parentModelName}_${modelName}s/${id}`
     }
 
@@ -62,5 +64,5 @@ function updateItem(modelName, options, id, data) {
 
 
 export default function update(modelName, options={}) {
-  return (id, data) => updateItem(modelName, options, id, data)
+  return (id, data, parentId=null) => updateItem(modelName, options, id, data, parentId)
 }

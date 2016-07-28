@@ -45,12 +45,12 @@ app.use(session({
 app.use('/', routes);
 app.use('/', questions);
 app.use('/', cards);
-app.use('/', blocks);
 app.use('/', actions);
 app.use('/bots', bots);
 app.use('/courses', courses);
 app.use('/surveys', surveys);
 app.use('/scenarios', scenarios);
+app.use('/cards/:cardId/blocks', blocks);
 
 
 // catch 404 and forward to error handler

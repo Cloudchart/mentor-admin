@@ -4,8 +4,9 @@ import dbconfig from '../config/database'
 
 const Thinky = thinky(dbconfig[process.env.NODE_ENV])
 const type = Thinky.type
-const r = Thinky.r
 
+
+export const r = Thinky.r
 
 // models
 //
@@ -70,17 +71,6 @@ export const Card = Thinky.createModel('insights',
   }).removeExtra()
 )
 
-export const Block = Thinky.createModel('blocks',
-  type.object().schema({
-    id: type.string(),
-    cardId: type.string(),
-    position: type.number().integer().default(0),
-    type: type.string().enum(['text', 'image']).default('text'),
-    url: type.string(),
-    text: type.string(),
-  }).removeExtra()
-)
-
 export const Survey = Thinky.createModel('surveys',
   type.object().schema({
     id: type.string(),
@@ -121,11 +111,6 @@ Card.docOn('saving', doc => {
   doc.updated_at = new Date()
 })
 
-Block.docOn('saving', doc => {
-  if (doc.type === 'text') doc.url = undefined
-  if (doc.type === 'image') doc.text = undefined
-})
-
 // indexes
 //
 Card.ensureIndex('content')
@@ -138,10 +123,6 @@ Action.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
 
 Bot.hasMany(Course, 'courses', 'id', 'botId')
 Bot.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
-
-// Card.hasMany(Block, 'blocks', 'id', 'cardId')
-
-Block.belongsTo(Card, 'card', 'cardId', 'id')
 
 Survey.hasMany(SurveyQuestion, 'questions', 'id', 'surveyId')
 Survey.belongsTo(Course, 'course', 'courseId', 'id')

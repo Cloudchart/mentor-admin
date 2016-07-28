@@ -15,11 +15,11 @@ class BlockEdit extends Component {
   }
 
   handleUpdate(event) {
-    this.props.actions.updateBlock(this.props.item.id, this.refs.form)
+    this.props.actions.updateBlock(this.props.item.id, this.refs.form, this.props.cardId)
   }
 
   handleDelete(event) {
-    this.props.actions.deleteBlock(this.props.item.id)
+    this.props.actions.deleteBlock(this.props.item.id, this.props.cardId)
   }
 
   // renderers
@@ -97,6 +97,7 @@ class BlockEdit extends Component {
 
 BlockEdit.propTypes = {
   item: PropTypes.object.isRequired,
+  cardId: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
