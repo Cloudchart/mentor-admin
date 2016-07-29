@@ -180,6 +180,33 @@ class CardEdit extends Component {
             onUpdateInput={ this.handleTagsInputUpdate.bind(this) }
           />
           { this.renderTags() }
+
+          <TextField
+            name="origin[title]"
+            defaultValue={ item.origin.title }
+            floatingLabelText="Origin title"
+            hintText="Enter origin title"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+          <br/>
+
+          <TextField
+            name="origin[url]"
+            defaultValue={ item.origin.url }
+            floatingLabelText="Origin url"
+            hintText="Enter origin url"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+          <br/>
+
+          <TextField
+            name="origin[duration]"
+            defaultValue={ item.origin.duration }
+            type="number"
+            floatingLabelText="Origin duration"
+            hintText="Enter origin duration"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
         </form>
 
         <h3>Blocks</h3>
