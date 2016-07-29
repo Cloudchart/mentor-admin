@@ -35,14 +35,11 @@ export const Action = Thinky.createModel('actions',
 export const Bot = Thinky.createModel('bots',
   type.object().schema({
     id: type.string(),
-    scenarioId: type.string(),
-    name: type.string(),
-    isActive: type.boolean().default(false),
-    keys: type.object().schema({
-      facebookKey: type.string(),
-      facebookVerificationKey: type.string(),
-      telegramKey: type.string(),
-    }).removeExtra(),
+    scenario: type.object().schema({
+      id: type.string(),
+    }).removeExtra().default({}),
+    token: type.string(),
+    type: type.string().enum(['messenger', 'telegram']),
   }).removeExtra()
 )
 
@@ -61,15 +58,9 @@ export const Card = Thinky.createModel('insights',
     id: type.string(),
     author: type.string(),
     content: type.string(),
-    origin: type.object().schema({
-      duration: type.number().default(0),
-      title: type.string(),
-      url: type.string(),
-    }).removeExtra().default({}),
+    origin: type.object().default({}),
     blocks: type.array().default([]),
     tags: type.array().default([]),
-    negative_reaction: type.string(),
-    positive_reaction: type.string(),
     created_at: type.date().default(r.now()),
     updated_at: type.date(),
   }).removeExtra()
@@ -124,9 +115,6 @@ Card.ensureIndex('content')
 Scenario.hasMany(Action, 'actions', 'id', 'scenarioId')
 
 Action.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
-
-Bot.hasMany(Course, 'courses', 'id', 'botId')
-Bot.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
 
 Survey.hasMany(SurveyQuestion, 'questions', 'id', 'surveyId')
 Survey.belongsTo(Course, 'course', 'courseId', 'id')

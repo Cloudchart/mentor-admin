@@ -54,8 +54,8 @@ class BotsList extends Component {
   renderBot(bot) {
     return(
       <TableRow key={ bot.id }>
-        <TableRowColumn>{ bot.name }</TableRowColumn>
-        <TableRowColumn>{ bot.isActive ? 'Active' : 'Inactive' }</TableRowColumn>
+        <TableRowColumn>{ bot.id }</TableRowColumn>
+        <TableRowColumn>{ bot.type }</TableRowColumn>
         <TableRowColumn>
           {[
             <a key={1} href="" onClick={ this.handleEdit.bind(this, bot) }>Edit</a>,
@@ -76,13 +76,13 @@ class BotsList extends Component {
         <Table selectable={ false }>
           <TableHeader>
             <TableRow>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Active</TableHeaderColumn>
+              <TableHeaderColumn>ID</TableHeaderColumn>
+              <TableHeaderColumn>Type</TableHeaderColumn>
               <TableHeaderColumn>Actions</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody>
-            { sortBy(bots.filter(bot => bot.name), 'name').map(this.renderBot.bind(this)) }
+            { bots.map(this.renderBot.bind(this)) }
           </TableBody>
         </Table>
 

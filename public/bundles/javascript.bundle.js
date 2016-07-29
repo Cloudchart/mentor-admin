@@ -38477,12 +38477,12 @@
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
 	          null,
-	          bot.name
+	          bot.id
 	        ),
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
 	          null,
-	          bot.isActive ? 'Active' : 'Inactive'
+	          bot.type
 	        ),
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
@@ -38528,12 +38528,12 @@
 	              _react2.default.createElement(
 	                _Table.TableHeaderColumn,
 	                null,
-	                'Name'
+	                'ID'
 	              ),
 	              _react2.default.createElement(
 	                _Table.TableHeaderColumn,
 	                null,
-	                'Active'
+	                'Type'
 	              ),
 	              _react2.default.createElement(
 	                _Table.TableHeaderColumn,
@@ -38545,9 +38545,7 @@
 	          _react2.default.createElement(
 	            _Table.TableBody,
 	            null,
-	            (0, _sortBy2.default)(bots.filter(function (bot) {
-	              return bot.name;
-	            }), 'name').map(this.renderBot.bind(this))
+	            bots.map(this.renderBot.bind(this))
 	          )
 	        ),
 	        _react2.default.createElement(_RaisedButton2.default, {
@@ -44882,10 +44880,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _sortBy = __webpack_require__(429);
-
-	var _sortBy2 = _interopRequireDefault(_sortBy);
-
 	var _Toggle = __webpack_require__(499);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
@@ -44908,45 +44902,39 @@
 	var BotEdit = function (_Component) {
 	  _inherits(BotEdit, _Component);
 
-	  function BotEdit(props) {
+	  function BotEdit() {
 	    _classCallCheck(this, BotEdit);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BotEdit).call(this, props));
-
-	    props.bot.keys = props.bot.keys || {};
-	    _this.state = {
-	      name: props.bot.name,
-	      isActive: props.bot.isActive,
-	      scenarioId: props.bot.scenarioId,
-	      facebookKey: props.bot.keys.facebookKey,
-	      facebookVerificationKey: props.bot.keys.facebookVerificationKey,
-	      telegramKey: props.bot.keys.telegramKey
-	    };
-	    return _this;
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(BotEdit).apply(this, arguments));
 	  }
-
-	  // handlers
-	  //
-
 
 	  _createClass(BotEdit, [{
 	    key: 'handleSubmit',
+
+
+	    // handlers
+	    //
 	    value: function handleSubmit(event) {
 	      event.preventDefault();
 	    }
 	  }, {
 	    key: 'handleUpdate',
 	    value: function handleUpdate(event) {
-	      var _props = this.props;
-	      var bot = _props.bot;
-	      var actions = _props.actions;
-
-	      actions.updateBot(bot.id, this.refs.form);
+	      this.props.actions.updateBot(this.props.bot.id, this.refs.form);
 	    }
 
 	    // renderers
 	    //
 
+	  }, {
+	    key: 'renderOptions',
+	    value: function renderOptions(item, index) {
+	      return _react2.default.createElement(
+	        'option',
+	        { key: index, value: item },
+	        item
+	      );
+	    }
 	  }, {
 	    key: 'renderScenariosOptions',
 	    value: function renderScenariosOptions(scenario) {
@@ -44959,10 +44947,10 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props2 = this.props;
-	      var bot = _props2.bot;
-	      var scenarios = _props2.scenarios;
-	      var actions = _props2.actions;
+	      var _props = this.props;
+	      var bot = _props.bot;
+	      var scenarios = _props.scenarios;
+	      var actions = _props.actions;
 
 
 	      return _react2.default.createElement(
@@ -44972,37 +44960,10 @@
 	          'form',
 	          { ref: 'form', className: 'bots-edit', onSubmit: this.handleSubmit },
 	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: this.state.name,
-	            autoFocus: !this.state.name,
-	            floatingLabelText: 'Name',
-	            hintText: 'Enter bot name',
-	            name: 'name',
-	            onBlur: this.handleUpdate.bind(this)
-	          }),
-	          _react2.default.createElement(_Toggle2.default, {
-	            label: 'Is active',
-	            labelPosition: 'right',
-	            name: 'isActive',
-	            defaultToggled: this.state.isActive,
-	            onBlur: this.handleUpdate.bind(this)
-	          }),
-	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: this.state.facebookKey,
-	            floatingLabelText: 'Facebook key',
-	            hintText: 'Enter facebook key',
-	            name: 'keys[facebookKey]',
-	            onBlur: this.handleUpdate.bind(this)
-	          }),
-	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: this.state.facebookVerificationKey,
-	            floatingLabelText: 'Facebook verification key',
-	            disabled: true
-	          }),
-	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: this.state.telegramKey,
-	            floatingLabelText: 'Telegram key',
-	            hintText: 'Enter telegram key',
-	            name: 'keys[telegramKey]',
+	            defaultValue: bot.token,
+	            floatingLabelText: 'Token',
+	            hintText: 'Enter token',
+	            name: 'token',
 	            onBlur: this.handleUpdate.bind(this)
 	          }),
 	          _react2.default.createElement('br', null),
@@ -45017,12 +44978,30 @@
 	            _react2.default.createElement(
 	              'select',
 	              {
-	                name: 'scenarioId',
-	                defaultValue: this.state.scenarioId,
-	                onBlur: this.handleUpdate.bind(this)
+	                name: 'scenario[id]',
+	                defaultValue: bot.scenario.id,
+	                onChange: this.handleUpdate.bind(this)
 	              },
 	              _react2.default.createElement('option', null),
-	              (0, _sortBy2.default)(scenarios, 'name').map(this.renderScenariosOptions.bind(this))
+	              scenarios.map(this.renderScenariosOptions.bind(this))
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Type'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              {
+	                name: 'type',
+	                defaultValue: bot.type,
+	                onChange: this.handleUpdate.bind(this)
+	              },
+	              ['messenger', 'telegram'].map(this.renderOptions.bind(this))
 	            )
 	          )
 	        )
@@ -53172,7 +53151,7 @@
 /* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license

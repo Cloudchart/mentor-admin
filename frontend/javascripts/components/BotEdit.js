@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import sortBy from 'lodash/sortBy'
 
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
@@ -10,19 +9,6 @@ import TextField from 'material-ui/TextField'
 
 class BotEdit extends Component {
 
-  constructor(props) {
-    super(props)
-    props.bot.keys = props.bot.keys || {}
-    this.state = {
-      name: props.bot.name,
-      isActive: props.bot.isActive,
-      scenarioId: props.bot.scenarioId,
-      facebookKey: props.bot.keys.facebookKey,
-      facebookVerificationKey: props.bot.keys.facebookVerificationKey,
-      telegramKey: props.bot.keys.telegramKey,
-    }
-  }
-
   // handlers
   //
   handleSubmit(event) {
@@ -30,12 +16,17 @@ class BotEdit extends Component {
   }
 
   handleUpdate(event) {
-    const { bot, actions } = this.props
-    actions.updateBot(bot.id, this.refs.form)
+    this.props.actions.updateBot(this.props.bot.id, this.refs.form)
   }
 
   // renderers
   //
+  renderOptions(item, index) {
+    return (
+      <option key={ index } value={ item }>{ item }</option>
+    )
+  }
+
   renderScenariosOptions(scenario) {
     return(
       <option key={ scenario.id } value={ scenario.id }>{ scenario.name }</option>
@@ -49,41 +40,10 @@ class BotEdit extends Component {
       <div>
         <form ref="form" className="bots-edit" onSubmit={ this.handleSubmit }>
           <TextField
-            defaultValue={ this.state.name }
-            autoFocus={ !this.state.name }
-            floatingLabelText="Name"
-            hintText="Enter bot name"
-            name="name"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
-
-          <Toggle
-            label="Is active"
-            labelPosition="right"
-            name="isActive"
-            defaultToggled={ this.state.isActive }
-            onBlur={ this.handleUpdate.bind(this) }
-          />
-
-          <TextField
-            defaultValue={ this.state.facebookKey }
-            floatingLabelText="Facebook key"
-            hintText="Enter facebook key"
-            name="keys[facebookKey]"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
-
-          <TextField
-            defaultValue={ this.state.facebookVerificationKey }
-            floatingLabelText="Facebook verification key"
-            disabled={ true }
-          />
-
-          <TextField
-            defaultValue={ this.state.telegramKey }
-            floatingLabelText="Telegram key"
-            hintText="Enter telegram key"
-            name="keys[telegramKey]"
+            defaultValue={ bot.token }
+            floatingLabelText="Token"
+            hintText="Enter token"
+            name="token"
             onBlur={ this.handleUpdate.bind(this) }
           />
           <br/>
@@ -91,12 +51,23 @@ class BotEdit extends Component {
           <label>
             <span>Scenario</span>
             <select
-              name="scenarioId"
-              defaultValue={ this.state.scenarioId }
-              onBlur={ this.handleUpdate.bind(this) }
+              name="scenario[id]"
+              defaultValue={ bot.scenario.id }
+              onChange={ this.handleUpdate.bind(this) }
             >
               <option></option>
-              { sortBy(scenarios, 'name').map(this.renderScenariosOptions.bind(this)) }
+              { scenarios.map(this.renderScenariosOptions.bind(this)) }
+            </select>
+          </label>
+
+          <label>
+            <span>Type</span>
+            <select
+              name="type"
+              defaultValue={ bot.type }
+              onChange={ this.handleUpdate.bind(this) }
+            >
+              { ['messenger', 'telegram'].map(this.renderOptions.bind(this)) }
             </select>
           </label>
         </form>
