@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import sortBy from 'lodash/sortBy'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -52,7 +51,7 @@ class ScenariosList extends Component {
   renderItem(item) {
     return(
       <TableRow key={ item.id }>
-        <TableRowColumn>{ item.name }</TableRowColumn>
+        <TableRowColumn>{ item.type }</TableRowColumn>
         <TableRowColumn>
           {[
             <a key={1} href="" onClick={ this.handleEdit.bind(this, item) }>Edit</a>,
@@ -65,7 +64,7 @@ class ScenariosList extends Component {
   }
 
   render() {
-    const { scenarios, actions } = this.props
+    const { scenarios, scenarioActions, actions } = this.props
     const { selectedItemId } = this.state
 
     if (selectedItemId) {
@@ -73,6 +72,7 @@ class ScenariosList extends Component {
         <ScenarioEdit
           scenarioId={ this.state.selectedItemId }
           scenarios={ scenarios }
+          scenarioActions={ scenarioActions }
           onChange={ this.handleEditClose.bind(this) }
           actions={ actions }
         />
@@ -83,12 +83,12 @@ class ScenariosList extends Component {
           <Table selectable={ false }>
             <TableHeader>
               <TableRow>
-                <TableHeaderColumn>Name</TableHeaderColumn>
+                <TableHeaderColumn>Type</TableHeaderColumn>
                 <TableHeaderColumn>Actions</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody>
-              { sortBy(scenarios.filter(scenario => scenario.name), 'name').map(this.renderItem.bind(this)) }
+              { scenarios.map(this.renderItem.bind(this)) }
             </TableBody>
           </Table>
 
@@ -106,6 +106,7 @@ class ScenariosList extends Component {
 
 ScenariosList.propTypes = {
   scenarios: PropTypes.array.isRequired,
+  scenarioActions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

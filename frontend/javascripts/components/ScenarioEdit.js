@@ -4,6 +4,8 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
 
+import ActionsList from './ActionsList'
+
 
 class ScenarioEdit extends Component {
 
@@ -52,7 +54,7 @@ class ScenarioEdit extends Component {
   //
   render() {
     const { item } = this.state
-    const { scenario, actions } = this.props
+    const { scenario, scenarioActions, actions } = this.props
 
     return (
       <div>
@@ -62,28 +64,26 @@ class ScenarioEdit extends Component {
           onTouchTap={ this.props.onChange }
         />
 
-        <h3>{ item.name ? `${item.name} scenario` : 'New scenario' }</h3>
+        <h3>{ item.type ? `${item.type} scenario` : 'New scenario' }</h3>
 
-        <form ref="form" className="scenario-edit" onSubmit={ this.handleSubmit }>
+        <form ref="form" style={{ marginBottom: '40px' }} onSubmit={ this.handleSubmit }>
           <TextField
-            defaultValue={ item.name }
-            autoFocus={ !item.name }
-            floatingLabelText="Name"
-            hintText="Enter scenario name"
-            name="name"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
-
-          <TextField
-            defaultValue={ item.actionsJSON }
-            fullWidth={ true }
-            multiLine={ true }
-            floatingLabelText="Actions"
-            hintText="Enter scenario actions"
-            name="actionsJSON"
+            defaultValue={ item.type }
+            autoFocus={ !item.type }
+            floatingLabelText="Type"
+            hintText="Enter scenario type"
+            name="type"
             onBlur={ this.handleUpdate.bind(this) }
           />
         </form>
+
+        <h3>Actions</h3>
+
+        <ActionsList
+          scenario={ item }
+          scenarioActions={ scenarioActions }
+          actions={ actions }
+        />
       </div>
     )
   }
@@ -93,6 +93,7 @@ class ScenarioEdit extends Component {
 ScenarioEdit.propTypes = {
   scenarioId: PropTypes.string.isRequired,
   scenarios: PropTypes.array.isRequired,
+  scenarioActions: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }

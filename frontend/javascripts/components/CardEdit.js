@@ -9,10 +9,9 @@ import Chip from 'material-ui/Chip'
 import AutoComplete from 'material-ui/AutoComplete'
 
 import ContentClearIcon from 'material-ui/svg-icons/content/clear'
-import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less'
-import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 
 import BlocksList from './BlocksList'
+import SortablePaperActions from './SortablePaperActions'
 
 
 class CardEdit extends Component {
@@ -23,12 +22,6 @@ class CardEdit extends Component {
       tagSearchText: '',
       selectedTags: props.item.tags,
     }
-  }
-
-  // helpers
-  //
-  getSelectedIndex() {
-    return this.props.course.insights.findIndex(i => i.id === this.props.item.id)
   }
 
   // handlers
@@ -65,54 +58,12 @@ class CardEdit extends Component {
     setTimeout(() => { this.handleUpdate() }, 200)
   }
 
-  handleMove(direction, event) {
-    const { item, course, actions } = this.props
-
-    let insights = course.insights
-    const selectedIndex = this.getSelectedIndex()
-    const indexToBeReplaced = selectedIndex + direction
-
-    insights = insights.map((insight, index) => {
-      if (index === selectedIndex) {
-        return insights[indexToBeReplaced]
-      } else if (index === indexToBeReplaced) {
-        return insights[selectedIndex]
-      } else {
-        return insight
-      }
-    })
-
-    actions.updateCourse(course.id, { insights: insights })
+  handleSortChange(items) {
+    this.props.actions.updateCourse(this.props.course.id, { insights: items })
   }
 
   // renderers
   //
-  renderMoveUpButton() {
-    if (this.getSelectedIndex() === this.props.course.insights.length - 1) return null
-
-    return (
-      <IconButton
-        style={{ float: 'right' }}
-        onTouchTap={ this.handleMove.bind(this, 1) }
-      >
-        <ExpandMoreIcon />
-      </IconButton>
-    )
-  }
-
-  renderMoveDownButton() {
-    if (this.getSelectedIndex() === 0) return null
-
-    return (
-      <IconButton
-        style={{ float: 'right' }}
-        onTouchTap={ this.handleMove.bind(this, -1) }
-      >
-        <ExpandLessIcon />
-      </IconButton>
-    )
-  }
-
   renderDeleteButton() {
     return (
       <IconButton
@@ -143,13 +94,16 @@ class CardEdit extends Component {
   }
 
   render() {
-    const { item, tags, actions } = this.props
+    const { item, course, tags, actions } = this.props
 
     return (
       <Paper style={{ width: '600px', margin: '20px 0', padding: '20px' }}>
         { this.renderDeleteButton() }
-        { this.renderMoveUpButton() }
-        { this.renderMoveDownButton() }
+        <SortablePaperActions
+          selectedItemId={ item.id }
+          items={ course.insights }
+          onChange={ this.handleSortChange.bind(this) }
+        />
 
         <form ref="form" style={{ marginBottom: '40px' }} onSubmit={ this.handleSubmit }>
           <TextField

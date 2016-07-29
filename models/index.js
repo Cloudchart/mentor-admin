@@ -13,22 +13,23 @@ export const r = Thinky.r
 export const Scenario = Thinky.createModel('scenarios',
   type.object().schema({
     id: type.string(),
-    name: type.string(),
-    actionsJSON: type.string(), // temp field
+    type: type.string(),
+    actions: type.array().default([]),
   }).removeExtra()
 )
 
 export const Action = Thinky.createModel('actions',
   type.object().schema({
     id: type.string(),
-    scenarioId: type.string(),
     label: type.string(),
     action: type.string().enum(['input', 'message', 'sleep', 'course']),
-    courseId: type.string().optional(),
-    text: type.string().optional(),
-    next: type.string().optional(),
-    timeout: type.number().integer().optional(),
-    branch: type.object().optional(),
+    text: type.string(),
+    next: type.string(),
+    timeout: type.number().integer(),
+    branch: type.object().schema({
+      yes: type.string(),
+      no: type.string(),
+    }).removeExtra().default({}),
   }).removeExtra()
 )
 
@@ -106,16 +107,16 @@ Card.docOn('saving', doc => {
   doc.updated_at = new Date()
 })
 
+Action.docOn('saving', doc => {
+  doc.timeout = doc.timeout || null
+})
+
 // indexes
 //
 Card.ensureIndex('content')
 
 // relations
 //
-Scenario.hasMany(Action, 'actions', 'id', 'scenarioId')
-
-Action.belongsTo(Scenario, 'scenario', 'scenarioId', 'id')
-
 Survey.hasMany(SurveyQuestion, 'questions', 'id', 'surveyId')
 Survey.belongsTo(Course, 'course', 'courseId', 'id')
 

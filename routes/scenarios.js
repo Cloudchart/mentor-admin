@@ -1,59 +1,55 @@
 import multer from 'multer'
 import { Router } from 'express'
 
-import { getFilteredAttrs, handleThinkyError } from './helpers'
+import { getFilteredAttrs, _handleThinkyError } from './helpers'
 import { appName } from '../lib'
-import { Scenario, ScenarioAction } from '../models'
+import { Scenario, Action } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['name', 'actionsJSON']
+const permittedAttrs = ['type', 'actions']
 
 
-// helpers
-//
-function getAttrs(body) {
-  let attrs = getFilteredAttrs(body, permittedAttrs)
-  attrs.name = body.name || null
-  return attrs
-}
-
-// actions
-//
 router.get('/', async (req, res, next) => {
-  Scenario.run().then(scenarios => {
-    res.render('scenarios', { title: `${appName} – Scenarios`, scenarios: scenarios })
-  }).error(error => {
-    res.status(500).render('error', { message: error, error: {} })
-  })
+  try {
+    const scenarios = await Scenario.run()
+
+    res.render('scenarios', { title: `${appName} – Scenarios`,
+      scenarios: scenarios,
+    })
+  } catch (err) {
+    res.status(500).render('error', { message: err, error: {} })
+  }
 })
 
-router.post('/', (req, res, next) => {
-  Scenario.filter(item => item.hasFields('name').not()).then(result => {
-    if (result.length === 0) {
-      const scenario = new Scenario({})
-      scenario.save().then(result => {
-        res.json(result)
-      }).error(handleThinkyError(res))
-    } else {
-      res.json(result[0])
-    }
-  }).error(handleThinkyError(res))
-})
-
-router.put('/:id', upload.array(), (req, res, next) => {
-  Scenario.get(req.params.id).update(getAttrs(req.body)).run().then(result => {
+router.post('/', async (req, res, next) => {
+  try {
+    const item = new Scenario({})
+    const result = await item.save()
     res.json(result)
-  }).error(handleThinkyError(res))
+  } catch (err) {
+    _handleThinkyError(err, res)
+  }
 })
 
-router.delete('/:id', (req, res, next) => {
-  Scenario.get(req.params.id).run().then(scenario => {
-    scenario.delete().then(result => {
-      res.json({ message: 'ok' })
-    }).error(handleThinkyError(res))
-  }).error(handleThinkyError(res))
-})
+router.put('/:id', upload.array(), async (req, res, next) => {
+  try {
+    const item = await Scenario.get(req.params.id)
+    const attrs = getFilteredAttrs(req.body, permittedAttrs)
+    const result = await item.merge(attrs).save()
+    res.json(result)
+  } catch (err) {
+    _handleThinkyError(err, res)
+  }})
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const item = await Scenario.get(req.params.id)
+    await item.delete()
+    res.json({ message: 'ok' })
+  } catch (err) {
+    _handleThinkyError(err, res)
+  }})
 
 
 export default router

@@ -12,13 +12,16 @@ const deleteBot = destroy('bot')
 const createScenario = create('scenario')
 const updateScenario = update('scenario')
 const deleteScenario = destroy('scenario')
+const getActions = getMany('action', { parentModelName: 'scenario' })
+const createAction = create('action', { parentModelName: 'scenario' })
+const updateAction = update('action', { parentModelName: 'scenario' })
 
 const createCourse = create('course')
 const updateCourse = update('course')
 const deleteCourse = destroy('course')
+const getCards = getMany('card', { parentModelName: 'course' })
 const createCard = create('card', { parentModelName: 'course' })
 const updateCard = update('card', { parentModelName: 'course' })
-const getCards = getMany('card', { parentModelName: 'course' })
 const createBlock = create('block', { parentModelName: 'card' })
 const updateBlock = update('block', { parentModelName: 'card' })
 const deleteBlock = destroy('block', { parentModelName: 'card' })
@@ -33,7 +36,15 @@ const getQuestions = getMany('question', { parentModelName: 'survey' })
 
 
 export const botsActions = { createBot, updateBot, deleteBot }
-export const scenariosActions = { createScenario, updateScenario, deleteScenario }
+
+export const scenariosActions = {
+  createScenario,
+  updateScenario,
+  deleteScenario,
+  getActions,
+  createAction,
+  updateAction,
+}
 
 export const coursesActions = {
   createCourse,

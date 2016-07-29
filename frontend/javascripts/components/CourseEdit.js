@@ -26,14 +26,6 @@ class CourseEdit extends Component {
     this.setState({ item: this.getItem(nextProps) })
   }
 
-  // componentWillMount() {
-  //   document.addEventListener('keydown', this.handleEscape.bind(this))
-  // }
-
-  // componentWillUnmount() {
-  //   document.removeEventListener('keydown', this.handleEscape.bind(this))
-  // }
-
   // helpers
   //
   getItem(props) {
@@ -53,10 +45,6 @@ class CourseEdit extends Component {
   handleBack(event) {
     this.props.onChange()
   }
-
-  // handleEscape(event) {
-  //   if (event.keyCode == 27) this.props.onChange()
-  // }
 
   // renderers
   //

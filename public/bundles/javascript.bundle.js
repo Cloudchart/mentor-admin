@@ -29444,13 +29444,16 @@
 	var createScenario = (0, _create2.default)('scenario');
 	var updateScenario = (0, _update2.default)('scenario');
 	var deleteScenario = (0, _delete2.default)('scenario');
+	var getActions = (0, _getMany2.default)('action', { parentModelName: 'scenario' });
+	var createAction = (0, _create2.default)('action', { parentModelName: 'scenario' });
+	var updateAction = (0, _update2.default)('action', { parentModelName: 'scenario' });
 
 	var createCourse = (0, _create2.default)('course');
 	var updateCourse = (0, _update2.default)('course');
 	var deleteCourse = (0, _delete2.default)('course');
+	var getCards = (0, _getMany2.default)('card', { parentModelName: 'course' });
 	var createCard = (0, _create2.default)('card', { parentModelName: 'course' });
 	var updateCard = (0, _update2.default)('card', { parentModelName: 'course' });
-	var getCards = (0, _getMany2.default)('card', { parentModelName: 'course' });
 	var createBlock = (0, _create2.default)('block', { parentModelName: 'card' });
 	var updateBlock = (0, _update2.default)('block', { parentModelName: 'card' });
 	var deleteBlock = (0, _delete2.default)('block', { parentModelName: 'card' });
@@ -29464,7 +29467,15 @@
 	var getQuestions = (0, _getMany2.default)('question', { parentModelName: 'survey' });
 
 	var botsActions = exports.botsActions = { createBot: createBot, updateBot: updateBot, deleteBot: deleteBot };
-	var scenariosActions = exports.scenariosActions = { createScenario: createScenario, updateScenario: updateScenario, deleteScenario: deleteScenario };
+
+	var scenariosActions = exports.scenariosActions = {
+	  createScenario: createScenario,
+	  updateScenario: updateScenario,
+	  deleteScenario: deleteScenario,
+	  getActions: getActions,
+	  createAction: createAction,
+	  updateAction: updateAction
+	};
 
 	var coursesActions = exports.coursesActions = {
 	  createCourse: createCourse,
@@ -46860,14 +46871,6 @@
 	      this.setState({ item: this.getItem(nextProps) });
 	    }
 
-	    // componentWillMount() {
-	    //   document.addEventListener('keydown', this.handleEscape.bind(this))
-	    // }
-
-	    // componentWillUnmount() {
-	    //   document.removeEventListener('keydown', this.handleEscape.bind(this))
-	    // }
-
 	    // helpers
 	    //
 
@@ -46897,10 +46900,6 @@
 	    value: function handleBack(event) {
 	      this.props.onChange();
 	    }
-
-	    // handleEscape(event) {
-	    //   if (event.keyCode == 27) this.props.onChange()
-	    // }
 
 	    // renderers
 	    //
@@ -47199,17 +47198,13 @@
 
 	var _clear2 = _interopRequireDefault(_clear);
 
-	var _expandLess = __webpack_require__(424);
-
-	var _expandLess2 = _interopRequireDefault(_expandLess);
-
-	var _expandMore = __webpack_require__(425);
-
-	var _expandMore2 = _interopRequireDefault(_expandMore);
-
 	var _BlocksList = __webpack_require__(522);
 
 	var _BlocksList2 = _interopRequireDefault(_BlocksList);
+
+	var _SortablePaperActions = __webpack_require__(599);
+
+	var _SortablePaperActions2 = _interopRequireDefault(_SortablePaperActions);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47239,24 +47234,11 @@
 	    return _this;
 	  }
 
-	  // helpers
+	  // handlers
 	  //
 
 
 	  _createClass(CardEdit, [{
-	    key: 'getSelectedIndex',
-	    value: function getSelectedIndex() {
-	      var _this2 = this;
-
-	      return this.props.course.insights.findIndex(function (i) {
-	        return i.id === _this2.props.item.id;
-	      });
-	    }
-
-	    // handlers
-	    //
-
-	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(event) {
 	      event.preventDefault();
@@ -47269,11 +47251,11 @@
 	  }, {
 	    key: 'handleDelete',
 	    value: function handleDelete(event) {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      if (window.confirm('Are you sure?')) {
 	        (function () {
-	          var _props = _this3.props;
+	          var _props = _this2.props;
 	          var item = _props.item;
 	          var course = _props.course;
 	          var actions = _props.actions;
@@ -47293,84 +47275,36 @@
 	  }, {
 	    key: 'handleTagsInputSelect',
 	    value: function handleTagsInputSelect(value) {
-	      var _this4 = this;
+	      var _this3 = this;
 
 	      var selectedTags = [].concat(_toConsumableArray(new Set(this.state.selectedTags.concat(value))));
 	      this.setState({ tagSearchText: '', selectedTags: selectedTags });
 	      setTimeout(function () {
-	        _this4.handleUpdate();
+	        _this3.handleUpdate();
 	      }, 200);
 	    }
 	  }, {
 	    key: 'handleTagDelete',
 	    value: function handleTagDelete(value) {
-	      var _this5 = this;
+	      var _this4 = this;
 
 	      var selectedTags = this.state.selectedTags.filter(function (tag) {
 	        return tag !== value;
 	      });
 	      this.setState({ selectedTags: selectedTags });
 	      setTimeout(function () {
-	        _this5.handleUpdate();
+	        _this4.handleUpdate();
 	      }, 200);
 	    }
 	  }, {
-	    key: 'handleMove',
-	    value: function handleMove(direction, event) {
-	      var _props2 = this.props;
-	      var item = _props2.item;
-	      var course = _props2.course;
-	      var actions = _props2.actions;
-
-
-	      var insights = course.insights;
-	      var selectedIndex = this.getSelectedIndex();
-	      var indexToBeReplaced = selectedIndex + direction;
-
-	      insights = insights.map(function (insight, index) {
-	        if (index === selectedIndex) {
-	          return insights[indexToBeReplaced];
-	        } else if (index === indexToBeReplaced) {
-	          return insights[selectedIndex];
-	        } else {
-	          return insight;
-	        }
-	      });
-
-	      actions.updateCourse(course.id, { insights: insights });
+	    key: 'handleSortChange',
+	    value: function handleSortChange(items) {
+	      this.props.actions.updateCourse(this.props.course.id, { insights: items });
 	    }
 
 	    // renderers
 	    //
 
-	  }, {
-	    key: 'renderMoveUpButton',
-	    value: function renderMoveUpButton() {
-	      if (this.getSelectedIndex() === this.props.course.insights.length - 1) return null;
-
-	      return _react2.default.createElement(
-	        _IconButton2.default,
-	        {
-	          style: { float: 'right' },
-	          onTouchTap: this.handleMove.bind(this, 1)
-	        },
-	        _react2.default.createElement(_expandMore2.default, null)
-	      );
-	    }
-	  }, {
-	    key: 'renderMoveDownButton',
-	    value: function renderMoveDownButton() {
-	      if (this.getSelectedIndex() === 0) return null;
-
-	      return _react2.default.createElement(
-	        _IconButton2.default,
-	        {
-	          style: { float: 'right' },
-	          onTouchTap: this.handleMove.bind(this, -1)
-	        },
-	        _react2.default.createElement(_expandLess2.default, null)
-	      );
-	    }
 	  }, {
 	    key: 'renderDeleteButton',
 	    value: function renderDeleteButton() {
@@ -47410,18 +47344,22 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props3 = this.props;
-	      var item = _props3.item;
-	      var tags = _props3.tags;
-	      var actions = _props3.actions;
+	      var _props2 = this.props;
+	      var item = _props2.item;
+	      var course = _props2.course;
+	      var tags = _props2.tags;
+	      var actions = _props2.actions;
 
 
 	      return _react2.default.createElement(
 	        _Paper2.default,
 	        { style: { width: '600px', margin: '20px 0', padding: '20px' } },
 	        this.renderDeleteButton(),
-	        this.renderMoveUpButton(),
-	        this.renderMoveDownButton(),
+	        _react2.default.createElement(_SortablePaperActions2.default, {
+	          selectedItemId: item.id,
+	          items: course.insights,
+	          onChange: this.handleSortChange.bind(this)
+	        }),
 	        _react2.default.createElement(
 	          'form',
 	          { ref: 'form', style: { marginBottom: '40px' }, onSubmit: this.handleSubmit },
@@ -54860,6 +54798,7 @@
 	    value: function render() {
 	      var _props = this.props;
 	      var scenarios = _props.scenarios;
+	      var scenarioActions = _props.scenarioActions;
 	      var actions = _props.actions;
 
 
@@ -54870,7 +54809,11 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'content' },
-	          _react2.default.createElement(_ScenariosList2.default, { scenarios: scenarios, actions: actions })
+	          _react2.default.createElement(_ScenariosList2.default, {
+	            scenarios: scenarios,
+	            scenarioActions: scenarioActions,
+	            actions: actions
+	          })
 	        )
 	      );
 	    }
@@ -54881,12 +54824,14 @@
 
 	ScenariosApp.propTypes = {
 	  scenarios: _react.PropTypes.array.isRequired,
+	  scenarioActions: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
 	function mapStateToProps(state) {
 	  return {
-	    scenarios: state.scenarios
+	    scenarios: state.scenarios,
+	    scenarioActions: state.scenarioActions
 	  };
 	}
 
@@ -54913,10 +54858,6 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _sortBy = __webpack_require__(429);
-
-	var _sortBy2 = _interopRequireDefault(_sortBy);
 
 	var _RaisedButton = __webpack_require__(476);
 
@@ -54993,7 +54934,7 @@
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
 	          null,
-	          item.name
+	          item.type
 	        ),
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
@@ -55019,6 +54960,7 @@
 	    value: function render() {
 	      var _props = this.props;
 	      var scenarios = _props.scenarios;
+	      var scenarioActions = _props.scenarioActions;
 	      var actions = _props.actions;
 	      var selectedItemId = this.state.selectedItemId;
 
@@ -55027,6 +54969,7 @@
 	        return _react2.default.createElement(_ScenarioEdit2.default, {
 	          scenarioId: this.state.selectedItemId,
 	          scenarios: scenarios,
+	          scenarioActions: scenarioActions,
 	          onChange: this.handleEditClose.bind(this),
 	          actions: actions
 	        });
@@ -55046,7 +54989,7 @@
 	                _react2.default.createElement(
 	                  _Table.TableHeaderColumn,
 	                  null,
-	                  'Name'
+	                  'Type'
 	                ),
 	                _react2.default.createElement(
 	                  _Table.TableHeaderColumn,
@@ -55058,9 +55001,7 @@
 	            _react2.default.createElement(
 	              _Table.TableBody,
 	              null,
-	              (0, _sortBy2.default)(scenarios.filter(function (scenario) {
-	                return scenario.name;
-	              }), 'name').map(this.renderItem.bind(this))
+	              scenarios.map(this.renderItem.bind(this))
 	            )
 	          ),
 	          _react2.default.createElement(_RaisedButton2.default, {
@@ -55079,6 +55020,7 @@
 
 	ScenariosList.propTypes = {
 	  scenarios: _react.PropTypes.array.isRequired,
+	  scenarioActions: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -55111,6 +55053,10 @@
 	var _TextField = __webpack_require__(501);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
+
+	var _ActionsList = __webpack_require__(597);
+
+	var _ActionsList2 = _interopRequireDefault(_ActionsList);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -55193,6 +55139,7 @@
 	      var item = this.state.item;
 	      var _props = this.props;
 	      var scenario = _props.scenario;
+	      var scenarioActions = _props.scenarioActions;
 	      var actions = _props.actions;
 
 
@@ -55207,29 +55154,30 @@
 	        _react2.default.createElement(
 	          'h3',
 	          null,
-	          item.name ? item.name + ' scenario' : 'New scenario'
+	          item.type ? item.type + ' scenario' : 'New scenario'
 	        ),
 	        _react2.default.createElement(
 	          'form',
-	          { ref: 'form', className: 'scenario-edit', onSubmit: this.handleSubmit },
+	          { ref: 'form', style: { marginBottom: '40px' }, onSubmit: this.handleSubmit },
 	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: item.name,
-	            autoFocus: !item.name,
-	            floatingLabelText: 'Name',
-	            hintText: 'Enter scenario name',
-	            name: 'name',
-	            onBlur: this.handleUpdate.bind(this)
-	          }),
-	          _react2.default.createElement(_TextField2.default, {
-	            defaultValue: item.actionsJSON,
-	            fullWidth: true,
-	            multiLine: true,
-	            floatingLabelText: 'Actions',
-	            hintText: 'Enter scenario actions',
-	            name: 'actionsJSON',
+	            defaultValue: item.type,
+	            autoFocus: !item.type,
+	            floatingLabelText: 'Type',
+	            hintText: 'Enter scenario type',
+	            name: 'type',
 	            onBlur: this.handleUpdate.bind(this)
 	          })
-	        )
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Actions'
+	        ),
+	        _react2.default.createElement(_ActionsList2.default, {
+	          scenario: item,
+	          scenarioActions: scenarioActions,
+	          actions: actions
+	        })
 	      );
 	    }
 	  }]);
@@ -55240,6 +55188,7 @@
 	ScenarioEdit.propTypes = {
 	  scenarioId: _react.PropTypes.string.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  scenarioActions: _react.PropTypes.array.isRequired,
 	  onChange: _react.PropTypes.func,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -55997,6 +55946,8 @@
 		"./ScenariosApp.js": 591,
 		"./SurveysApp": 592,
 		"./SurveysApp.js": 592,
+		"./actions": 596,
+		"./actions.js": 596,
 		"./bots": 576,
 		"./bots.js": 576,
 		"./cards": 588,
@@ -56410,10 +56361,6 @@
 	  switch (action.type) {
 	    case 'CREATE_SCENARIO_RECEIVE':
 	      return (0, _uniqBy2.default)(state.concat(action.item), 'id');
-	    case 'UPDATE_SCENARIO_REQUEST':
-	      return state.map(function (item) {
-	        return item.id === action.id ? Object.assign(item, { isFetching: true }) : item;
-	      });
 	    case 'UPDATE_SCENARIO_RECEIVE':
 	      return state.map(function (item) {
 	        return item.id === action.id ? Object.assign(action.item, { isFetching: false }) : item;
@@ -56425,6 +56372,10 @@
 	    case 'DELETE_SCENARIO_RECEIVE':
 	      return state.filter(function (item) {
 	        return item.id !== action.id;
+	      });
+	    case 'CREATE_ACTION_RECEIVE':
+	      return state.map(function (item) {
+	        return item.id === action.parentId ? Object.assign(item, { actions: item.actions.concat({ id: action.item.id }) }) : item;
 	      });
 	    default:
 	      return state;
@@ -56607,10 +56558,15 @@
 
 	var _scenarios2 = _interopRequireDefault(_scenarios);
 
+	var _actions = __webpack_require__(596);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
-	  scenarios: _scenarios2.default
+	  scenarios: _scenarios2.default,
+	  scenarioActions: _actions2.default
 	});
 
 /***/ },
@@ -56719,6 +56675,522 @@
 	      return state;
 	  }
 	};
+
+/***/ },
+/* 595 */,
+/* 596 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function () {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'GET_ACTIONS_RECEIVE':
+	      return action.items;
+	    case 'CREATE_ACTION_RECEIVE':
+	      return state.concat(action.item);
+	    case 'DELETE_ACTION_RECEIVE':
+	      return state.filter(function (item) {
+	        return item.id !== action.id;
+	      });
+	    case 'UPDATE_ACTION_RECEIVE':
+	      return state.map(function (item) {
+	        return item.id === action.id ? Object.assign(action.item, { isFetching: false }) : item;
+	      });
+	    case 'UPDATE_ACTION_ERROR':
+	      return state.map(function (item) {
+	        return item.id === action.id ? Object.assign(item, { isFetching: false, error: action.error }) : item;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+
+/***/ },
+/* 597 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FlatButton = __webpack_require__(478);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _add = __webpack_require__(511);
+
+	var _add2 = _interopRequireDefault(_add);
+
+	var _ActionEdit = __webpack_require__(598);
+
+	var _ActionEdit2 = _interopRequireDefault(_ActionEdit);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ActionsList = function (_Component) {
+	  _inherits(ActionsList, _Component);
+
+	  function ActionsList() {
+	    _classCallCheck(this, ActionsList);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ActionsList).apply(this, arguments));
+	  }
+
+	  _createClass(ActionsList, [{
+	    key: 'componentDidMount',
+
+
+	    // lifecycle
+	    //
+	    value: function componentDidMount() {
+	      this.props.actions.getActions(this.props.scenario.id);
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: 'handleCreate',
+	    value: function handleCreate(event) {
+	      this.props.actions.createAction(this.props.scenario.id);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderItems',
+	    value: function renderItems() {
+	      if (this.props.scenarioActions.length === 0) return null;
+	      return this.props.scenario.actions.map(this.renderItem.bind(this));
+	    }
+	  }, {
+	    key: 'renderItem',
+	    value: function renderItem(action) {
+	      var item = this.props.scenarioActions.find(function (item) {
+	        return item.id === action.id;
+	      });
+	      if (!item) return null;
+
+	      return _react2.default.createElement(_ActionEdit2.default, {
+	        key: item.id,
+	        item: item,
+	        scenario: this.props.scenario,
+	        actions: this.props.actions
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'actions' },
+	          this.renderItems()
+	        ),
+	        _react2.default.createElement(_FlatButton2.default, {
+	          label: 'Add action',
+	          labelPosition: 'before',
+	          primary: true,
+	          icon: _react2.default.createElement(_add2.default, null),
+	          onTouchTap: this.handleCreate.bind(this)
+	        })
+	      );
+	    }
+	  }]);
+
+	  return ActionsList;
+	}(_react.Component);
+
+	ActionsList.propTypes = {
+	  scenario: _react.PropTypes.object.isRequired,
+	  scenarioActions: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = ActionsList;
+
+/***/ },
+/* 598 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Paper = __webpack_require__(403);
+
+	var _Paper2 = _interopRequireDefault(_Paper);
+
+	var _TextField = __webpack_require__(501);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	var _IconButton = __webpack_require__(368);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
+	var _clear = __webpack_require__(521);
+
+	var _clear2 = _interopRequireDefault(_clear);
+
+	var _SortablePaperActions = __webpack_require__(599);
+
+	var _SortablePaperActions2 = _interopRequireDefault(_SortablePaperActions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ActionEdit = function (_Component) {
+	  _inherits(ActionEdit, _Component);
+
+	  function ActionEdit() {
+	    _classCallCheck(this, ActionEdit);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ActionEdit).apply(this, arguments));
+	  }
+
+	  _createClass(ActionEdit, [{
+	    key: 'handleSubmit',
+
+
+	    // handlers
+	    //
+	    value: function handleSubmit(event) {
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: 'handleUpdate',
+	    value: function handleUpdate(event) {
+	      this.props.actions.updateAction(this.props.item.id, this.refs.form);
+	    }
+	  }, {
+	    key: 'handleDelete',
+	    value: function handleDelete(event) {
+	      var _this2 = this;
+
+	      if (window.confirm('Are you sure?')) {
+	        (function () {
+	          var _props = _this2.props;
+	          var item = _props.item;
+	          var scenario = _props.scenario;
+	          var actions = _props.actions;
+
+	          var scenarioActions = scenario.actions.filter(function (action) {
+	            return action.id !== item.id;
+	          });
+	          actions.updateScenario(scenario.id, { actions: scenarioActions });
+	        })();
+	      }
+	    }
+	  }, {
+	    key: 'handleSortChange',
+	    value: function handleSortChange(items) {
+	      this.props.actions.updateScenario(this.props.scenario.id, { actions: items });
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderDeleteButton',
+	    value: function renderDeleteButton() {
+	      return _react2.default.createElement(
+	        _IconButton2.default,
+	        {
+	          iconStyle: { width: '20px', height: '20px' },
+	          style: { float: 'right' },
+	          onTouchTap: this.handleDelete.bind(this)
+	        },
+	        _react2.default.createElement(_clear2.default, null)
+	      );
+	    }
+	  }, {
+	    key: 'renderOptions',
+	    value: function renderOptions(item, index) {
+	      return _react2.default.createElement(
+	        'option',
+	        { key: index, value: item },
+	        item
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props2 = this.props;
+	      var item = _props2.item;
+	      var scenario = _props2.scenario;
+	      var tags = _props2.tags;
+	      var actions = _props2.actions;
+
+
+	      return _react2.default.createElement(
+	        _Paper2.default,
+	        { style: { width: '600px', margin: '20px 0', padding: '20px' } },
+	        this.renderDeleteButton(),
+	        _react2.default.createElement(_SortablePaperActions2.default, {
+	          selectedItemId: item.id,
+	          items: scenario.actions,
+	          onChange: this.handleSortChange.bind(this)
+	        }),
+	        _react2.default.createElement(
+	          'form',
+	          { ref: 'form', style: { marginBottom: '40px' }, onSubmit: this.handleSubmit },
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'label',
+	            defaultValue: item.label,
+	            floatingLabelText: 'Label',
+	            hintText: 'Enter action label',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Action'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              {
+	                name: 'action',
+	                defaultValue: item.action,
+	                onChange: this.handleUpdate.bind(this)
+	              },
+	              ['input', 'message', 'sleep', 'course'].map(this.renderOptions.bind(this))
+	            )
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'text',
+	            defaultValue: item.text,
+	            multiLine: true,
+	            floatingLabelText: 'Content',
+	            hintText: 'Enter action text',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'next',
+	            defaultValue: item.next,
+	            floatingLabelText: 'Next',
+	            hintText: 'Enter next label',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'timeout',
+	            type: 'number',
+	            defaultValue: item.timeout,
+	            floatingLabelText: 'Timeout',
+	            hintText: 'Enter timeout',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'branch[yes]',
+	            defaultValue: item.branch.yes,
+	            floatingLabelText: 'Branch yes',
+	            hintText: 'Enter branch yes label',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement(_TextField2.default, {
+	            name: 'branch[no]',
+	            defaultValue: item.branch.no,
+	            floatingLabelText: 'Branch no',
+	            hintText: 'Enter branch no label',
+	            onBlur: this.handleUpdate.bind(this)
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return ActionEdit;
+	}(_react.Component);
+
+	ActionEdit.propTypes = {
+	  item: _react.PropTypes.object.isRequired,
+	  scenario: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = ActionEdit;
+
+/***/ },
+/* 599 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _IconButton = __webpack_require__(368);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
+	var _expandLess = __webpack_require__(424);
+
+	var _expandLess2 = _interopRequireDefault(_expandLess);
+
+	var _expandMore = __webpack_require__(425);
+
+	var _expandMore2 = _interopRequireDefault(_expandMore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SortablePaperActions = function (_Component) {
+	  _inherits(SortablePaperActions, _Component);
+
+	  function SortablePaperActions() {
+	    _classCallCheck(this, SortablePaperActions);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(SortablePaperActions).apply(this, arguments));
+	  }
+
+	  _createClass(SortablePaperActions, [{
+	    key: 'getSelectedIndex',
+
+
+	    // helpers
+	    //
+	    value: function getSelectedIndex() {
+	      var _this2 = this;
+
+	      return this.props.items.findIndex(function (i) {
+	        return i.id === _this2.props.selectedItemId;
+	      });
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: 'handleMove',
+	    value: function handleMove(direction, event) {
+	      var actions = this.props.items;
+	      var selectedIndex = this.getSelectedIndex();
+	      var indexToBeReplaced = selectedIndex + direction;
+
+	      actions = actions.map(function (action, index) {
+	        if (index === selectedIndex) {
+	          return actions[indexToBeReplaced];
+	        } else if (index === indexToBeReplaced) {
+	          return actions[selectedIndex];
+	        } else {
+	          return action;
+	        }
+	      });
+
+	      this.props.onChange(actions);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderMoveUpButton',
+	    value: function renderMoveUpButton() {
+	      if (this.getSelectedIndex() === this.props.items.length - 1) return null;
+
+	      return _react2.default.createElement(
+	        _IconButton2.default,
+	        {
+	          style: { float: 'right' },
+	          onTouchTap: this.handleMove.bind(this, 1)
+	        },
+	        _react2.default.createElement(_expandMore2.default, null)
+	      );
+	    }
+	  }, {
+	    key: 'renderMoveDownButton',
+	    value: function renderMoveDownButton() {
+	      if (this.getSelectedIndex() === 0) return null;
+
+	      return _react2.default.createElement(
+	        _IconButton2.default,
+	        {
+	          style: { float: 'right' },
+	          onTouchTap: this.handleMove.bind(this, -1)
+	        },
+	        _react2.default.createElement(_expandLess2.default, null)
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        this.renderMoveUpButton(),
+	        this.renderMoveDownButton()
+	      );
+	    }
+	  }]);
+
+	  return SortablePaperActions;
+	}(_react.Component);
+
+	SortablePaperActions.propTypes = {
+	  selectedItemId: _react.PropTypes.string.isRequired,
+	  items: _react.PropTypes.array.isRequired,
+	  onChange: _react.PropTypes.func.isRequired
+	};
+
+	exports.default = SortablePaperActions;
 
 /***/ }
 /******/ ]);

@@ -2,22 +2,33 @@ import multer from 'multer'
 import { Router } from 'express'
 
 import { _handleThinkyError, getFilteredAttrs } from './helpers'
-import { Scenario, ScenarioAction } from '../models'
+import { Scenario, Action } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['label', 'action', 'scenarioId', 'text', 'next', 'timeout', 'branch']
+const permittedAttrs = ['label', 'action', 'text', 'next', 'timeout', 'branch']
 
 
-// helpers
-//
+router.get('/scenarios/:scenarioId/actions', async (req, res, next) => {
+  try {
+    const scenario = await Scenario.get(req.params.scenarioId)
+    const items = await Action.getAll(...scenario.actions.map(item => item.id))
+    res.json(items)
+  } catch (err) {
+    _handleThinkyError(err, res)
+  }
+})
 
-// actions
-//
 router.post('/scenarios/:scenarioId/actions', async (req, res, next) => {
   try {
-    const scenario = await Course.get(req.params.scenarioId)
-    res.json({})
+    const scenario = await Scenario.get(req.params.scenarioId)
+    const action = new Action({})
+    const result = await action.save()
+
+    scenario.actions = scenario.actions.concat({ id: result.id })
+    scenario.save()
+
+    res.json(result)
   } catch (err) {
     _handleThinkyError(err, res)
   }
@@ -25,16 +36,11 @@ router.post('/scenarios/:scenarioId/actions', async (req, res, next) => {
 
 router.put('/scenario_actions/:id', upload.array(), async (req, res, next) => {
   try {
+    const action = await Action.get(req.params.id)
     const attrs = getFilteredAttrs(req.body, permittedAttrs)
-    res.json({})
-  } catch (err) {
-    _handleThinkyError(err, res)
-  }
-})
+    const result = await action.merge(attrs).save()
 
-router.delete('/scenario_actions/:id', async (req, res, next) => {
-  try {
-    res.json({ message: 'ok' })
+    res.json(result)
   } catch (err) {
     _handleThinkyError(err, res)
   }
