@@ -3,7 +3,7 @@ import { Router } from 'express'
 
 import { getFilteredAttrs, _handleThinkyError } from './helpers'
 import { appName } from '../lib'
-import { Scenario, Action } from '../models'
+import { Scenario, Action, Course } from '../models'
 
 const router = Router()
 const upload = multer()
@@ -13,9 +13,11 @@ const permittedAttrs = ['type', 'actions']
 router.get('/', async (req, res, next) => {
   try {
     const scenarios = await Scenario.run()
+    const courses = await Course.filter(course => course.hasFields('name'))
 
     res.render('scenarios', { title: `${appName} – Scenarios`,
       scenarios: scenarios,
+      courses: courses,
     })
   } catch (err) {
     res.status(500).render('error', { message: err, error: {} })

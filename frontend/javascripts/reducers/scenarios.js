@@ -21,6 +21,12 @@ export default function (state = [], action) {
         Object.assign(item, { actions: item.actions.concat({ id: action.item.id }) }) :
         item
       )
+    case 'DELETE_ACTION_RECEIVE':
+      return state.map(item => item.id === action.parentId ?
+        Object.assign(item, { actions: item.actions.filter(i => i.id !== action.id) }) :
+        item
+      )
+
     default:
       return state
   }

@@ -22,14 +22,13 @@ export const Action = Thinky.createModel('actions',
   type.object().schema({
     id: type.string(),
     label: type.string(),
-    action: type.string().enum(['input', 'message', 'sleep', 'course']),
+    action: type.string().enum(['input', 'message', 'sleep', 'course']).default('input'),
     text: type.string(),
     next: type.string(),
     timeout: type.number().integer(),
-    branch: type.object().schema({
-      yes: type.string(),
-      no: type.string(),
-    }).removeExtra().default({}),
+    branch: type.string(),
+    keyboard: type.string(),
+    course: type.string(),
   }).removeExtra()
 )
 
@@ -40,7 +39,7 @@ export const Bot = Thinky.createModel('bots',
       id: type.string(),
     }).removeExtra().default({}),
     token: type.string(),
-    type: type.string().enum(['messenger', 'telegram']),
+    type: type.string().enum(['messenger', 'telegram']).default('messenger'),
   }).removeExtra()
 )
 
@@ -108,7 +107,24 @@ Card.docOn('saving', doc => {
 })
 
 Action.docOn('saving', doc => {
-  doc.timeout = doc.timeout || null
+  doc.timeout = doc.timeout || undefined
+
+  let attrs = ['branch', 'text', 'keyboard', 'timeout', 'course']
+  let actionBasedAttrs = []
+
+  if (doc.action === 'input') {
+    actionBasedAttrs.push('branch')
+  } else if (doc.action === 'message') {
+    actionBasedAttrs.push('text', 'keyboard')
+  } else if (doc.action === 'sleep') {
+    actionBasedAttrs.push('timeout')
+  } else if (doc.action === 'course') {
+    actionBasedAttrs.push('course', 'branch')
+  }
+
+  attrs.forEach(attr => {
+    if (!actionBasedAttrs.includes(attr)) doc[attr] = undefined
+  })
 })
 
 // indexes

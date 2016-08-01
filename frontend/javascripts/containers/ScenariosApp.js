@@ -11,7 +11,7 @@ import ScenariosList from '../components/ScenariosList'
 class ScenariosApp extends Component {
 
   render() {
-    const { scenarios, scenarioActions, actions } = this.props
+    const { scenarios, scenarioActions, courses, actions } = this.props
 
     return (
       <div className="container scenarios">
@@ -21,6 +21,7 @@ class ScenariosApp extends Component {
           <ScenariosList
             scenarios={ scenarios }
             scenarioActions={ scenarioActions }
+            courses={ courses }
             actions={ actions }
           />
         </div>
@@ -32,6 +33,7 @@ class ScenariosApp extends Component {
 ScenariosApp.propTypes = {
   scenarios: PropTypes.array.isRequired,
   scenarioActions: PropTypes.array.isRequired,
+  courses: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -39,6 +41,7 @@ function mapStateToProps(state) {
   return {
     scenarios: state.scenarios,
     scenarioActions: state.scenarioActions,
+    courses: state.courses,
   }
 }
 

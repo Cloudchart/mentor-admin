@@ -23,9 +23,7 @@ class ActionEdit extends Component {
 
   handleDelete(event) {
     if (window.confirm('Are you sure?')) {
-      const { item, scenario, actions } = this.props
-      const scenarioActions = scenario.actions.filter(action => action.id !== item.id)
-      actions.updateScenario(scenario.id, { actions: scenarioActions })
+      this.props.actions.deleteAction(this.props.item.id, this.props.scenario.id)
     }
   }
 
@@ -53,6 +51,78 @@ class ActionEdit extends Component {
     )
   }
 
+  renderCoursesOptions(item) {
+    return (
+      <option key={ item.id } value={ item.id }>{ item.name }</option>
+    )
+  }
+
+  renderCourse(item) {
+    if (item.action === 'course') return (
+      <label>
+        <span>Course</span>
+        <select
+          name="course"
+          defaultValue={ item.course }
+          onChange={ this.handleUpdate.bind(this) }
+        >
+          <option></option>
+          { this.props.courses.map(this.renderCoursesOptions.bind(this)) }
+        </select>
+      </label>
+    )
+  }
+
+  renderText(item) {
+    if (item.action === 'message') return (
+      <TextField
+        name="text"
+        defaultValue={ item.text }
+        multiLine={ true }
+        floatingLabelText="Text"
+        hintText="Enter action text"
+        onBlur={ this.handleUpdate.bind(this) }
+      />
+    )
+  }
+
+  renderTimeout(item) {
+    if (item.action === 'sleep') return (
+      <TextField
+        name="timeout"
+        type="number"
+        defaultValue={ item.timeout }
+        floatingLabelText="Timeout"
+        hintText="Enter timeout"
+        onBlur={ this.handleUpdate.bind(this) }
+      />
+    )
+  }
+
+  renderBranch(item) {
+    if (item.action === 'input' || item.action === 'course') return (
+      <TextField
+        name="branch"
+        defaultValue={ item.branch }
+        floatingLabelText="Branch"
+        hintText="Enter branch"
+        onBlur={ this.handleUpdate.bind(this) }
+      />
+    )
+  }
+
+  renderKeyboard(item) {
+    if (item.action === 'message') return (
+      <TextField
+        name="keyboard"
+        defaultValue={ item.keyboard }
+        floatingLabelText="Keyboard"
+        hintText="Enter keyboard"
+        onBlur={ this.handleUpdate.bind(this) }
+      />
+    )
+  }
+
   render() {
     const { item, scenario, tags, actions } = this.props
 
@@ -73,6 +143,14 @@ class ActionEdit extends Component {
             hintText="Enter action label"
             onBlur={ this.handleUpdate.bind(this) }
           />
+
+          <TextField
+            name="next"
+            defaultValue={ item.next }
+            floatingLabelText="Next"
+            hintText="Enter next label"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
           <br/>
 
           <label>
@@ -85,52 +163,16 @@ class ActionEdit extends Component {
               { ['input', 'message', 'sleep', 'course'].map(this.renderOptions.bind(this)) }
             </select>
           </label>
+
+          { this.renderCourse(item) }
           <br/>
-
-          <TextField
-            name="text"
-            defaultValue={ item.text }
-            multiLine={ true }
-            floatingLabelText="Content"
-            hintText="Enter action text"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
+          { this.renderText(item) }
           <br/>
-
-          <TextField
-            name="next"
-            defaultValue={ item.next }
-            floatingLabelText="Next"
-            hintText="Enter next label"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
+          { this.renderTimeout(item) }
           <br/>
-
-          <TextField
-            name="timeout"
-            type="number"
-            defaultValue={ item.timeout }
-            floatingLabelText="Timeout"
-            hintText="Enter timeout"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
+          { this.renderBranch(item) }
           <br/>
-
-          <TextField
-            name="branch[yes]"
-            defaultValue={ item.branch.yes }
-            floatingLabelText="Branch yes"
-            hintText="Enter branch yes label"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
-
-          <TextField
-            name="branch[no]"
-            defaultValue={ item.branch.no }
-            floatingLabelText="Branch no"
-            hintText="Enter branch no label"
-            onBlur={ this.handleUpdate.bind(this) }
-          />
+          { this.renderKeyboard(item) }
         </form>
       </Paper>
     )
@@ -141,6 +183,7 @@ class ActionEdit extends Component {
 ActionEdit.propTypes = {
   item: PropTypes.object.isRequired,
   scenario: PropTypes.object.isRequired,
+  courses: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

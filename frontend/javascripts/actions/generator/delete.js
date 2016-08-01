@@ -8,11 +8,12 @@ function requestDeleteItem(modelName, id) {
   }
 }
 
-function receiveDeleteItem(modelName, id, item) {
+function receiveDeleteItem(modelName, id, parentId, item) {
   return {
     type: `DELETE_${modelName.toUpperCase()}_RECEIVE`,
     id,
     item,
+    parentId,
     receivedAt: Date.now()
   }
 }
@@ -44,7 +45,7 @@ function deleteItem(modelName, options, id, parentId) {
       if (json.error) {
         return dispatch(catchDeleteItemError(modelName, id, json.error))
       } else {
-        return dispatch(receiveDeleteItem(modelName, id, json))
+        return dispatch(receiveDeleteItem(modelName, id, parentId, json))
       }
     }).catch(error => {
       return dispatch(catchDeleteItemError(modelName, id, error))

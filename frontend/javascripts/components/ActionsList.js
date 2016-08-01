@@ -36,6 +36,7 @@ class ActionsList extends Component {
         key={ item.id }
         item={ item }
         scenario={ this.props.scenario }
+        courses={ this.props.courses }
         actions={ this.props.actions }
       />
     )
@@ -64,6 +65,7 @@ class ActionsList extends Component {
 ActionsList.propTypes = {
   scenario: PropTypes.object.isRequired,
   scenarioActions: PropTypes.array.isRequired,
+  courses: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

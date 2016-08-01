@@ -1,6 +1,7 @@
 export function getFilteredAttrs(attrs, permittedAttrs) {
   let filteredAttrs = {}
   Object.keys(attrs).forEach(key => {
+    if (attrs[key] === '') attrs[key] = undefined
     if (permittedAttrs.includes(key)) filteredAttrs[key] = attrs[key]
   })
   return filteredAttrs

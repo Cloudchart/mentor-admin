@@ -15,6 +15,7 @@ const deleteScenario = destroy('scenario')
 const getActions = getMany('action', { parentModelName: 'scenario' })
 const createAction = create('action', { parentModelName: 'scenario' })
 const updateAction = update('action', { parentModelName: 'scenario' })
+const deleteAction = destroy('action', { parentModelName: 'scenario' })
 
 const createCourse = create('course')
 const updateCourse = update('course')
@@ -44,6 +45,7 @@ export const scenariosActions = {
   getActions,
   createAction,
   updateAction,
+  deleteAction,
 }
 
 export const coursesActions = {
