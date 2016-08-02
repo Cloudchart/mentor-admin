@@ -46563,6 +46563,7 @@
 	      var courses = _props.courses;
 	      var cards = _props.cards;
 	      var tags = _props.tags;
+	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
 
 
@@ -46577,6 +46578,7 @@
 	            cards: cards,
 	            courses: courses,
 	            tags: tags,
+	            scenarios: scenarios,
 	            actions: actions
 	          })
 	        )
@@ -46590,6 +46592,7 @@
 	CoursesApp.propTypes = {
 	  courses: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
+	  scenarios: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -46597,7 +46600,8 @@
 	  return {
 	    cards: state.cards,
 	    courses: state.courses,
-	    tags: state.tags
+	    tags: state.tags,
+	    scenarios: state.scenarios
 	  };
 	}
 
@@ -46742,6 +46746,7 @@
 	      var courses = _props.courses;
 	      var cards = _props.cards;
 	      var tags = _props.tags;
+	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
 	      var selectedItemId = this.state.selectedItemId;
 
@@ -46752,6 +46757,7 @@
 	          courses: courses,
 	          cards: cards,
 	          tags: tags,
+	          scenarios: scenarios,
 	          onChange: this.handleEditClose.bind(this),
 	          actions: actions
 	        });
@@ -46816,6 +46822,7 @@
 	  courses: _react.PropTypes.array.isRequired,
 	  cards: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
+	  scenarios: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -46927,11 +46934,11 @@
 
 	  }, {
 	    key: 'renderOptionsForSelect',
-	    value: function renderOptionsForSelect(item) {
+	    value: function renderOptionsForSelect(title, item) {
 	      return _react2.default.createElement(
 	        'option',
 	        { key: item.id, value: item.id },
-	        item.name
+	        item[title]
 	      );
 	    }
 	  }, {
@@ -46941,6 +46948,7 @@
 	      var _props = this.props;
 	      var cards = _props.cards;
 	      var tags = _props.tags;
+	      var scenarios = _props.scenarios;
 	      var actions = _props.actions;
 
 
@@ -46965,6 +46973,26 @@
 	            floatingLabelText: 'ID',
 	            disabled: true
 	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Scenario'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              {
+	                name: 'scenario[id]',
+	                defaultValue: item.scenario.id,
+	                onChange: this.handleUpdate.bind(this)
+	              },
+	              _react2.default.createElement('option', null),
+	              scenarios.map(this.renderOptionsForSelect.bind(this, 'type'))
+	            )
+	          ),
 	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(_TextField2.default, {
 	            defaultValue: item.name,
@@ -47005,6 +47033,7 @@
 	  courses: _react.PropTypes.array.isRequired,
 	  cards: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
+	  scenarios: _react.PropTypes.array.isRequired,
 	  onChange: _react.PropTypes.func,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -56973,12 +57002,17 @@
 
 	var _tags2 = _interopRequireDefault(_tags);
 
+	var _scenarios = __webpack_require__(589);
+
+	var _scenarios2 = _interopRequireDefault(_scenarios);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
 	  cards: _cards2.default,
 	  courses: _courses2.default,
-	  tags: _tags2.default
+	  tags: _tags2.default,
+	  scenarios: _scenarios2.default
 	});
 
 /***/ },

@@ -7,7 +7,7 @@ import { Bot, Course, Scenario, Card } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['name', 'author', 'insights']
+const permittedAttrs = ['name', 'author', 'insights', 'scenario']
 
 // actions
 //
@@ -15,9 +15,11 @@ router.get('/', async (req, res, next) => {
   try {
     const courses = await Course.run()
     const tags = await Card.concatMap(card => card('tags')).distinct().execute()
+    const scenarios = await Scenario.filter(scenario => scenario.hasFields('type'))
 
     res.render('courses', { title: `${appName} – Courses`,
       courses: courses,
+      scenarios: scenarios,
       tags: tags,
     })
   } catch (err) {

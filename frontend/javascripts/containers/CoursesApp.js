@@ -11,7 +11,7 @@ import CoursesList from '../components/CoursesList'
 class CoursesApp extends Component {
 
   render() {
-    const { courses, cards, tags, actions } = this.props
+    const { courses, cards, tags, scenarios, actions } = this.props
 
     return (
       <div className="container courses">
@@ -22,6 +22,7 @@ class CoursesApp extends Component {
             cards={ cards }
             courses={ courses }
             tags={ tags }
+            scenarios={ scenarios }
             actions={ actions }
           />
         </div>
@@ -33,6 +34,7 @@ class CoursesApp extends Component {
 CoursesApp.propTypes = {
   courses: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
+  scenarios: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -41,6 +43,7 @@ function mapStateToProps(state) {
     cards: state.cards,
     courses: state.courses,
     tags: state.tags,
+    scenarios: state.scenarios,
   }
 }
 

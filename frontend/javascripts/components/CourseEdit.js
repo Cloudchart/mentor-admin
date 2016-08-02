@@ -48,15 +48,15 @@ class CourseEdit extends Component {
 
   // renderers
   //
-  renderOptionsForSelect(item) {
+  renderOptionsForSelect(title, item) {
     return(
-      <option key={ item.id } value={ item.id }>{ item.name }</option>
+      <option key={ item.id } value={ item.id }>{ item[title] }</option>
     )
   }
 
   render() {
     const { item } = this.state
-    const { cards, tags, actions } = this.props
+    const { cards, tags, scenarios, actions } = this.props
 
     return (
       <div>
@@ -74,6 +74,19 @@ class CourseEdit extends Component {
             floatingLabelText="ID"
             disabled={ true }
           />
+          <br/>
+
+          <label>
+            <span>Scenario</span>
+            <select
+              name="scenario[id]"
+              defaultValue={ item.scenario.id }
+              onChange={ this.handleUpdate.bind(this) }
+            >
+              <option></option>
+              { scenarios.map(this.renderOptionsForSelect.bind(this, 'type')) }
+            </select>
+          </label>
           <br/>
 
           <TextField
@@ -113,6 +126,7 @@ CourseEdit.propTypes = {
   courses: PropTypes.array.isRequired,
   cards: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
+  scenarios: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }
