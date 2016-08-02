@@ -52,9 +52,15 @@ class ScenarioEdit extends Component {
 
   // renderers
   //
+  renderOptionsForSelect(title, item) {
+    return(
+      <option key={ item.id } value={ item.id }>{ item[title] }</option>
+    )
+  }
+
   render() {
     const { item } = this.state
-    const { scenario, scenarioActions, courses, tags, actions } = this.props
+    const { scenario, scenarioActions, courses, tags, bot_owners, actions } = this.props
 
     return (
       <div>
@@ -75,6 +81,19 @@ class ScenarioEdit extends Component {
             name="type"
             onBlur={ this.handleUpdate.bind(this) }
           />
+          <br/>
+
+          <label>
+            <span>Bot Owner</span>
+            <select
+              name="bot_owner[id]"
+              defaultValue={ item.bot_owner.id }
+              onChange={ this.handleUpdate.bind(this) }
+            >
+              <option></option>
+              { bot_owners.map(this.renderOptionsForSelect.bind(this, 'name')) }
+            </select>
+          </label>
         </form>
 
         <h3>Actions</h3>
@@ -98,6 +117,7 @@ ScenarioEdit.propTypes = {
   scenarioActions: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
+  bot_owners: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }

@@ -64,7 +64,7 @@ class ScenariosList extends Component {
   }
 
   render() {
-    const { scenarios, scenarioActions, courses, tags, actions } = this.props
+    const { scenarios, scenarioActions, courses, tags, bot_owners, actions } = this.props
     const { selectedItemId } = this.state
 
     if (selectedItemId) {
@@ -75,6 +75,7 @@ class ScenariosList extends Component {
           scenarioActions={ scenarioActions }
           courses={ courses }
           tags={ tags }
+          bot_owners={ bot_owners }
           onChange={ this.handleEditClose.bind(this) }
           actions={ actions }
         />
@@ -111,6 +112,7 @@ ScenariosList.propTypes = {
   scenarioActions: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
+  bot_owners: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
