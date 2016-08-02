@@ -56,7 +56,7 @@ class CourseEdit extends Component {
 
   render() {
     const { item } = this.state
-    const { cards, tags, scenarios, actions } = this.props
+    const { cards, tags, scenarios, bot_owners, actions } = this.props
 
     return (
       <div>
@@ -85,6 +85,18 @@ class CourseEdit extends Component {
             >
               <option></option>
               { scenarios.map(this.renderOptionsForSelect.bind(this, 'type')) }
+            </select>
+          </label>
+
+          <label>
+            <span>Bot Owner</span>
+            <select
+              name="bot_owner[id]"
+              defaultValue={ item.bot_owner.id }
+              onChange={ this.handleUpdate.bind(this) }
+            >
+              <option></option>
+              { bot_owners.map(this.renderOptionsForSelect.bind(this, 'name')) }
             </select>
           </label>
           <br/>
@@ -127,6 +139,7 @@ CourseEdit.propTypes = {
   cards: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
   scenarios: PropTypes.array.isRequired,
+  bot_owners: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }

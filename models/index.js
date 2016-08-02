@@ -13,6 +13,9 @@ export const r = Thinky.r
 export const Scenario = Thinky.createModel('scenarios',
   type.object().schema({
     id: type.string(),
+    bot_owner: type.object().schema({
+      id: type.string(),
+    }).removeExtra().default({}),
     type: type.string(),
     actions: type.array().default([]),
   }).removeExtra()
@@ -61,6 +64,9 @@ export const Course = Thinky.createModel('courses',
   type.object().schema({
     id: type.string(),
     scenario: type.object().schema({
+      id: type.string(),
+    }).removeExtra().default({}),
+    bot_owner: type.object().schema({
       id: type.string(),
     }).removeExtra().default({}),
     name: type.string(),

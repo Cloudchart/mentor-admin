@@ -3,24 +3,26 @@ import { Router } from 'express'
 
 import { getFilteredAttrs, _handleThinkyError } from './helpers'
 import { appName } from '../lib'
-import { Bot, Course, Scenario, Card } from '../models'
+import { Bot, BotOwner, Course, Scenario, Card } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['name', 'author', 'insights', 'scenario']
+const permittedAttrs = ['name', 'author', 'insights', 'scenario', 'bot_owner']
 
 // actions
 //
 router.get('/', async (req, res, next) => {
   try {
     const courses = await Course.run()
-    const tags = await Card.concatMap(card => card('tags')).distinct().execute()
-    const scenarios = await Scenario.filter(scenario => scenario.hasFields('type'))
+    const tags = await Card.concatMap(item => item('tags')).distinct().execute()
+    const scenarios = await Scenario.filter(item => item.hasFields('type'))
+    const bot_owners = await BotOwner.filter(item => item.hasFields('name'))
 
     res.render('courses', { title: `${appName} – Courses`,
       courses: courses,
       scenarios: scenarios,
       tags: tags,
+      bot_owners: bot_owners,
     })
   } catch (err) {
     res.status(500).render('error', { message: err, error: {} })

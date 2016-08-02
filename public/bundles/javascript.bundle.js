@@ -46595,6 +46595,7 @@
 	      var cards = _props.cards;
 	      var tags = _props.tags;
 	      var scenarios = _props.scenarios;
+	      var bot_owners = _props.bot_owners;
 	      var actions = _props.actions;
 
 
@@ -46610,6 +46611,7 @@
 	            courses: courses,
 	            tags: tags,
 	            scenarios: scenarios,
+	            bot_owners: bot_owners,
 	            actions: actions
 	          })
 	        )
@@ -46624,6 +46626,7 @@
 	  courses: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  bot_owners: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -46632,7 +46635,8 @@
 	    cards: state.cards,
 	    courses: state.courses,
 	    tags: state.tags,
-	    scenarios: state.scenarios
+	    scenarios: state.scenarios,
+	    bot_owners: state.bot_owners
 	  };
 	}
 
@@ -46778,6 +46782,7 @@
 	      var cards = _props.cards;
 	      var tags = _props.tags;
 	      var scenarios = _props.scenarios;
+	      var bot_owners = _props.bot_owners;
 	      var actions = _props.actions;
 	      var selectedItemId = this.state.selectedItemId;
 
@@ -46789,6 +46794,7 @@
 	          cards: cards,
 	          tags: tags,
 	          scenarios: scenarios,
+	          bot_owners: bot_owners,
 	          onChange: this.handleEditClose.bind(this),
 	          actions: actions
 	        });
@@ -46854,6 +46860,7 @@
 	  cards: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  bot_owners: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -46980,6 +46987,7 @@
 	      var cards = _props.cards;
 	      var tags = _props.tags;
 	      var scenarios = _props.scenarios;
+	      var bot_owners = _props.bot_owners;
 	      var actions = _props.actions;
 
 
@@ -47024,6 +47032,25 @@
 	              scenarios.map(this.renderOptionsForSelect.bind(this, 'type'))
 	            )
 	          ),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Bot Owner'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              {
+	                name: 'bot_owner[id]',
+	                defaultValue: item.bot_owner.id,
+	                onChange: this.handleUpdate.bind(this)
+	              },
+	              _react2.default.createElement('option', null),
+	              bot_owners.map(this.renderOptionsForSelect.bind(this, 'name'))
+	            )
+	          ),
 	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(_TextField2.default, {
 	            defaultValue: item.name,
@@ -47065,6 +47092,7 @@
 	  cards: _react.PropTypes.array.isRequired,
 	  tags: _react.PropTypes.array.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  bot_owners: _react.PropTypes.array.isRequired,
 	  onChange: _react.PropTypes.func,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -53379,7 +53407,7 @@
 /* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
@@ -57149,13 +57177,18 @@
 
 	var _scenarios2 = _interopRequireDefault(_scenarios);
 
+	var _bot_owners = __webpack_require__(601);
+
+	var _bot_owners2 = _interopRequireDefault(_bot_owners);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
 	  cards: _cards2.default,
 	  courses: _courses2.default,
 	  tags: _tags2.default,
-	  scenarios: _scenarios2.default
+	  scenarios: _scenarios2.default,
+	  bot_owners: _bot_owners2.default
 	});
 
 /***/ },
