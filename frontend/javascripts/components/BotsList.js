@@ -68,7 +68,7 @@ class BotsList extends Component {
   }
 
   render() {
-    const { bots, scenarios, actions } = this.props
+    const { bots, scenarios, bot_owners, actions } = this.props
     const { selectedBot } = this.state
 
     return (
@@ -102,6 +102,7 @@ class BotsList extends Component {
             <BotEdit
               bot={ this.state.selectedBot }
               scenarios={ scenarios }
+              bot_owners={ bot_owners }
               actions={ actions }
             />
           }
@@ -123,6 +124,7 @@ class BotsList extends Component {
 BotsList.propTypes = {
   bots: PropTypes.array.isRequired,
   scenarios: PropTypes.array.isRequired,
+  bot_owners: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

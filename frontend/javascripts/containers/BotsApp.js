@@ -11,7 +11,7 @@ import BotsList from '../components/BotsList'
 class BotsApp extends Component {
 
   render() {
-    const { bots, scenarios, actions } = this.props
+    const { bots, scenarios, bot_owners, actions } = this.props
 
     return (
       <div className="container bots">
@@ -21,6 +21,7 @@ class BotsApp extends Component {
           <BotsList
             bots={ bots }
             scenarios={ scenarios }
+            bot_owners={ bot_owners }
             actions={ actions }
           />
         </div>
@@ -32,6 +33,7 @@ class BotsApp extends Component {
 BotsApp.propTypes = {
   bots: PropTypes.array.isRequired,
   scenarios: PropTypes.array.isRequired,
+  bot_owners: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -39,6 +41,7 @@ function mapStateToProps(state) {
   return {
     bots: state.bots,
     scenarios: state.scenarios,
+    bot_owners: state.bot_owners,
   }
 }
 

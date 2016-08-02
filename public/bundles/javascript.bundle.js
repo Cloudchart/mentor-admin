@@ -29362,6 +29362,7 @@
 	      var _props = this.props;
 	      var bots = _props.bots;
 	      var scenarios = _props.scenarios;
+	      var bot_owners = _props.bot_owners;
 	      var actions = _props.actions;
 
 
@@ -29375,6 +29376,7 @@
 	          _react2.default.createElement(_BotsList2.default, {
 	            bots: bots,
 	            scenarios: scenarios,
+	            bot_owners: bot_owners,
 	            actions: actions
 	          })
 	        )
@@ -29388,13 +29390,15 @@
 	BotsApp.propTypes = {
 	  bots: _react.PropTypes.array.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  bot_owners: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
 	function mapStateToProps(state) {
 	  return {
 	    bots: state.bots,
-	    scenarios: state.scenarios
+	    scenarios: state.scenarios,
+	    bot_owners: state.bot_owners
 	  };
 	}
 
@@ -38535,6 +38539,7 @@
 	      var _props = this.props;
 	      var bots = _props.bots;
 	      var scenarios = _props.scenarios;
+	      var bot_owners = _props.bot_owners;
 	      var actions = _props.actions;
 	      var selectedBot = this.state.selectedBot;
 
@@ -38592,6 +38597,7 @@
 	          children: _react2.default.createElement(_BotEdit2.default, {
 	            bot: this.state.selectedBot,
 	            scenarios: scenarios,
+	            bot_owners: bot_owners,
 	            actions: actions
 	          }),
 	          actions: _react2.default.createElement(_FlatButton2.default, {
@@ -38611,6 +38617,7 @@
 	BotsList.propTypes = {
 	  bots: _react.PropTypes.array.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  bot_owners: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -44963,12 +44970,12 @@
 	      );
 	    }
 	  }, {
-	    key: 'renderScenariosOptions',
-	    value: function renderScenariosOptions(scenario) {
+	    key: 'renderObjectOptions',
+	    value: function renderObjectOptions(title, item) {
 	      return _react2.default.createElement(
 	        'option',
-	        { key: scenario.id, value: scenario.id },
-	        scenario.type
+	        { key: item.id, value: item.id },
+	        item[title]
 	      );
 	    }
 	  }, {
@@ -44977,6 +44984,7 @@
 	      var _props = this.props;
 	      var bot = _props.bot;
 	      var scenarios = _props.scenarios;
+	      var bot_owners = _props.bot_owners;
 	      var actions = _props.actions;
 
 
@@ -45008,25 +45016,6 @@
 	            _react2.default.createElement(
 	              'span',
 	              null,
-	              'Scenario'
-	            ),
-	            _react2.default.createElement(
-	              'select',
-	              {
-	                name: 'scenario[id]',
-	                defaultValue: bot.scenario.id,
-	                onChange: this.handleUpdate.bind(this)
-	              },
-	              _react2.default.createElement('option', null),
-	              scenarios.map(this.renderScenariosOptions.bind(this))
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'label',
-	            null,
-	            _react2.default.createElement(
-	              'span',
-	              null,
 	              'Type'
 	            ),
 	            _react2.default.createElement(
@@ -45037,6 +45026,44 @@
 	                onChange: this.handleUpdate.bind(this)
 	              },
 	              ['messenger', 'telegram'].map(this.renderOptions.bind(this))
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Scenario'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              {
+	                name: 'scenario[id]',
+	                defaultValue: bot.scenario.id,
+	                onChange: this.handleUpdate.bind(this)
+	              },
+	              _react2.default.createElement('option', null),
+	              scenarios.map(this.renderObjectOptions.bind(this, 'type'))
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Bot Owner'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              {
+	                name: 'bot_owner[id]',
+	                defaultValue: bot.bot_owner.id,
+	                onChange: this.handleUpdate.bind(this)
+	              },
+	              _react2.default.createElement('option', null),
+	              bot_owners.map(this.renderObjectOptions.bind(this, 'name'))
 	            )
 	          )
 	        )
@@ -45050,6 +45077,7 @@
 	BotEdit.propTypes = {
 	  bot: _react.PropTypes.object.isRequired,
 	  scenarios: _react.PropTypes.array.isRequired,
+	  bot_owners: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -53351,7 +53379,7 @@
 /* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
@@ -56690,11 +56718,16 @@
 
 	var _scenarios2 = _interopRequireDefault(_scenarios);
 
+	var _bot_owners = __webpack_require__(601);
+
+	var _bot_owners2 = _interopRequireDefault(_bot_owners);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
 	  bots: _bots2.default,
-	  scenarios: _scenarios2.default
+	  scenarios: _scenarios2.default,
+	  bot_owners: _bot_owners2.default
 	});
 
 /***/ },

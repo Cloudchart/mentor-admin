@@ -26,14 +26,14 @@ class BotEdit extends Component {
     )
   }
 
-  renderScenariosOptions(scenario) {
+  renderObjectOptions(title, item) {
     return(
-      <option key={ scenario.id } value={ scenario.id }>{ scenario.type }</option>
+      <option key={ item.id } value={ item.id }>{ item[title] }</option>
     )
   }
 
   render() {
-    const { bot, scenarios, actions } = this.props
+    const { bot, scenarios, bot_owners, actions } = this.props
 
     return (
       <div>
@@ -57,18 +57,6 @@ class BotEdit extends Component {
           <br/>
 
           <label>
-            <span>Scenario</span>
-            <select
-              name="scenario[id]"
-              defaultValue={ bot.scenario.id }
-              onChange={ this.handleUpdate.bind(this) }
-            >
-              <option></option>
-              { scenarios.map(this.renderScenariosOptions.bind(this)) }
-            </select>
-          </label>
-
-          <label>
             <span>Type</span>
             <select
               name="type"
@@ -76,6 +64,30 @@ class BotEdit extends Component {
               onChange={ this.handleUpdate.bind(this) }
             >
               { ['messenger', 'telegram'].map(this.renderOptions.bind(this)) }
+            </select>
+          </label>
+
+          <label>
+            <span>Scenario</span>
+            <select
+              name="scenario[id]"
+              defaultValue={ bot.scenario.id }
+              onChange={ this.handleUpdate.bind(this) }
+            >
+              <option></option>
+              { scenarios.map(this.renderObjectOptions.bind(this, 'type')) }
+            </select>
+          </label>
+
+          <label>
+            <span>Bot Owner</span>
+            <select
+              name="bot_owner[id]"
+              defaultValue={ bot.bot_owner.id }
+              onChange={ this.handleUpdate.bind(this) }
+            >
+              <option></option>
+              { bot_owners.map(this.renderObjectOptions.bind(this, 'name')) }
             </select>
           </label>
         </form>
@@ -88,6 +100,7 @@ class BotEdit extends Component {
 BotEdit.propTypes = {
   bot: PropTypes.object.isRequired,
   scenarios: PropTypes.array.isRequired,
+  bot_owners: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
