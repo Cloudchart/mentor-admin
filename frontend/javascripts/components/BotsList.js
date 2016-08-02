@@ -55,6 +55,7 @@ class BotsList extends Component {
     return(
       <TableRow key={ bot.id }>
         <TableRowColumn>{ bot.id }</TableRowColumn>
+        <TableRowColumn>{ bot.name }</TableRowColumn>
         <TableRowColumn>{ bot.type }</TableRowColumn>
         <TableRowColumn>
           {[
@@ -77,6 +78,7 @@ class BotsList extends Component {
           <TableHeader>
             <TableRow>
               <TableHeaderColumn>ID</TableHeaderColumn>
+              <TableHeaderColumn>Name</TableHeaderColumn>
               <TableHeaderColumn>Type</TableHeaderColumn>
               <TableHeaderColumn>Actions</TableHeaderColumn>
             </TableRow>

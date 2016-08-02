@@ -38496,6 +38496,11 @@
 	        _react2.default.createElement(
 	          _Table.TableRowColumn,
 	          null,
+	          bot.name
+	        ),
+	        _react2.default.createElement(
+	          _Table.TableRowColumn,
+	          null,
 	          bot.type
 	        ),
 	        _react2.default.createElement(
@@ -38543,6 +38548,11 @@
 	                _Table.TableHeaderColumn,
 	                null,
 	                'ID'
+	              ),
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Name'
 	              ),
 	              _react2.default.createElement(
 	                _Table.TableHeaderColumn,
@@ -44955,7 +44965,7 @@
 	      return _react2.default.createElement(
 	        'option',
 	        { key: scenario.id, value: scenario.id },
-	        scenario.name
+	        scenario.type
 	      );
 	    }
 	  }, {
@@ -44973,6 +44983,14 @@
 	        _react2.default.createElement(
 	          'form',
 	          { ref: 'form', className: 'bots-edit', onSubmit: this.handleSubmit },
+	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: bot.name,
+	            floatingLabelText: 'Name',
+	            hintText: 'Enter name',
+	            name: 'name',
+	            onBlur: this.handleUpdate.bind(this)
+	          }),
+	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(_TextField2.default, {
 	            defaultValue: bot.token,
 	            floatingLabelText: 'Token',
@@ -53228,7 +53246,7 @@
 /* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+	var __WEBPACK_AMD_DEFINE_RESULT__;var require;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license

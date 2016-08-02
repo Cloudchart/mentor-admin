@@ -29,7 +29,7 @@ class BotEdit extends Component {
 
   renderScenariosOptions(scenario) {
     return(
-      <option key={ scenario.id } value={ scenario.id }>{ scenario.name }</option>
+      <option key={ scenario.id } value={ scenario.id }>{ scenario.type }</option>
     )
   }
 
@@ -39,6 +39,15 @@ class BotEdit extends Component {
     return (
       <div>
         <form ref="form" className="bots-edit" onSubmit={ this.handleSubmit }>
+          <TextField
+            defaultValue={ bot.name }
+            floatingLabelText="Name"
+            hintText="Enter name"
+            name="name"
+            onBlur={ this.handleUpdate.bind(this) }
+          />
+          <br/>
+
           <TextField
             defaultValue={ bot.token }
             floatingLabelText="Token"

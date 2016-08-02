@@ -38,6 +38,7 @@ export const Bot = Thinky.createModel('bots',
     scenario: type.object().schema({
       id: type.string(),
     }).removeExtra().default({}),
+    name: type.string(),
     token: type.string(),
     type: type.string().enum(['messenger', 'telegram']).default('messenger'),
   }).removeExtra()

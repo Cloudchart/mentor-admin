@@ -7,13 +7,13 @@ import { Bot, Scenario } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['type', 'token', 'scenario']
+const permittedAttrs = ['name', 'type', 'token', 'scenario']
 
 
 router.get('/', async (req, res, next) => {
   try {
     const bots = await Bot.run()
-    const scenarios = await Scenario.filter(scenario => scenario.hasFields('name'))
+    const scenarios = await Scenario.filter(scenario => scenario.hasFields('type'))
 
     res.render('bots', { title: `${appName} – Bots`,
       bots: bots,
