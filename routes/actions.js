@@ -6,7 +6,10 @@ import { Scenario, Action } from '../models'
 
 const router = Router()
 const upload = multer()
-const permittedAttrs = ['label', 'action', 'next', 'text', 'course', 'timeout', 'branch', 'keyboard']
+
+const permittedAttrs = [
+  'label', 'action', 'next', 'text', 'course', 'timeout', 'branch', 'keyboard', 'tags'
+]
 
 
 router.get('/scenarios/:scenarioId/actions', async (req, res, next) => {

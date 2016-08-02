@@ -14,10 +14,12 @@ router.get('/', async (req, res, next) => {
   try {
     const scenarios = await Scenario.run()
     const courses = await Course.filter(course => course.hasFields('name'))
+    const tags = await Action.concatMap(action => action('tags').default([])).distinct().execute()
 
     res.render('scenarios', { title: `${appName} – Scenarios`,
       scenarios: scenarios,
       courses: courses,
+      tags: tags,
     })
   } catch (err) {
     res.status(500).render('error', { message: err, error: {} })

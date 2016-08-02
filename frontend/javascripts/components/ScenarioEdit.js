@@ -54,7 +54,7 @@ class ScenarioEdit extends Component {
   //
   render() {
     const { item } = this.state
-    const { scenario, scenarioActions, courses, actions } = this.props
+    const { scenario, scenarioActions, courses, tags, actions } = this.props
 
     return (
       <div>
@@ -83,6 +83,7 @@ class ScenarioEdit extends Component {
           scenario={ item }
           scenarioActions={ scenarioActions }
           courses={ courses }
+          tags={ tags }
           actions={ actions }
         />
       </div>
@@ -96,6 +97,7 @@ ScenarioEdit.propTypes = {
   scenarios: PropTypes.array.isRequired,
   scenarioActions: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   actions: PropTypes.object.isRequired,
 }

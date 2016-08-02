@@ -22,13 +22,16 @@ export const Action = Thinky.createModel('actions',
   type.object().schema({
     id: type.string(),
     label: type.string(),
-    action: type.string().enum(['input', 'message', 'sleep', 'course']).default('input'),
+    action: type.string().enum(
+      ['input', 'message', 'sleep', 'course', 'cardlist', 'coursechooser']
+    ).default('input'),
     text: type.string(),
     next: type.string(),
     timeout: type.number().integer(),
     branch: type.string(),
     keyboard: type.string(),
     course: type.string(),
+    tags: type.array().default([]),
   }).removeExtra()
 )
 
@@ -113,7 +116,7 @@ Card.docOn('saving', doc => {
 Action.docOn('saving', doc => {
   doc.timeout = doc.timeout || undefined
 
-  let attrs = ['branch', 'text', 'keyboard', 'timeout', 'course']
+  let attrs = ['branch', 'text', 'keyboard', 'timeout', 'course', 'tags']
   let actionBasedAttrs = []
 
   if (doc.action === 'input') {
@@ -124,6 +127,8 @@ Action.docOn('saving', doc => {
     actionBasedAttrs.push('timeout')
   } else if (doc.action === 'course') {
     actionBasedAttrs.push('course', 'branch')
+  } else if (doc.action.match(/cardlist|coursechooser/)) {
+    actionBasedAttrs.push('tags')
   }
 
   attrs.forEach(attr => {

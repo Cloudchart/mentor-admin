@@ -7,6 +7,9 @@ import IconButton from 'material-ui/IconButton'
 import ContentClearIcon from 'material-ui/svg-icons/content/clear'
 
 import SortablePaperActions from './SortablePaperActions'
+import Tags from './Tags'
+
+const actionsValues = ['input', 'message', 'sleep', 'course', 'cardlist', 'coursechooser']
 
 
 class ActionEdit extends Component {
@@ -123,6 +126,16 @@ class ActionEdit extends Component {
     )
   }
 
+  renderTags(item) {
+    if (item.action.match(/cardlist|coursechooser/)) return (
+      <Tags
+        selectedTags={ item.tags }
+        tags={ this.props.tags }
+        onChange={ this.handleUpdate.bind(this) }
+      />
+    )
+  }
+
   render() {
     const { item, scenario, tags, actions } = this.props
 
@@ -160,7 +173,7 @@ class ActionEdit extends Component {
               defaultValue={ item.action }
               onChange={ this.handleUpdate.bind(this) }
             >
-              { ['input', 'message', 'sleep', 'course'].map(this.renderOptions.bind(this)) }
+              { actionsValues.map(this.renderOptions.bind(this)) }
             </select>
           </label>
 
@@ -173,6 +186,8 @@ class ActionEdit extends Component {
           { this.renderBranch(item) }
           <br/>
           { this.renderKeyboard(item) }
+          <br/>
+          { this.renderTags(item) }
         </form>
       </Paper>
     )
@@ -184,6 +199,7 @@ ActionEdit.propTypes = {
   item: PropTypes.object.isRequired,
   scenario: PropTypes.object.isRequired,
   courses: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
