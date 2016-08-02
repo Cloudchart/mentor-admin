@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  main(
+    data-react-class="BotOwnersApp"
+  )
+
+block pagescript
+  script(type="text/javascript").
+    window.__INITIAL_STATE__ = {
+      bot_owners: !{JSON.stringify(bot_owners)}
+    }

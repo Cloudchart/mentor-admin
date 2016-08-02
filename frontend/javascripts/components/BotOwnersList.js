@@ -13,54 +13,53 @@ import {
   TableRowColumn
 } from 'material-ui/Table'
 
-import BotEdit from './BotEdit'
+import BotOwnerEdit from './BotOwnerEdit'
 
 
-class BotsList extends Component {
+class BotOwnersList extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      selectedBot: {},
+      selectedItem: {},
     }
   }
 
   // handlers
   //
   handleNew(event) {
-    this.props.actions.createBot().then(res => {
-      this.setState({ selectedBot: res.item })
+    this.props.actions.createBotOwner().then(res => {
+      this.setState({ selectedItem: res.item })
     })
 
   }
 
   handleEditClose(event) {
-    this.setState({ selectedBot: {} })
+    this.setState({ selectedItem: {} })
   }
 
-  handleEdit(bot, event) {
+  handleEdit(item, event) {
     event.preventDefault()
-    this.setState({ selectedBot: bot })
+    this.setState({ selectedItem: item })
   }
 
   handleDelete(id, event) {
     event.preventDefault()
-    if (window.confirm('Are you sure?')) this.props.actions.deleteBot(id)
+    if (window.confirm('Are you sure?')) this.props.actions.deleteBotOwner(id)
   }
 
   // renderers
   //
-  renderBot(bot) {
+  renderItem(item) {
     return(
-      <TableRow key={ bot.id }>
-        <TableRowColumn>{ bot.id }</TableRowColumn>
-        <TableRowColumn>{ bot.name }</TableRowColumn>
-        <TableRowColumn>{ bot.type }</TableRowColumn>
+      <TableRow key={ item.id }>
+        <TableRowColumn>{ item.id }</TableRowColumn>
+        <TableRowColumn>{ item.name }</TableRowColumn>
         <TableRowColumn>
           {[
-            <a key={1} href="" onClick={ this.handleEdit.bind(this, bot) }>Edit</a>,
+            <a key={1} href="" onClick={ this.handleEdit.bind(this, item) }>Edit</a>,
             <span key={2}> | </span>,
-            <a key={3} href="" onClick={ this.handleDelete.bind(this, bot.id) }>Delete</a>
+            <a key={3} href="" onClick={ this.handleDelete.bind(this, item.id) }>Delete</a>
           ]}
         </TableRowColumn>
       </TableRow>
@@ -68,8 +67,8 @@ class BotsList extends Component {
   }
 
   render() {
-    const { bots, scenarios, actions } = this.props
-    const { selectedBot } = this.state
+    const { bot_owners, actions } = this.props
+    const { selectedItem } = this.state
 
     return (
       <div>
@@ -78,12 +77,11 @@ class BotsList extends Component {
             <TableRow>
               <TableHeaderColumn>ID</TableHeaderColumn>
               <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Type</TableHeaderColumn>
               <TableHeaderColumn>Actions</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody>
-            { bots.map(this.renderBot.bind(this)) }
+            { bot_owners.map(this.renderItem.bind(this)) }
           </TableBody>
         </Table>
 
@@ -95,13 +93,12 @@ class BotsList extends Component {
         />
 
         <Dialog
-          title={ selectedBot.name ? `${selectedBot.name} bot` : 'New bot' }
-          open={ Object.keys(this.state.selectedBot).length > 0 }
+          title={ selectedItem.name ? `${selectedItem.name} bot owner` : 'New bot owner' }
+          open={ Object.keys(this.state.selectedItem).length > 0 }
           autoScrollBodyContent={ true }
           children={
-            <BotEdit
-              bot={ this.state.selectedBot }
-              scenarios={ scenarios }
+            <BotOwnerEdit
+              item={ this.state.selectedItem }
               actions={ actions }
             />
           }
@@ -120,11 +117,10 @@ class BotsList extends Component {
 
 }
 
-BotsList.propTypes = {
-  bots: PropTypes.array.isRequired,
-  scenarios: PropTypes.array.isRequired,
+BotOwnersList.propTypes = {
+  bot_owners: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
 
-export default BotsList
+export default BotOwnersList

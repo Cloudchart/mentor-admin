@@ -29284,6 +29284,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
+		"./BotOwnersApp": 600,
+		"./BotOwnersApp.js": 600,
 		"./BotsApp": 355,
 		"./BotsApp.js": 355,
 		"./CoursesApp": 507,
@@ -29413,7 +29415,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.surveysActions = exports.coursesActions = exports.scenariosActions = exports.botsActions = undefined;
+	exports.surveysActions = exports.coursesActions = exports.scenariosActions = exports.botOwnersActions = exports.botsActions = undefined;
 
 	var _getMany = __webpack_require__(357);
 
@@ -29440,6 +29442,10 @@
 	var createBot = (0, _create2.default)('bot');
 	var updateBot = (0, _update2.default)('bot');
 	var deleteBot = (0, _delete2.default)('bot');
+
+	var createBotOwner = (0, _create2.default)('bot_owner');
+	var updateBotOwner = (0, _update2.default)('bot_owner');
+	var deleteBotOwner = (0, _delete2.default)('bot_owner');
 
 	var createScenario = (0, _create2.default)('scenario');
 	var updateScenario = (0, _update2.default)('scenario');
@@ -29468,6 +29474,7 @@
 	var getQuestions = (0, _getMany2.default)('question', { parentModelName: 'survey' });
 
 	var botsActions = exports.botsActions = { createBot: createBot, updateBot: updateBot, deleteBot: deleteBot };
+	var botOwnersActions = exports.botOwnersActions = { createBotOwner: createBotOwner, updateBotOwner: updateBotOwner, deleteBotOwner: deleteBotOwner };
 
 	var scenariosActions = exports.scenariosActions = {
 	  createScenario: createScenario,
@@ -30415,6 +30422,10 @@
 	              null,
 	              _react2.default.createElement(_menu2.default, { color: '#FFFFFF' })
 	            ) },
+	          _react2.default.createElement(_MenuItem2.default, {
+	            primaryText: 'Bot Owners',
+	            onTouchTap: this.handleMenuItemClick.bind(this, '/bot_owners')
+	          }),
 	          _react2.default.createElement(_MenuItem2.default, {
 	            primaryText: 'Bots',
 	            onTouchTap: this.handleMenuItemClick.bind(this, '/bots')
@@ -38404,10 +38415,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _sortBy = __webpack_require__(429);
-
-	var _sortBy2 = _interopRequireDefault(_sortBy);
-
 	var _RaisedButton = __webpack_require__(476);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
@@ -44903,10 +44910,6 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _Toggle = __webpack_require__(499);
-
-	var _Toggle2 = _interopRequireDefault(_Toggle);
 
 	var _TextField = __webpack_require__(501);
 
@@ -56624,6 +56627,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
+		"./BotOwnersApp": 603,
+		"./BotOwnersApp.js": 603,
 		"./BotsApp": 579,
 		"./BotsApp.js": 579,
 		"./CoursesApp": 591,
@@ -56634,6 +56639,8 @@
 		"./SurveysApp.js": 597,
 		"./actions": 596,
 		"./actions.js": 596,
+		"./bot_owners": 601,
+		"./bot_owners.js": 601,
 		"./bots": 580,
 		"./bots.js": 580,
 		"./cards": 592,
@@ -57420,6 +57427,458 @@
 	      return state;
 	  }
 	};
+
+/***/ },
+/* 600 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _redux = __webpack_require__(168);
+
+	var _reactRedux = __webpack_require__(181);
+
+	var _actions = __webpack_require__(356);
+
+	var _Header = __webpack_require__(364);
+
+	var _Header2 = _interopRequireDefault(_Header);
+
+	var _BotOwnersList = __webpack_require__(604);
+
+	var _BotOwnersList2 = _interopRequireDefault(_BotOwnersList);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var BotOwnersApp = function (_Component) {
+	  _inherits(BotOwnersApp, _Component);
+
+	  function BotOwnersApp() {
+	    _classCallCheck(this, BotOwnersApp);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(BotOwnersApp).apply(this, arguments));
+	  }
+
+	  _createClass(BotOwnersApp, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var bot_owners = _props.bot_owners;
+	      var actions = _props.actions;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'container' },
+	        _react2.default.createElement(_Header2.default, { title: 'Bot Owners' }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'content' },
+	          _react2.default.createElement(_BotOwnersList2.default, {
+	            bot_owners: bot_owners,
+	            actions: actions
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return BotOwnersApp;
+	}(_react.Component);
+
+	BotOwnersApp.propTypes = {
+	  bot_owners: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	function mapStateToProps(state) {
+	  return {
+	    bot_owners: state.bot_owners
+	  };
+	}
+
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    actions: (0, _redux.bindActionCreators)(_actions.botOwnersActions, dispatch)
+	  };
+	}
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(BotOwnersApp);
+
+/***/ },
+/* 601 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function () {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'CREATE_BOT_OWNER_RECEIVE':
+	      return state.concat(action.item);
+	    case 'DELETE_BOT_OWNER_RECEIVE':
+	      return state.filter(function (item) {
+	        return item.id !== action.id;
+	      });
+	    case 'UPDATE_BOT_OWNER_RECEIVE':
+	      return state.map(function (item) {
+	        return item.id === action.id ? Object.assign(action.item, { isFetching: false }) : item;
+	      });
+	    case 'UPDATE_BOT_OWNER_ERROR':
+	      return state.map(function (item) {
+	        return item.id === action.id ? Object.assign(item, { isFetching: false, error: action.error }) : item;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+
+/***/ },
+/* 602 */,
+/* 603 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _redux = __webpack_require__(168);
+
+	var _bot_owners = __webpack_require__(601);
+
+	var _bot_owners2 = _interopRequireDefault(_bot_owners);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _redux.combineReducers)({
+	  bot_owners: _bot_owners2.default
+	});
+
+/***/ },
+/* 604 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _RaisedButton = __webpack_require__(476);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+	var _FlatButton = __webpack_require__(478);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _Dialog = __webpack_require__(481);
+
+	var _Dialog2 = _interopRequireDefault(_Dialog);
+
+	var _Table = __webpack_require__(485);
+
+	var _BotOwnerEdit = __webpack_require__(605);
+
+	var _BotOwnerEdit2 = _interopRequireDefault(_BotOwnerEdit);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var BotOwnersList = function (_Component) {
+	  _inherits(BotOwnersList, _Component);
+
+	  function BotOwnersList(props) {
+	    _classCallCheck(this, BotOwnersList);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BotOwnersList).call(this, props));
+
+	    _this.state = {
+	      selectedItem: {}
+	    };
+	    return _this;
+	  }
+
+	  // handlers
+	  //
+
+
+	  _createClass(BotOwnersList, [{
+	    key: 'handleNew',
+	    value: function handleNew(event) {
+	      var _this2 = this;
+
+	      this.props.actions.createBotOwner().then(function (res) {
+	        _this2.setState({ selectedItem: res.item });
+	      });
+	    }
+	  }, {
+	    key: 'handleEditClose',
+	    value: function handleEditClose(event) {
+	      this.setState({ selectedItem: {} });
+	    }
+	  }, {
+	    key: 'handleEdit',
+	    value: function handleEdit(item, event) {
+	      event.preventDefault();
+	      this.setState({ selectedItem: item });
+	    }
+	  }, {
+	    key: 'handleDelete',
+	    value: function handleDelete(id, event) {
+	      event.preventDefault();
+	      if (window.confirm('Are you sure?')) this.props.actions.deleteBotOwner(id);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderItem',
+	    value: function renderItem(item) {
+	      return _react2.default.createElement(
+	        _Table.TableRow,
+	        { key: item.id },
+	        _react2.default.createElement(
+	          _Table.TableRowColumn,
+	          null,
+	          item.id
+	        ),
+	        _react2.default.createElement(
+	          _Table.TableRowColumn,
+	          null,
+	          item.name
+	        ),
+	        _react2.default.createElement(
+	          _Table.TableRowColumn,
+	          null,
+	          [_react2.default.createElement(
+	            'a',
+	            { key: 1, href: '', onClick: this.handleEdit.bind(this, item) },
+	            'Edit'
+	          ), _react2.default.createElement(
+	            'span',
+	            { key: 2 },
+	            ' | '
+	          ), _react2.default.createElement(
+	            'a',
+	            { key: 3, href: '', onClick: this.handleDelete.bind(this, item.id) },
+	            'Delete'
+	          )]
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var bot_owners = _props.bot_owners;
+	      var actions = _props.actions;
+	      var selectedItem = this.state.selectedItem;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _Table.Table,
+	          { selectable: false },
+	          _react2.default.createElement(
+	            _Table.TableHeader,
+	            null,
+	            _react2.default.createElement(
+	              _Table.TableRow,
+	              null,
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'ID'
+	              ),
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Name'
+	              ),
+	              _react2.default.createElement(
+	                _Table.TableHeaderColumn,
+	                null,
+	                'Actions'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _Table.TableBody,
+	            null,
+	            bot_owners.map(this.renderItem.bind(this))
+	          )
+	        ),
+	        _react2.default.createElement(_RaisedButton2.default, {
+	          label: 'New',
+	          primary: true,
+	          style: { marginTop: '20px' },
+	          onTouchTap: this.handleNew.bind(this)
+	        }),
+	        _react2.default.createElement(_Dialog2.default, {
+	          title: selectedItem.name ? selectedItem.name + ' bot owner' : 'New bot owner',
+	          open: Object.keys(this.state.selectedItem).length > 0,
+	          autoScrollBodyContent: true,
+	          children: _react2.default.createElement(_BotOwnerEdit2.default, {
+	            item: this.state.selectedItem,
+	            actions: actions
+	          }),
+	          actions: _react2.default.createElement(_FlatButton2.default, {
+	            label: 'Done',
+	            primary: true,
+	            onTouchTap: this.handleEditClose.bind(this)
+	          }),
+	          onRequestClose: this.handleEditClose.bind(this)
+	        })
+	      );
+	    }
+	  }]);
+
+	  return BotOwnersList;
+	}(_react.Component);
+
+	BotOwnersList.propTypes = {
+	  bot_owners: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = BotOwnersList;
+
+/***/ },
+/* 605 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TextField = __webpack_require__(501);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var BotOwnerEdit = function (_Component) {
+	  _inherits(BotOwnerEdit, _Component);
+
+	  function BotOwnerEdit() {
+	    _classCallCheck(this, BotOwnerEdit);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(BotOwnerEdit).apply(this, arguments));
+	  }
+
+	  _createClass(BotOwnerEdit, [{
+	    key: 'handleSubmit',
+
+
+	    // handlers
+	    //
+	    value: function handleSubmit(event) {
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: 'handleUpdate',
+	    value: function handleUpdate(event) {
+	      this.props.actions.updateBotOwner(this.props.item.id, this.refs.form);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var item = _props.item;
+	      var actions = _props.actions;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'form',
+	          { ref: 'form', onSubmit: this.handleSubmit },
+	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: item.id,
+	            floatingLabelText: 'ID',
+	            disabled: true
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(_TextField2.default, {
+	            defaultValue: item.name,
+	            autoFocus: !item.name,
+	            floatingLabelText: 'Name',
+	            hintText: 'Enter name',
+	            name: 'name',
+	            onBlur: this.handleUpdate.bind(this)
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return BotOwnerEdit;
+	}(_react.Component);
+
+	BotOwnerEdit.propTypes = {
+	  item: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = BotOwnerEdit;
 
 /***/ }
 /******/ ]);

@@ -18,6 +18,7 @@ var actions = require('./routes/actions').default;
 var courses = require('./routes/courses').default;
 var cards = require('./routes/cards').default;
 var blocks = require('./routes/blocks').default;
+var bot_owners = require('./routes/bot_owners').default;
 
 var app = express();
 
@@ -47,6 +48,7 @@ app.use('/', questions);
 app.use('/', cards);
 app.use('/', actions);
 app.use('/bots', bots);
+app.use('/bot_owners', bot_owners);
 app.use('/courses', courses);
 app.use('/surveys', surveys);
 app.use('/scenarios', scenarios);

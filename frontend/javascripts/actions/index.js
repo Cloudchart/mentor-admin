@@ -9,6 +9,10 @@ const createBot = create('bot')
 const updateBot = update('bot')
 const deleteBot = destroy('bot')
 
+const createBotOwner = create('bot_owner')
+const updateBotOwner = update('bot_owner')
+const deleteBotOwner = destroy('bot_owner')
+
 const createScenario = create('scenario')
 const updateScenario = update('scenario')
 const deleteScenario = destroy('scenario')
@@ -37,6 +41,7 @@ const getQuestions = getMany('question', { parentModelName: 'survey' })
 
 
 export const botsActions = { createBot, updateBot, deleteBot }
+export const botOwnersActions = { createBotOwner, updateBotOwner, deleteBotOwner }
 
 export const scenariosActions = {
   createScenario,

@@ -26,6 +26,10 @@ class Header extends Component {
         iconElementLeft={
           <IconMenu iconButtonElement={ <IconButton><MenuIcon color="#FFFFFF" /></IconButton> }>
             <MenuItem
+              primaryText="Bot Owners"
+              onTouchTap={ this.handleMenuItemClick.bind(this, '/bot_owners') }
+            />
+            <MenuItem
               primaryText="Bots"
               onTouchTap={ this.handleMenuItemClick.bind(this, '/bots') }
             />

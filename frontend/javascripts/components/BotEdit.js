@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 
-import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
 
 // https://github.com/callemall/material-ui/issues/3151

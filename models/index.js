@@ -47,6 +47,13 @@ export const Bot = Thinky.createModel('bots',
   }).removeExtra()
 )
 
+export const BotOwner = Thinky.createModel('bot_owners',
+  type.object().schema({
+    id: type.string(),
+    name: type.string(),
+  }).removeExtra()
+)
+
 export const Course = Thinky.createModel('courses',
   type.object().schema({
     id: type.string(),
